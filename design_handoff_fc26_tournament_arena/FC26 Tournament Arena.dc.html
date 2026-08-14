@@ -30,7 +30,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes spinslow{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes trophyfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@media print{html,body{background:#06080c !important;background-image:none !important;color:#e9edf2 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}[data-noprint]{display:none !important}[data-printonly]{display:block !important}[data-printblock]{break-inside:avoid;page-break-inside:avoid}[data-printsheet]{position:static !important;transform:none !important;width:auto !important;max-width:none !important;max-height:none !important;overflow:visible !important;animation:none !important;margin:0 !important;border-radius:18px !important;padding:16px !important}body:has([data-printsheet]) [data-printmain]{display:none !important}body:has([data-printsheet]) [data-printroot]{display:flex;flex-direction:column}body:has([data-printsheet]) [data-printonly]{order:2}*{animation:none !important}@page{margin:10mm}}
+@media print{html,body{background:#06080c !important;background-image:none !important;color:#e9edf2 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}[data-noprint]{display:none !important}[data-printonly="1"]{display:block !important}[data-printstack]{grid-template-columns:1fr !important}[data-printblock]{break-inside:avoid;page-break-inside:avoid}[data-printsheet]{position:static !important;transform:none !important;width:auto !important;max-width:none !important;max-height:none !important;overflow:visible !important;animation:none !important;margin:0 !important;border-radius:18px !important;padding:16px !important}body:has([data-printsheet]) [data-printmain]{display:none !important}body:has([data-printsheet]) [data-printroot]{display:flex;flex-direction:column}body:has([data-printsheet]) [data-printonly="1"]{order:2}*{animation:none !important}@page{margin:10mm}}
 </style>
 </helmet>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#0a0f05"/><rect x="14" y="14" width="172" height="172" rx="24" fill="#0e1a06"/><text x="100" y="118" font-family="Verdana,sans-serif" font-size="58" font-weight="bold" text-anchor="middle" fill="#c8ff2e">26</text></svg></template>
@@ -153,12 +153,8 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 <sc-if value="{{ hasCurrent }}" hint-placeholder-val="{{ false }}">
 <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.3);background:linear-gradient(180deg,#0c1014,#070a0e);padding:0;position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(55% 75% at 0% 30%,{{ curA.tint }},transparent 55%),radial-gradient(55% 75% at 100% 30%,{{ curB.tint }},transparent 55%);pointer-events:none"></div>
-  <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 14px 0 14px">
+  <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:16px 14px 0 14px">
     <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;letter-spacing:3px;color:#0a0f05;background:linear-gradient(135deg,#d6ff5c,#8fce00);padding:4px 14px 3px 14px;transform:skewX(-10deg)">{{ curStage }} &#183; {{ curNum }}</div>
-    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,59,59,.14);border:1px solid rgba(255,59,59,.5);border-radius:999px;padding:4px 12px">
-      <div style="width:7px;height:7px;border-radius:50%;background:#ff3b3b;animation:pulse 1.2s ease-in-out infinite"></div>
-      <div style="font-weight:700;font-size:11px;letter-spacing:2px;color:#ff6b6b">LIVE</div>
-    </div>
   </div>
   <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;padding:0 12px">
     <div style="flex:1;min-width:0;max-width:170px;text-align:center">
@@ -172,6 +168,10 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       <input value="{{ curPickA }}" onChange="{{ onPickA }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" list="fc26PickList" autoComplete="off" autoCapitalize="characters"style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curA.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curA.color }};outline:none">
     </div>
     <div style="flex:0 0 auto;text-align:center;padding:0 4px">
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,59,59,.14);border:1px solid rgba(255,59,59,.5);border-radius:999px;padding:4px 12px;margin-bottom:10px">
+        <div style="width:7px;height:7px;border-radius:50%;background:#ff3b3b;animation:pulse 1.2s ease-in-out infinite"></div>
+        <div style="font-weight:700;font-size:11px;letter-spacing:2px;color:#ff6b6b">LIVE</div>
+      </div>
       <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.55);border:1px solid rgba(200,255,46,.35);border-radius:16px;padding:10px 16px;box-shadow:0 6px 30px rgba(0,0,0,.5),inset 0 -2px 0 rgba(200,255,46,.25)">
         <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:52px;line-height:1;color:#fff;text-shadow:0 0 26px {{ curA.glow }}">{{ scoreA }}</div>
         <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:20px;color:#c8ff2e;font-style:italic">:</div>
@@ -232,7 +232,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 </sc-if>
 
 <!-- TABLE + SCORERS -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:24px;align-items:start">
+<div data-printstack="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:24px;align-items:start">
   <div>
     <div style="display:flex;align-items:center;gap:10px;padding:0 2px"><span style="width:14px;height:14px;background:linear-gradient(135deg,#c8ff2e,#6fa800);transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;letter-spacing:5px">LEAGUE TABLE</span></div>
     <div data-printblock="1" style="margin-top:12px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#0a0d12;overflow:hidden">
@@ -345,7 +345,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 </div>
 
 <!-- PRINT SUMMARY -->
-<div data-printonly="1" style="display:none;break-before:page;page-break-before:always;padding-top:8px;color:#e9edf2;font-family:'Rajdhani',sans-serif">
+<div data-printonly="{{ printTextReport }}" style="display:none;break-before:page;page-break-before:always;padding-top:8px;color:#e9edf2;font-family:'Rajdhani',sans-serif">
   <h1 style="font-size:22px;margin:0 0 4px 0">{{ printTitle }}</h1>
   <p style="margin:0 0 14px 0;font-size:13px">FC26 Tournament &#183; {{ eventDate }} &#183; King's House &#183; PS5 &#183; Prize Rs. {{ prizeLabel }}</p>
   <sc-if value="{{ printFixturesMode }}" hint-placeholder-val="{{ true }}">
@@ -953,7 +953,7 @@ class Component extends DCLogic {
       for (let r = 0; r < rd; r++) for (let x = 0; x < act.length; x++) for (let y = x + 1; y < act.length; y++) pending.push({ a: act[x], b: act[y], ga: 0, gb: 0, part: 1 });
     }
     const sfs = fx.filter(f => f.stage === 'SEMI-FINAL');
-    const ITER = 3000;
+    const ITER = 6000;
     for (let it = 0; it < ITER; it++) {
       let f1, f2;
       if (sfs.length === 2) {
@@ -1401,6 +1401,7 @@ class Component extends DCLogic {
       onPrizeChange: (e) => this.setState({ prize: Math.max(0, parseInt(e.target.value, 10) || 0) }, () => this.save()),
       onMinChange: (e) => this.setState({ minMatches: Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)) }, () => this.save()),
       minHint: st.tossDone ? 'Applies after a reset — fixtures are already drawn.' : '0 = every team plays every other once (' + (act.length - 1) + ' matches each). Higher repeats the league: currently ' + this.rounds() + '\u00D7 round robin, ' + ((act.length - 1) * this.rounds()) + ' league matches per team.',
+      printTextReport: st.printMode === 'team' ? '1' : '0',
       printFixturesMode: st.printMode !== 'team',
       printTeamMode: st.printMode === 'team' && st.printTeam != null,
       printTitle: st.printMode === 'team' && st.printTeam != null ? TEAMS[st.printTeam].name + ' — Team Summary' : 'Tournament Summary',

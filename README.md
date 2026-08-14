@@ -15,13 +15,13 @@ Event: FC26 Tournament · King's House · PS5 · prize configurable (default Rs.
 - **Live league table** — P W D L GF GA GD PTS, ranked by points → GD → goals → head-to-head; top 4 highlighted, champion marked in gold.
 - **Top scorers** — live individual goal leaderboard for every player.
 - **Fixtures queue** — all matches always visible (including unplayed knockout slots), winner/loser highlighting, and a ▶ button to promote any upcoming fixture to play next.
-- **Final chance %** — every team card carries a live "FINAL CHANCE" reading: the odds of that team reaching the final, from a 3,000-run Monte Carlo simulation of every remaining fixture (form-weighted, live score included), recomputed on every goal.
+- **Final chance %** — every team card carries a live "FINAL CHANCE" reading: the odds of that team reaching the final, from a 6,000-run Monte Carlo simulation of every remaining fixture (form-weighted, live score included), recomputed on every goal. Early on the meters sit near 40% for everyone (2 of 5 reach the final) and depend on games remaining as much as points — a team with matches in hand can out-rate one with more points banked.
 - **Team sheets** — tap a team for stats, player goals and a match-by-match history.
 - **Grand Stage** — trophy podium that becomes the champion coronation, plus an auto-opening celebration modal with confetti.
 - **Sound** — all cues synthesized in-browser (no audio files): toss ticks, goal horn, full-time whistle, champion fanfare. Toggle lives in the ⋯ menu and persists.
 - **Team management** — swap players between teams by tap or drag, rename players (goals follow the name), remove/restore teams before the toss.
 - **Persistence** — everything survives refresh via `localStorage`, plus JSON backup/restore and a two-tap reset.
-- **Print summary** — by fixtures prints the real UI, in colour, of exactly the three record sections: league table, top scorers and the full fixtures queue, followed by a text data appendix on its own page. By team prints that team's sheet plus its match-by-match report.
+- **Print summary** — by fixtures prints the real UI, in colour, of exactly the three record sections stacked full-width: league table, then top scorers, then the full fixtures queue — nothing else. By team prints that team's sheet plus its match-by-match text report.
 
 ## Files
 
