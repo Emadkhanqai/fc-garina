@@ -21,7 +21,7 @@ Event: FC26 Tournament · King's House · PS5 · prize configurable (default Rs.
 - **Sound** — all cues synthesized in-browser (no audio files): toss ticks, goal horn, full-time whistle, champion fanfare. Toggle lives in the ⋯ menu and persists.
 - **Team management** — swap players between teams by tap or drag, rename players (goals follow the name), remove/restore teams before the toss.
 - **Persistence** — everything survives refresh via `localStorage`, plus JSON backup/restore and a two-tap reset.
-- **Print summary** — prints the arena itself in full colour (hero, teams, live match, table, scorers, fixtures, Grand Stage) with a text data appendix on a following page; or by team, which prints that team's sheet plus its match-by-match report. Only the operator controls (menu, toss CTA, Record Goal, undo/end, promote arrows) drop out.
+- **Print summary** — by fixtures prints the real UI, in colour, of exactly the three record sections: league table, top scorers and the full fixtures queue, followed by a text data appendix on its own page. By team prints that team's sheet plus its match-by-match report.
 
 ## Files
 
