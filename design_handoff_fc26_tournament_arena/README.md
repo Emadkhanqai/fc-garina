@@ -38,8 +38,8 @@ Section order top to bottom: Header → Hero → Meet the Teams → Opening Toss
 - **Purpose**: brand mark + global actions, deliberately small.
 - **Layout**: flex row, space-between, padding `14px 2px 10px`.
 - Left: `34×34` rounded-`8px` tile, `linear-gradient(135deg,#c8ff2e,#7ac800)`, text "26" Orbitron 900 `11px` `#0a0f05`; then "FC26 TOURNAMENT ARENA" Orbitron 700 `13px`, letter-spacing `2px`, `#e9edf2`.
-- Right: **SOUND ON/OFF** pill (bg `rgba(255,255,255,.06)`, border `1px rgba(255,255,255,.12)`, radius `8px`, padding `7px 10px`, Rajdhani 700 `12px`, `#c8ff2e`) and an **⋯** button (same shell, font-size `20px`, `#e9edf2`) that opens the utility sheet.
-- No large Backup/Print/Reset buttons in the header — everything lives behind ⋯.
+- Right: a single **⋯** button (bg `rgba(255,255,255,.06)`, border `1px rgba(255,255,255,.12)`, radius `8px`, padding `4px 12px`, font-size `20px`, `#e9edf2`) that opens the utility sheet.
+- No Backup/Print/Reset/Sound buttons in the header — everything lives behind ⋯.
 
 ### 2. Hero
 
@@ -87,7 +87,7 @@ Section order top to bottom: Header → Hero → Meet the Teams → Opening Toss
 - Top row: stage chip `LEAGUE · MATCH 6` (Orbitron 900 `11px`, `#0a0f05` on lime gradient, `skewX(-10deg)`) + **LIVE** badge (7px `#ff3b3b` dot pulsing `1.2s`, text 700 `11px` `#ff6b6b`, bg `rgba(255,59,59,.14)`, border `1px rgba(255,59,59,.5)`, radius `999px`).
 - Teams: same skewed crest panels as the toss (`max-width:170px`, radius `14px`, `2px` team border, `0 0 28px` glow) with skewed team-color nameplates below.
 - Scoreboard plate between them: bg `rgba(0,0,0,.55)`, border `1px rgba(200,255,46,.35)`, radius `16px`, padding `10px 16px`, `box-shadow: 0 6px 30px rgba(0,0,0,.5), inset 0 -2px 0 rgba(200,255,46,.25)`. Digits Orbitron 900 `52px` `#fff`, each glowing in its own team's color; separator `:` Orbitron 900 `20px` italic `#c8ff2e`.
-- Under each nameplate: an **FC26 in-game team input** (which real-world national/club team that player picked, e.g. FRANCE). Dashed bottom border in team color, transparent-dark bg, centered uppercase Rajdhani 700 `13px` in team color, placeholder `FC26 TEAM?`, max 16 chars.
+- Under each nameplate: an **FC26 in-game team input** (which real-world national/club team that player picked, e.g. FRANCE). Dashed bottom border in team color, transparent-dark bg, centered uppercase Rajdhani 700 `13px` in team color, placeholder `FC26 TEAM?`, max 16 chars. Both inputs are bound to a shared `<datalist>` of previously used picks, so earlier entries type-ahead on later matches.
 
 ### 6. Record Goal (inside Live Match)
 
@@ -95,7 +95,7 @@ Section order top to bottom: Header → Hero → Meet the Teams → Opening Toss
 - Band: `border-top: 1px rgba(200,255,46,.15)`, bg `rgba(0,0,0,.3)`, padding `16px 14px 18px`.
 - Header: "RECORD GOAL" Orbitron 900 `13px`, letter-spacing `5px`, `#c8ff2e`, `text-shadow: 0 0 16px rgba(200,255,46,.5)`, flanked by 26px lime rules.
 - Two team panels: `grid-template-columns: repeat(auto-fit, minmax(230px,1fr))`, gap `12px`. Panel bg `linear-gradient(180deg,<team tint 10%>, rgba(255,255,255,.02) 60%)`, border `1px` team color @45%, radius `16px`, `3px` top streak in team color. **No repeated team logo/name header inside the panel** — the color coding ties it to the team above.
-- Player buttons (one per player, 2 per team): `min-height 56px`, radius `12px`, border `1px` team color, bg `linear-gradient(90deg,<team tint>, rgba(0,0,0,.25) 55%)`, `box-shadow: inset 3px 0 0 <teamColor>`; left group = `26×26` solid team-color chip with `+` (Orbitron 900 `16px` `#0a0f05`), player name Rajdhani 700 `18px`, in-match tally `(2)` in team color; right = "GOAL" Orbitron 900 `11px` letter-spacing `2px` in team color with glow. Press: `scale(.96)` + `0 0 22px` team glow.
+- Player buttons (one per player, 2 per team): `min-height 56px`, radius `12px`, border `1px` team color, bg `linear-gradient(90deg,<team tint>, rgba(0,0,0,.25) 55%)`, `box-shadow: inset 3px 0 0 <teamColor>`; left group = `26×26` solid team-color chip with `+` (Orbitron 900 `16px` `#0a0f05`) and the player name Rajdhani 700 `18px` (ellipsis on overflow); right = the in-match tally alone, Orbitron 900 `22px`, `min-width:22px`, team color with `0 0 14px` glow once it is above zero, `rgba(255,255,255,.22)` and unglowed at zero. No "GOAL" word — the `+` chip carries the affordance. Press: `scale(.96)` + `0 0 22px` team glow.
 - Action row: **UNDO LAST GOAL** (`flex:1`, min-height `50px`, neutral outline) and **END GAME → NEXT MATCH** (`flex:2`, lime gradient, Orbitron 900 `14px`, glow `0 0 22px rgba(200,255,46,.35)`; label becomes **END FINAL** on the final).
 
 ### 7. Next Match
@@ -149,7 +149,7 @@ Two panels in `grid-template-columns: repeat(auto-fit, minmax(320px,1fr))`, gap 
 All bottom sheets: fixed to bottom, max-width `560px` centered, bg `#0d1118`, `border-radius: 20px 20px 0 0`, `border-top: 1px rgba(255,255,255,.15)`, padding `18px 18px calc(18px + env(safe-area-inset-bottom))`, `animation: slideup .25s ease`, a `40×4` grab handle on top, and a `rgba(0,0,0,.6)` backdrop that closes on tap. `max-height: 82vh; overflow-y:auto` where content can grow.
 
 ### A. Utility sheet (⋯)
-Stacked buttons, each `min-height:52px`, radius `12px`: **EDIT TEAM MEMBERS** (lime outline), **TOURNAMENT SETTINGS**, **BACKUP — EXPORT JSON**, **RESTORE — IMPORT JSON**, **PRINT SUMMARY**, **RESET TOURNAMENT** (red: border `rgba(255,80,80,.4)`, bg `rgba(255,80,80,.08)`, text `#ff7b7b`; requires a second tap — label changes to "TAP AGAIN TO CONFIRM RESET").
+Stacked buttons, each `min-height:52px`, radius `12px`. First a **SOUND** row — neutral shell, label left, state right as an Orbitron 900 `12px` pill reading `ON` (`#c8ff2e` on `rgba(200,255,46,.05)`, border `rgba(200,255,46,.3)`) or `OFF` (`#8a99a8` on `rgba(255,255,255,.04)`, border `rgba(255,255,255,.12)`) — then **EDIT TEAM MEMBERS** (lime outline), **TOURNAMENT SETTINGS**, **BACKUP — EXPORT JSON**, **RESTORE — IMPORT JSON**, **PRINT SUMMARY**, **RESET TOURNAMENT** (red: border `rgba(255,80,80,.4)`, bg `rgba(255,80,80,.08)`, text `#ff7b7b`; requires a second tap — label changes to "TAP AGAIN TO CONFIRM RESET").
 
 ### B. Team Members sheet
 - Title "TEAM MEMBERS" + hint line; a mode toggle pill switches between **swap mode** (default) and **rename mode**.
@@ -230,7 +230,8 @@ Swaps move players (and their goal history) between teams. Renames rewrite the p
 ### Data management
 - JSON **export** downloads `fc26-tournament-backup.json`; **import** validates `app === 'fc26-arena'` and an array of fixtures, else shows an error toast.
 - **Reset** clears storage and returns to the pre-toss state (two-tap confirm).
-- **Print** hides all interactive UI (`[data-noprint]`) and reveals the print-only summary (`[data-printonly]`) in black-on-white Georgia.
+- **Print** renders the arena itself, in colour (`print-color-adjust: exact`, canvas stays `#06080c`, `@page` margin `10mm`). `[data-noprint]` now marks only the operator controls — header ⋯, toss CTA, the whole Record Goal band, the FC26 pick inputs, fixture ▶ buttons, every overlay backdrop/sheet and the toast — so hero, teams, live match, table, scorers, fixtures and Grand Stage all print. `[data-printblock]` sets `break-inside: avoid` on each card/row. The text summary (`[data-printonly]`) follows on a new page, restyled dark to match.
+- **Print by team** additionally opens that team's sheet and prints it as the report: `[data-printsheet]` un-fixes the bottom sheet (`position: static`, no max-height), `body:has([data-printsheet]) [data-printmain]` hides the main page, and the container flips to flex so the sheet leads and the text summary follows (`order: 2`). The sheet closes again once `window.print()` returns.
 
 ### Sound (Web Audio, no asset files)
 Oscillator-based cues: `tick` (1500Hz square 45ms), `click` (750Hz triangle), `lock` (170Hz saw + 85Hz sine + 1046Hz square), `goal` (523/659/784/1046 arpeggio + 65Hz thump), `undo` (320→210Hz), `whistle` (2300Hz double + 2700Hz long), `fanfare` (7-note gold run doubled an octave down). The context is created on first user gesture; a header toggle mutes everything and the state persists. Volume is a tweakable prop.
@@ -258,6 +259,7 @@ Persisted:
 - `removed: { [teamId]: true }`
 - `prize: number`
 - `minMatches: number`
+- `picks: string[]` (uppercased FC26 in-game team picks, most recent first, capped at 30 — harvested from both sides when a match is completed)
 - `ts: number`
 
 Ephemeral (not persisted): `rolling`, `lockShow`, `slotA`, `slotB`, `menuOpen`, `rosterOpen`, `rosterEdit`, `swapSel`, `settingsOpen`, `printOpen`, `printMode`, `printTeam`, `modalTeam`, `champModal`, `penaltyFor`, `penA`, `penB`, `toast`, `resetArmed`.

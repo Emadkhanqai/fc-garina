@@ -37,10 +37,11 @@ The user writes in Roman Urdu / Hinglish. Reply in the same register, short and 
 ## Technical
 
 - Everything client-side: `localStorage` key `fc26_arena_v1` through a try/catch-safe wrapper; JSON backup/restore; no backend.
-- Sound is synthesized with Web Audio — no audio assets. Header toggle mutes it; the choice persists.
+- Sound is synthesized with Web Audio — no audio assets. The ⋯ menu toggles it; the choice persists.
 - Preload all crests on mount, otherwise fast toss cycling paints a stale logo next to a new team name.
 - Touch targets ≥ 44px (goal buttons 56px), respect `env(safe-area-inset-bottom)`, no horizontal overflow at iPhone widths, `auto-fit`/`minmax` grids instead of breakpoints.
-- Print: hide interactive UI via `[data-noprint]`, reveal `[data-printonly]`.
+- Print: the real UI prints in colour (`print-color-adjust:exact`). `[data-noprint]` hides only operator controls, `[data-printonly]` reveals the text appendix, `[data-printblock]` keeps cards whole, and `[data-printsheet]` un-fixes the team sheet for by-team prints.
+- FC26 in-game picks entered on a match are learned into `picks` and offered back through a `<datalist>` on later matches.
 
 ## Repository
 
