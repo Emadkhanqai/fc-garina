@@ -888,6 +888,9 @@ class Component extends DCLogic {
     ].join('#');
   }
   finalChances() {
+    const out = {};
+    this.active().forEach(i => out[i] = 0);
+    if (!this.state.tossDone) return out;
     const sig = this.chanceSig();
     if (this._chSig === sig) return this._chOut;
     this._chOut = this.simulateFinals();
@@ -921,6 +924,11 @@ class Component extends DCLogic {
     const fx = this.state.fixtures;
     const fin = fx.find(f => f.stage === 'FINAL');
     if (fin) { act.forEach(i => out[i] = (i === fin.a || i === fin.b) ? 1 : 0); return out; }
+    if (fx.every(f => f.events.length === 0)) {
+      const p = 2 / act.length;
+      act.forEach(i => out[i] = p);
+      return out;
+    }
     const str = this.strengths();
     const pois = lam => { const L = Math.exp(-lam); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; };
     const play = (a, b, ga, gb, part) => {
