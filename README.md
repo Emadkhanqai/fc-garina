@@ -15,6 +15,7 @@ Event: FC26 Tournament · King's House · PS5 · prize configurable (default Rs.
 - **Live league table** — P W D L GF GA GD PTS, ranked by points → GD → goals → head-to-head; top 4 highlighted, champion marked in gold.
 - **Top scorers** — live individual goal leaderboard for every player.
 - **Fixtures queue** — all matches always visible (including unplayed knockout slots), winner/loser highlighting, and a ▶ button to promote any upcoming fixture to play next.
+- **Final chance %** — every team card carries a live "FINAL CHANCE" reading: the odds of that team reaching the final, from a 3,000-run Monte Carlo simulation of every remaining fixture (form-weighted, live score included), recomputed on every goal.
 - **Team sheets** — tap a team for stats, player goals and a match-by-match history.
 - **Grand Stage** — trophy podium that becomes the champion coronation, plus an auto-opening celebration modal with confetti.
 - **Sound** — all cues synthesized in-browser (no audio files): toss ticks, goal horn, full-time whistle, champion fanfare. Toggle in the header.

@@ -86,6 +86,15 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
             <span style="background:rgba(200,255,46,.09);border:1px solid rgba(200,255,46,.3);border-radius:999px;padding:3px 10px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:1px;color:#c8ff2e">{{ t.ptsLabel }}</span>
           </div>
           <div style="font-weight:700;font-size:10.5px;letter-spacing:1.5px;color:{{ t.color }};margin-top:6px;font-style:italic;opacity:.85">{{ t.tagline }}</div>
+          <div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+              <span style="font-weight:700;font-size:9.5px;letter-spacing:1.5px;color:#5b6b7a">FINAL CHANCE</span>
+              <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;line-height:1;color:{{ t.chanceColor }};text-shadow:0 0 14px {{ t.chanceGlow }}">{{ t.chanceLabel }}</span>
+            </div>
+            <div style="margin-top:6px;height:5px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden">
+              <div style="width:{{ t.chanceWidth }};height:100%;border-radius:3px;background:linear-gradient(90deg,{{ t.color }},{{ t.chanceBarTo }});box-shadow:0 0 10px {{ t.chanceGlow }};transition:width .45s ease"></div>
+            </div>
+          </div>
         </div>
       </button>
     </sc-for>
@@ -854,6 +863,109 @@ class Component extends DCLogic {
     this.state.fixtures.forEach(f => f.events.forEach(e => { map[e.player] = (map[e.player] || 0) + 1; }));
     return map;
   }
+  // ---------- final chances ----------
+  chanceSig() {
+    const st = this.state;
+    return [
+      this.active().join(','), this.rounds(), st.tossDone ? 1 : 0,
+      st.fixtures.map(f => { const s = this.score(f); return f.id + ':' + f.a + '-' + f.b + ':' + (f.done ? 1 : 0) + ':' + s.a + '-' + s.b + ':' + (f.pen == null ? '' : f.pen); }).join('|')
+    ].join('#');
+  }
+  finalChances() {
+    const sig = this.chanceSig();
+    if (this._chSig === sig) return this._chOut;
+    this._chOut = this.simulateFinals();
+    this._chSig = sig;
+    return this._chOut;
+  }
+  strengths() {
+    const form = {};
+    this.active().forEach(i => form[i] = { p: 0, pts: 0, gd: 0 });
+    this.state.fixtures.filter(f => f.done).forEach(f => {
+      const s = this.score(f), A = form[f.a], B = form[f.b];
+      if (!A || !B) return;
+      A.p++; B.p++; A.gd += s.a - s.b; B.gd += s.b - s.a;
+      if (s.a > s.b) A.pts += 3; else if (s.b > s.a) B.pts += 3; else { A.pts++; B.pts++; }
+    });
+    const str = {};
+    Object.keys(form).forEach(k => {
+      const r = form[k];
+      if (!r.p) { str[k] = 1; return; }
+      const raw = 1 + 0.10 * (r.pts / r.p - 1.2) + 0.11 * (r.gd / r.p);
+      const w = r.p / (r.p + 2);
+      str[k] = Math.max(0.68, Math.min(1.45, 1 + w * (raw - 1)));
+    });
+    return str;
+  }
+  simulateFinals() {
+    const act = this.active();
+    const out = {};
+    act.forEach(i => out[i] = 0);
+    if (act.length <= 2) { act.forEach(i => out[i] = 1); return out; }
+    const fx = this.state.fixtures;
+    const fin = fx.find(f => f.stage === 'FINAL');
+    if (fin) { act.forEach(i => out[i] = (i === fin.a || i === fin.b) ? 1 : 0); return out; }
+    const str = this.strengths();
+    const pois = lam => { const L = Math.exp(-lam); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; };
+    const play = (a, b, ga, gb, part) => {
+      const ra = Math.pow(str[a] / str[b], 1.25);
+      return [ga + pois(Math.max(0.35, Math.min(3.2, 1.45 * ra)) * part), gb + pois(Math.max(0.35, Math.min(3.2, 1.45 / ra)) * part)];
+    };
+    const ko = (a, b, ga, gb, part) => {
+      const r = play(a, b, ga, gb, part);
+      if (r[0] > r[1]) return a;
+      if (r[1] > r[0]) return b;
+      return Math.random() < str[a] / (str[a] + str[b]) ? a : b;
+    };
+    const baseRow = {};
+    act.forEach(i => baseRow[i] = { pts: 0, gd: 0, gf: 0 });
+    fx.filter(f => f.stage === 'LEAGUE' && f.done).forEach(f => {
+      const s = this.score(f), A = baseRow[f.a], B = baseRow[f.b];
+      if (!A || !B) return;
+      A.gf += s.a; B.gf += s.b; A.gd += s.a - s.b; B.gd += s.b - s.a;
+      if (s.a > s.b) A.pts += 3; else if (s.b > s.a) B.pts += 3; else { A.pts++; B.pts++; }
+    });
+    let pending;
+    if (this.state.tossDone) {
+      pending = fx.filter(f => f.stage === 'LEAGUE' && !f.done).map(f => {
+        const s = this.score(f);
+        return { a: f.a, b: f.b, ga: s.a, gb: s.b, part: f.events.length ? 0.55 : 1 };
+      });
+    } else {
+      pending = [];
+      const rd = this.rounds();
+      for (let r = 0; r < rd; r++) for (let x = 0; x < act.length; x++) for (let y = x + 1; y < act.length; y++) pending.push({ a: act[x], b: act[y], ga: 0, gb: 0, part: 1 });
+    }
+    const sfs = fx.filter(f => f.stage === 'SEMI-FINAL');
+    const ITER = 3000;
+    for (let it = 0; it < ITER; it++) {
+      let f1, f2;
+      if (sfs.length === 2) {
+        const w = sfs.map(f => {
+          if (f.done) return this.winner(f);
+          const s = this.score(f);
+          return ko(f.a, f.b, s.a, s.b, f.events.length ? 0.55 : 1);
+        });
+        f1 = w[0]; f2 = w[1];
+      } else {
+        const rows = act.map(i => ({ idx: i, pts: baseRow[i].pts, gd: baseRow[i].gd, gf: baseRow[i].gf }));
+        const by = {};
+        rows.forEach(r => by[r.idx] = r);
+        pending.forEach(m => {
+          const g = play(m.a, m.b, m.ga, m.gb, m.part);
+          const A = by[m.a], B = by[m.b];
+          A.gf += g[0]; B.gf += g[1]; A.gd += g[0] - g[1]; B.gd += g[1] - g[0];
+          if (g[0] > g[1]) A.pts += 3; else if (g[1] > g[0]) B.pts += 3; else { A.pts++; B.pts++; }
+        });
+        rows.sort((x, y) => y.pts - x.pts || y.gd - x.gd || y.gf - x.gf || x.idx - y.idx);
+        if (act.length >= 4) { f1 = ko(rows[0].idx, rows[3].idx, 0, 0, 1); f2 = ko(rows[1].idx, rows[2].idx, 0, 0, 1); }
+        else { f1 = rows[0].idx; f2 = rows[1].idx; }
+      }
+      out[f1]++; out[f2]++;
+    }
+    act.forEach(i => out[i] = out[i] / ITER);
+    return out;
+  }
   // ---------- ui ops ----------
   toastMsg(msg, color) {
     clearTimeout(this._toastT);
@@ -978,6 +1090,7 @@ class Component extends DCLogic {
     const next = st.tossDone ? this.nextFix() : null;
     const standings = this.standings();
     const goals = this.playerGoals();
+    const chances = this.finalChances();
     const teamOf = p => TEAMS.find(t => t.players.includes(p));
     // scorers
     const act = this.active();
@@ -1209,9 +1322,17 @@ class Component extends DCLogic {
         const t = TEAMS[i];
         const srow = standings.find(r => r.idx === i);
         const spos = standings.indexOf(srow) + 1;
+        const pct = (chances[i] || 0) * 100;
+        const locked = pct >= 99.95;
+        const chColor = locked ? '#ffd54a' : pct <= 0 ? '#5b6b7a' : '#c8ff2e';
         return {
         ptsLabel: srow.pts + ' PTS',
         posLabel: '#' + spos,
+        chanceLabel: locked ? '100%' : pct >= 99.5 ? '99%' : pct > 0 && pct < 0.5 ? '<1%' : Math.round(pct) + '%',
+        chanceColor: chColor,
+        chanceGlow: glow(chColor, 0.4),
+        chanceWidth: (pct <= 0 ? 0 : Math.max(4, Math.round(pct))) + '%',
+        chanceBarTo: locked ? '#ffd54a' : '#c8ff2e',
         name: t.name, shortName: t.short, logo: t.logo, color: t.color, glow: glow(t.color, 0.35),
         borderColor: glow(t.color, 0.4), playersLabel: this.playersOf(i).join(' & '), tagline: t.tagline,
         open: () => { SFX.click(); this.setState({ modalTeam: i }); }

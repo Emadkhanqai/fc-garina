@@ -63,6 +63,7 @@ Section order top to bottom: Header → Hero → Meet the Teams → Opening Toss
   - Players line: Rajdhani 700 `15px` `#e9edf2`.
   - Points chip: `X PTS`, Orbitron 700 `10.5px`, `#c8ff2e` on `rgba(200,255,46,.09)`, border `1px rgba(200,255,46,.3)`, radius `999px`, padding `3px 10px`.
   - Tagline: 700 `10.5px` italic, letter-spacing `1.5px`, team color at `.85` opacity.
+  - **Final chance meter**: divider `1px rgba(255,255,255,.07)` above a row with label "FINAL CHANCE" (700 `9.5px`, letter-spacing `1.5px`, `#5b6b7a`) and the value right-aligned (Orbitron 900 `14px`, `#c8ff2e`, glow `0 0 14px` at 40%; `#ffd54a` once the team is in the final, `#5b6b7a` at 0%). Below it a `5px` track (`rgba(255,255,255,.07)`, radius `3px`) whose fill is `linear-gradient(90deg, <teamColor>, #c8ff2e)` (gold end-stop when locked at 100%), `transition: width .45s ease`, minimum visible width `4%` for any non-zero value.
 - No helper text like "tap for details" — the card is tappable on its own.
 
 ### 4. Opening Toss
@@ -211,6 +212,14 @@ Fixed bottom-center (`bottom: calc(28px + env(safe-area-inset-bottom))`), bg `#0
 - When every league match is done: **4+ teams** → SF1 (rank 1 v 4) and SF2 (rank 2 v 3) generate; **3 teams** → a direct final (rank 1 v 2).
 - When both semis are done → the final generates from the two winners.
 - When the final is done → champion is set, fanfare plays, the celebration modal opens, confetti runs on both canvases.
+
+### Final chance simulation
+Each team card shows the probability that team reaches the final, derived (never stored) on every render:
+- **3,000 Monte Carlo runs.** Each run simulates every remaining league fixture, ranks the table with the real tiebreakers (points → GD → goals), seeds SF1 (1 v 4) / SF2 (2 v 3), and plays both semis; a team is counted when it appears in the final. With 3 active teams the top two go straight to the final; with 2, both sit at 100%.
+- **Goal model.** Poisson draws with `λ = 1.45 · (strᴀ/strʙ)^1.25`, clamped `0.35–3.2`. Strength comes from completed results only — `1 + 0.10·(pts/game − 1.2) + 0.11·(GD/game)`, shrunk by `p/(p+2)` so one lopsided result can't dominate, clamped `0.68–1.45`. Teams with no games sit at `1`.
+- **Live matches count.** Goals already recorded in the in-progress fixture are carried into the simulation and only the remainder is simulated (λ scaled `0.55`), so the meters move on every tap of a GOAL button and reverse on Undo.
+- **Known outcomes short-circuit.** Once the final exists its two teams read `100%` and everyone else `0%`; completed semis contribute their real winners.
+- Results are memoised against a signature of active teams, round count and every fixture's score/done/penalty state, so re-renders (toss roulette, sheets opening) never re-run the simulation.
 
 ### Reordering the queue
 Tapping ▶ on an upcoming fixture promotes it: if the current match already has goals it slots in immediately **after** the live match; if the live match hasn't started, the promoted fixture **becomes** the live match. Everything renumbers.
