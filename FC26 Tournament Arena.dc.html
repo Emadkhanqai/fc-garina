@@ -163,7 +163,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
     <sc-if value="{{ tossPending }}" hint-placeholder-val="{{ false }}">
       <div data-noprint="1" style="position:relative;display:flex;gap:10px;margin-top:24px;animation:pop .4s ease">
         <button onClick="{{ rerollToss }}" style="flex:1;min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#e9edf2;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;cursor:pointer" style-active="transform:scale(.96)">&#8635; RE-ROLL</button>
-        <button onClick="{{ acceptToss }}" style="flex:2;position:relative;overflow:hidden;min-height:52px;border:none;border-radius:12px;background:linear-gradient(180deg,#d6ff5c,#a4e000 60%,#78b400);color:#0a0f05;font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 22px rgba(200,255,46,.4)" style-active="transform:scale(.96)">ACCEPT MATCH 1</button>
+        <button onClick="{{ acceptToss }}" style="flex:2;position:relative;overflow:hidden;min-height:52px;border:none;border-radius:12px;background:linear-gradient(180deg,#d6ff5c,#a4e000 60%,#78b400);color:#0a0f05;font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 22px rgba(200,255,46,.4)" style-active="transform:scale(.96)">ACCEPT</button>
       </div>
     </sc-if>
     <sc-if value="{{ tossLocked }}" hint-placeholder-val="{{ false }}">
@@ -185,7 +185,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10.5px;letter-spacing:1px;color:#0a0f05;background:{{ curA.color }};padding:4px 10px 3px 10px;transform:skewX(-10deg);margin-top:10px;box-shadow:0 0 16px {{ curA.glow }}">{{ curA.name }}</div>
       <input value="{{ curPickA }}" onChange="{{ onPickA }}" onFocus="{{ onPickAFocus }}" onBlur="{{ onPickABlur }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" autoComplete="off" autoCapitalize="characters" style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curA.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curA.color }};outline:none">
       <sc-if value="{{ pickSuggestA.open }}" hint-placeholder-val="{{ false }}">
-        <div data-noprint="1" style="position:absolute;z-index:20;top:100%;left:50%;transform:translateX(-50%);width:150px;margin-top:4px;background:#0d1118;border:1px solid {{ curA.color }};border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.55);overflow:hidden">
+        <div data-noprint="1" style="position:absolute;z-index:20;top:100%;left:50%;transform:translateX(-50%);width:150px;margin-top:4px;background:#0d1118;border:1px solid {{ curA.color }};border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.55);max-height:216px;overflow-y:auto">
           <sc-for list="{{ pickSuggestA.items }}" as="pk" hint-placeholder-count="0">
             <button onClick="{{ pk.onTap }}" style="display:block;width:100%;padding:9px 10px;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.06);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-align:center;cursor:pointer" style-active="background:rgba(255,255,255,.08)">{{ pk.v }}</button>
           </sc-for>
@@ -208,7 +208,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10.5px;letter-spacing:1px;color:#0a0f05;background:{{ curB.color }};padding:4px 10px 3px 10px;transform:skewX(-10deg);margin-top:10px;box-shadow:0 0 16px {{ curB.glow }}">{{ curB.name }}</div>
       <input value="{{ curPickB }}" onChange="{{ onPickB }}" onFocus="{{ onPickBFocus }}" onBlur="{{ onPickBBlur }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" autoComplete="off" autoCapitalize="characters" style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curB.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curB.color }};outline:none">
       <sc-if value="{{ pickSuggestB.open }}" hint-placeholder-val="{{ false }}">
-        <div data-noprint="1" style="position:absolute;z-index:20;top:100%;left:50%;transform:translateX(-50%);width:150px;margin-top:4px;background:#0d1118;border:1px solid {{ curB.color }};border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.55);overflow:hidden">
+        <div data-noprint="1" style="position:absolute;z-index:20;top:100%;left:50%;transform:translateX(-50%);width:150px;margin-top:4px;background:#0d1118;border:1px solid {{ curB.color }};border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.55);max-height:216px;overflow-y:auto">
           <sc-for list="{{ pickSuggestB.items }}" as="pk" hint-placeholder-count="0">
             <button onClick="{{ pk.onTap }}" style="display:block;width:100%;padding:9px 10px;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.06);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-align:center;cursor:pointer" style-active="background:rgba(255,255,255,.08)">{{ pk.v }}</button>
           </sc-for>
@@ -318,6 +318,9 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           <img src="{{ q.bLogo }}" alt="" style="width:30px;height:30px;object-fit:cover;border-radius:8px">
           <sc-if value="{{ q.canPromote }}" hint-placeholder-val="{{ false }}">
             <button onClick="{{ q.promote }}" data-noprint="1" aria-label="Play this match next" style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(200,255,46,.08);border:1px solid rgba(200,255,46,.4);border-radius:50%;padding:0;cursor:pointer" style-active="transform:scale(.9);background:rgba(200,255,46,.2)"><span style="display:block;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #c8ff2e;margin-left:3px"></span></button>
+          </sc-if>
+          <sc-if value="{{ q.promoteDisabled }}" hint-placeholder-val="{{ false }}">
+            <div data-noprint="1" aria-label="Match in progress — can't reorder" style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:50%;cursor:not-allowed"><span style="display:block;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #3a4550;margin-left:3px"></span></div>
           </sc-if>
           <sc-if value="{{ q.hasPicks }}" hint-placeholder-val="{{ false }}">
             <div style="flex-basis:100%;text-align:center;font-weight:700;font-size:11.5px;letter-spacing:2px;color:#8a99a8;margin-top:-2px">{{ q.picksLabel }}</div>
@@ -708,6 +711,7 @@ const TEAMS = [
   { id: 'warriors', name: 'TEAM WARRIORS', short: 'WARRIORS', players: ['Sami', 'Danish'], logo: 'logos/warriors.png', color: '#ff4b4b', tagline: 'WE FIGHT. WE WIN.' },
   { id: 'falcons', name: 'TEAM FALCONS', short: 'FALCONS', players: ['Ali', 'Abdur Rehman'], logo: 'logos/falcons.png', color: '#54e04a', tagline: 'AIM HIGH. FLY HIGHER.' }
 ];
+const DEFAULT_PICKS = ['ARGENTINA', 'BARCELONA', 'REAL MADRID', 'PSG', 'FRANCE', 'SPAIN', 'BAYERN', 'MANCHESTER CITY', 'ENGLAND'];
 const KEY = 'fc26_arena_v1';
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } },
@@ -937,14 +941,15 @@ class Component extends DCLogic {
     const i = fx.findIndex(f => f.id === fid);
     if (i < 0 || fx[i].done) return;
     const cur = this.curFix();
+    if (cur && cur.events.length > 0) return;
     const curIdx = cur ? fx.indexOf(cur) : fx.length;
-    const target = (cur && cur.events.length > 0) ? curIdx + 1 : curIdx;
+    const target = curIdx;
     if (i === target) return;
     const [f] = fx.splice(i, 1);
     fx.splice(target > i ? target : target, 0, f);
     fx.forEach((x, idx) => { x.num = idx + 1; });
     SFX.click();
-    this.toastMsg((cur && cur.events.length > 0) ? 'MOVED TO NEXT MATCH' : 'NOW THE CURRENT MATCH', '#c8ff2e');
+    this.toastMsg('NOW THE CURRENT MATCH', '#c8ff2e');
     this.setState({ fixtures: fx.slice() }, () => this.save());
   }
   setPick(side, val) {
@@ -969,9 +974,10 @@ class Component extends DCLogic {
   }
   pickSuggestions(side, typed) {
     const q = (typed || '').trim().toUpperCase();
-    const all = this.state.picks || [];
+    const learned = this.state.picks || [];
+    const all = learned.concat(DEFAULT_PICKS.filter(p => !learned.includes(p)));
     const list = q ? all.filter(p => p.includes(q) && p !== q) : all;
-    return list.slice(0, 6);
+    return list.slice(0, 9);
   }
   undoGoal = () => {
     const f = this.curFix(); if (!f || !f.events.length) return;
@@ -1335,6 +1341,7 @@ class Component extends DCLogic {
         queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS RANK 2', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
       }
     } else {
+      const matchLive = !!(cur && cur.events.length > 0);
       st.fixtures.forEach(f => {
         const s = this.score(f);
         const isCur = cur && f.id === cur.id;
@@ -1349,7 +1356,8 @@ class Component extends DCLogic {
         queueRows.push({
           real: true, placeholder: false,
           aColor, bColor, aTag, bTag,
-          canPromote: !f.done && !isCur,
+          canPromote: !f.done && !isCur && !matchLive,
+          promoteDisabled: !f.done && !isCur && matchLive,
           promote: () => this.promote(f.id),
           hasPicks: !!picks, picksLabel: picks,
           numLabel: String(f.num).padStart(2, '0'),
