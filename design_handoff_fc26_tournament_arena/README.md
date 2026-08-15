@@ -154,8 +154,8 @@ Stacked buttons, each `min-height:52px`, radius `12px`. First a **SOUND** row �
 ### B. Team Members sheet
 - Title "TEAM MEMBERS" + hint line; a mode toggle pill switches between **swap mode** (default) and **rename mode**.
 - One row per team: `42×42` crest, team name in team color, and a **✕ REMOVE / + RESTORE** button (red/lime outline).
-- Swap mode: each player is a chip (`min-height:46px`, radius `10px`, `⇅` glyph + name) that is both tappable and `draggable`. Tap one (selected: bg `rgba(200,255,46,.14)`, border `#c8ff2e`, glow), tap another to swap the two players — across teams or within one. Drag-and-drop does the same.
-- Rename mode: two text inputs per team (max 20 chars). Renaming carries that player's existing goal events to the new name. Clearing a name removes the player everywhere.
+- Swap mode: each player is a chip (`min-height:46px`, radius `10px`, `⇅` glyph + name) that is both tappable and `draggable`. Tap one (selected: bg `rgba(200,255,46,.14)`, border `#c8ff2e`, glow), tap another to swap the two players — across teams or within one. Drag-and-drop does the same. An empty slot (a player removed in rename mode) renders as a muted, non-draggable "EMPTY SLOT" chip (`rgba(255,255,255,.02)` fill, `rgba(255,255,255,.08)` border, `#5b6b7a` text) — it's still a valid tap/drop target, so a player can be swapped straight into it.
+- Rename mode: two slots per team (max 20 chars each). A filled slot is a text input plus a small `✕` remove button (`34×34`, red outline, tap clears that slot — carries goal events to an empty player name, which the roster and scorer lists then drop). An empty slot instead shows a full-width dashed `+ ADD PLAYER` button (`38px` tall, `rgba(200,255,46,.04)` fill, `1px dashed rgba(200,255,46,.35)` border, muted `#8a99a8` label); tapping it swaps in a focused text input for that slot — type a name and it commits live like any rename, or tap away with nothing typed and it reverts to the placeholder.
 - Removed team rows collapse to "TEAM REMOVED FROM TOURNAMENT".
 
 ### C. Tournament Settings sheet

@@ -467,14 +467,25 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
             </sc-if>
             <sc-if value="{{ rr.showEdit }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;gap:8px">
-                <input value="{{ rr.p1 }}" onChange="{{ rr.onP1 }}" placeholder="Player 1" maxLength="20" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:#e9edf2;outline:none">
-                <input value="{{ rr.p2 }}" onChange="{{ rr.onP2 }}" placeholder="Player 2" maxLength="20" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:#e9edf2;outline:none">
+                <sc-for list="{{ rr.slots }}" as="sl" hint-placeholder-count="2">
+                  <div style="flex:1;min-width:0">
+                    <sc-if value="{{ sl.showInput }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;align-items:center;gap:6px">
+                        <input id="{{ sl.inputId }}" value="{{ sl.name }}" onChange="{{ sl.onChange }}" onBlur="{{ sl.onBlur }}" placeholder="{{ sl.placeholder }}" maxLength="20" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:#e9edf2;outline:none">
+                        <button onClick="{{ sl.onRemove }}" aria-label="Remove player" style="flex:0 0 auto;width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,80,80,.35);background:rgba(255,80,80,.08);color:#ff7b7b;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;cursor:pointer" style-active="transform:scale(.9)">&#10005;</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ sl.showAdd }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ sl.onAddTap }}" style="width:100%;min-height:38px;box-sizing:border-box;border-radius:8px;border:1px dashed rgba(200,255,46,.35);background:rgba(200,255,46,.04);color:#8a99a8;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.96)">+ ADD PLAYER</button>
+                    </sc-if>
+                  </div>
+                </sc-for>
               </div>
             </sc-if>
             <sc-if value="{{ rr.showSwap }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;gap:8px">
                 <sc-for list="{{ rr.chips }}" as="ch" hint-placeholder-count="2">
-                  <button onClick="{{ ch.onTap }}" draggable="true" onDragStart="{{ ch.onDragStart }}" onDragOver="{{ ch.onDragOver }}" onDrop="{{ ch.onDrop }}" style="flex:1;min-width:0;min-height:46px;box-sizing:border-box;background:{{ ch.bg }};border:1px solid {{ ch.border }};border-radius:10px;padding:8px 10px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:#e9edf2;cursor:grab;box-shadow:{{ ch.shadow }}" style-active="transform:scale(.95)">
+                  <button onClick="{{ ch.onTap }}" draggable="{{ ch.draggable }}" onDragStart="{{ ch.onDragStart }}" onDragOver="{{ ch.onDragOver }}" onDrop="{{ ch.onDrop }}" style="flex:1;min-width:0;min-height:46px;box-sizing:border-box;background:{{ ch.bg }};border:1px solid {{ ch.border }};border-radius:10px;padding:8px 10px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:{{ ch.color }};cursor:{{ ch.cursor }};box-shadow:{{ ch.shadow }}" style-active="transform:scale(.95)">
                     <span style="color:#5b6b7a;font-size:13px">&#8645;</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ch.name }}</span>
                   </button>
                 </sc-for>
@@ -700,6 +711,23 @@ class Component extends DCLogic {
     const fixtures = this.state.fixtures;
     fixtures.forEach(f => f.events.forEach(e => { if (e.team === i && e.player === old) e.player = val; }));
     this.setState({ rosters, fixtures: fixtures.slice() }, () => this.save());
+  }
+  removePlayerSlot(i, slot) {
+    const name = this.players(i)[slot];
+    SFX.click();
+    this.setPlayer(i, slot, '');
+    this.toastMsg((name || 'PLAYER').toUpperCase() + ' REMOVED', '#ff6b6b');
+  }
+  addPlayerSlot(i, slot) {
+    SFX.click();
+    const id = 'rosterAdd_' + i + '_' + slot;
+    this.setState({ rosterAddSlot: { t: i, s: slot } }, () => {
+      const el = document.getElementById(id);
+      if (el) el.focus();
+    });
+  }
+  blurAddSlot(i, slot) {
+    this.setState(s => (s.rosterAddSlot && s.rosterAddSlot.t === i && s.rosterAddSlot.s === slot) ? { rosterAddSlot: null } : null);
   }
   later(fn, ms) { this._timers.push(setTimeout(fn, ms)); }
   componentWillUnmount() { this._timers.forEach(clearTimeout); }
@@ -1317,32 +1345,51 @@ class Component extends DCLogic {
       onRestoreFile: this.onRestoreFile, doPrint: this.doPrint, doReset: this.doReset,
       resetLabel: st.resetArmed ? 'TAP AGAIN TO CONFIRM RESET' : 'RESET TOURNAMENT',
       rosterOpen: !!st.rosterOpen,
-      openRoster: () => { SFX.click(); this.setState({ menuOpen: false, rosterOpen: true, swapSel: null, rosterEdit: false }); },
-      closeRoster: () => this.setState({ rosterOpen: false, swapSel: null }),
+      openRoster: () => { SFX.click(); this.setState({ menuOpen: false, rosterOpen: true, swapSel: null, rosterEdit: false, rosterAddSlot: null }); },
+      closeRoster: () => this.setState({ rosterOpen: false, swapSel: null, rosterAddSlot: null }),
       rosterEditMode: !!st.rosterEdit,
       rosterSwapMode: !st.rosterEdit,
-      rosterHint: st.rosterEdit ? 'Type to rename — goals already scored move with the new name.' : 'Tap one player, then tap another to swap their teams. Drag works too.',
+      rosterHint: st.rosterEdit ? 'Type to rename, ✕ to remove, + to bring someone new in — goals already scored move with the name.' : 'Tap one player, then tap another to swap their teams. Drag works too.',
       rosterModeLabel: st.rosterEdit ? '\u21C4 SWITCH TO SWAP MODE' : '\u270E RENAME PLAYERS',
-      toggleRosterMode: () => { SFX.click(); this.setState({ rosterEdit: !st.rosterEdit, swapSel: null }); },
+      toggleRosterMode: () => { SFX.click(); this.setState({ rosterEdit: !st.rosterEdit, swapSel: null, rosterAddSlot: null }); },
       rosterRows: TEAMS.map((t, i) => {
         const removed = !!(st.removed || {})[t.id];
         const ps = this.players(i);
         const chip = (s) => {
           const sel = st.swapSel && st.swapSel.t === i && st.swapSel.s === s;
           const other = st.swapSel && !sel;
+          const empty = !(ps[s] && ps[s].trim());
           return {
-            name: ps[s],
-            bg: sel ? 'rgba(200,255,46,.14)' : 'rgba(0,0,0,.4)',
-            border: sel ? '#c8ff2e' : other ? 'rgba(200,255,46,.35)' : 'rgba(255,255,255,.14)',
+            name: empty ? 'EMPTY SLOT' : ps[s],
+            draggable: empty ? 'false' : 'true',
+            cursor: empty ? 'default' : 'grab',
+            bg: empty ? 'rgba(255,255,255,.02)' : sel ? 'rgba(200,255,46,.14)' : 'rgba(0,0,0,.4)',
+            border: empty ? 'rgba(255,255,255,.08)' : sel ? '#c8ff2e' : other ? 'rgba(200,255,46,.35)' : 'rgba(255,255,255,.14)',
+            color: empty ? '#5b6b7a' : '#e9edf2',
             shadow: sel ? '0 0 18px rgba(200,255,46,.4)' : 'none',
             onTap: () => this.chipTap(i, s),
-            onDragStart: () => { this._dragFrom = { t: i, s }; },
+            onDragStart: empty ? () => {} : () => { this._dragFrom = { t: i, s }; },
             onDragOver: (e) => e.preventDefault(),
             onDrop: (e) => { e.preventDefault(); if (this._dragFrom) { this.swapPlayers(this._dragFrom, { t: i, s }); this._dragFrom = null; } }
           };
         };
+        const slot = (s) => {
+          const name = ps[s];
+          const has = !!(name && name.trim());
+          const adding = !!(st.rosterAddSlot && st.rosterAddSlot.t === i && st.rosterAddSlot.s === s);
+          return {
+            showInput: has || adding, showAdd: !has && !adding,
+            name: name || '', placeholder: 'Player ' + (s + 1),
+            inputId: 'rosterAdd_' + i + '_' + s,
+            onChange: (e) => this.setPlayer(i, s, e.target.value),
+            onBlur: () => this.blurAddSlot(i, s),
+            onRemove: () => this.removePlayerSlot(i, s),
+            onAddTap: () => this.addPlayerSlot(i, s)
+          };
+        };
         return {
-          logo: t.logo, name: t.name, color: t.color, p1: ps[0], p2: ps[1],
+          logo: t.logo, name: t.name, color: t.color,
+          slots: [slot(0), slot(1)],
           chips: [chip(0), chip(1)],
           removed,
           showEdit: !removed && !!st.rosterEdit,
@@ -1351,9 +1398,7 @@ class Component extends DCLogic {
           toggleLabel: removed ? '+ RESTORE' : '\u2715 REMOVE',
           toggleBg: removed ? 'rgba(200,255,46,.08)' : 'rgba(255,80,80,.08)',
           toggleBorder: removed ? 'rgba(200,255,46,.4)' : 'rgba(255,80,80,.35)',
-          toggleColor: removed ? '#c8ff2e' : '#ff7b7b',
-          onP1: (e) => this.setPlayer(i, 0, e.target.value),
-          onP2: (e) => this.setPlayer(i, 1, e.target.value)
+          toggleColor: removed ? '#c8ff2e' : '#ff7b7b'
         };
       }),
       showToss: !st.tossDone || st.lockShow,

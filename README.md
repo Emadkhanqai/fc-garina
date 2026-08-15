@@ -19,7 +19,7 @@ Event: FC26 Tournament · King's House · PS5 · prize configurable (default Rs.
 - **Team sheets** — tap a team for stats, player goals and a match-by-match history.
 - **Grand Stage** — trophy podium that becomes the champion coronation, plus an auto-opening celebration modal with confetti.
 - **Sound** — all cues synthesized in-browser (no audio files): toss ticks, goal horn, full-time whistle, champion fanfare. Toggle lives in the ⋯ menu and persists.
-- **Team management** — swap players between teams by tap or drag, rename players (goals follow the name), remove/restore teams before the toss.
+- **Team management** — swap players between teams by tap or drag, rename players (goals follow the name), remove/restore teams before the toss. In rename mode, remove a player from their slot with one tap; the slot becomes an "+ ADD PLAYER" placeholder you tap to type a new name straight in. Empty slots read clearly in swap mode too, so you can drag or tap a player straight into one.
 - **Persistence** — everything survives refresh via `localStorage`, plus JSON backup/restore and a two-tap reset.
 - **Print summary** — by fixtures prints the real UI, in colour, of exactly the three record sections stacked full-width: league table, then top scorers, then the full fixtures queue — nothing else. By team prints that team's sheet plus its match-by-match text report.
 
