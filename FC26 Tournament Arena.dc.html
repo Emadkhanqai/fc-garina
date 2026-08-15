@@ -157,15 +157,17 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
     <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;letter-spacing:3px;color:#0a0f05;background:linear-gradient(135deg,#d6ff5c,#8fce00);padding:4px 14px 3px 14px;transform:skewX(-10deg)">{{ curStage }} &#183; {{ curNum }}</div>
   </div>
   <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;padding:0 12px">
-    <div style="flex:1;min-width:0;max-width:170px;text-align:center">
+    <div style="flex:1;min-width:0;max-width:170px;text-align:center;position:relative">
       <div style="transform:skewX(-7deg);border-radius:14px;overflow:hidden;border:2px solid {{ curA.color }};box-shadow:0 0 28px {{ curA.glow }};background:#0a0d12"><img src="{{ curA.logo }}" alt="{{ curA.name }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)"></div>
       <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10.5px;letter-spacing:1px;color:#0a0f05;background:{{ curA.color }};padding:4px 10px 3px 10px;transform:skewX(-10deg);margin-top:10px;box-shadow:0 0 16px {{ curA.glow }}">{{ curA.name }}</div>
-      <datalist id="fc26PickList" data-noprint="1">
-        <sc-for list="{{ pickOptions }}" as="po" hint-placeholder-count="0">
-          <option value="{{ po.v }}"></option>
-        </sc-for>
-      </datalist>
-      <input value="{{ curPickA }}" onChange="{{ onPickA }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" list="fc26PickList" autoComplete="off" autoCapitalize="characters"style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curA.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curA.color }};outline:none">
+      <input value="{{ curPickA }}" onChange="{{ onPickA }}" onFocus="{{ onPickAFocus }}" onBlur="{{ onPickABlur }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" autoComplete="off" autoCapitalize="characters" style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curA.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curA.color }};outline:none">
+      <sc-if value="{{ pickSuggestA.open }}" hint-placeholder-val="{{ false }}">
+        <div data-noprint="1" style="position:absolute;z-index:20;top:100%;left:50%;transform:translateX(-50%);width:150px;margin-top:4px;background:#0d1118;border:1px solid {{ curA.color }};border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.55);overflow:hidden">
+          <sc-for list="{{ pickSuggestA.items }}" as="pk" hint-placeholder-count="0">
+            <button onClick="{{ pk.onTap }}" style="display:block;width:100%;padding:9px 10px;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.06);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-align:center;cursor:pointer" style-active="background:rgba(255,255,255,.08)">{{ pk.v }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
     </div>
     <div style="flex:0 0 auto;text-align:center;padding:0 4px">
       <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,59,59,.14);border:1px solid rgba(255,59,59,.5);border-radius:999px;padding:4px 12px;margin-bottom:10px">
@@ -178,10 +180,17 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
         <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:52px;line-height:1;color:#fff;text-shadow:0 0 26px {{ curB.glow }}">{{ scoreB }}</div>
       </div>
     </div>
-    <div style="flex:1;min-width:0;max-width:170px;text-align:center">
+    <div style="flex:1;min-width:0;max-width:170px;text-align:center;position:relative">
       <div style="transform:skewX(-7deg);border-radius:14px;overflow:hidden;border:2px solid {{ curB.color }};box-shadow:0 0 28px {{ curB.glow }};background:#0a0d12"><img src="{{ curB.logo }}" alt="{{ curB.name }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)"></div>
       <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10.5px;letter-spacing:1px;color:#0a0f05;background:{{ curB.color }};padding:4px 10px 3px 10px;transform:skewX(-10deg);margin-top:10px;box-shadow:0 0 16px {{ curB.glow }}">{{ curB.name }}</div>
-      <input value="{{ curPickB }}" onChange="{{ onPickB }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" list="fc26PickList" autoComplete="off" autoCapitalize="characters"style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curB.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curB.color }};outline:none">
+      <input value="{{ curPickB }}" onChange="{{ onPickB }}" onFocus="{{ onPickBFocus }}" onBlur="{{ onPickBBlur }}" placeholder="FC26 TEAM?" maxLength="16" data-noprint="1" autoComplete="off" autoCapitalize="characters" style="display:block;width:100%;max-width:150px;margin:8px auto 0 auto;box-sizing:border-box;background:rgba(0,0,0,.4);border:none;border-bottom:1px dashed {{ curB.color }};border-radius:6px 6px 0 0;padding:6px 8px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:{{ curB.color }};outline:none">
+      <sc-if value="{{ pickSuggestB.open }}" hint-placeholder-val="{{ false }}">
+        <div data-noprint="1" style="position:absolute;z-index:20;top:100%;left:50%;transform:translateX(-50%);width:150px;margin-top:4px;background:#0d1118;border:1px solid {{ curB.color }};border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.55);overflow:hidden">
+          <sc-for list="{{ pickSuggestB.items }}" as="pk" hint-placeholder-count="0">
+            <button onClick="{{ pk.onTap }}" style="display:block;width:100%;padding:9px 10px;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.06);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-align:center;cursor:pointer" style-active="background:rgba(255,255,255,.08)">{{ pk.v }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
     </div>
   </div>
 
@@ -787,6 +796,27 @@ class Component extends DCLogic {
     if (side === 'A') f.pickA = val; else f.pickB = val;
     this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
   }
+  pickFocus(side) {
+    clearTimeout(this._pickBlurT);
+    this.setState({ pickFocus: side });
+  }
+  pickBlur(side) {
+    clearTimeout(this._pickBlurT);
+    this._pickBlurT = setTimeout(() => {
+      this.setState(s => s.pickFocus === side ? { pickFocus: null } : null);
+    }, 180);
+  }
+  pickChoose(side, val) {
+    clearTimeout(this._pickBlurT);
+    this.setPick(side, val);
+    this.setState({ pickFocus: null });
+  }
+  pickSuggestions(side, typed) {
+    const q = (typed || '').trim().toUpperCase();
+    const all = this.state.picks || [];
+    const list = q ? all.filter(p => p.includes(q) && p !== q) : all;
+    return list.slice(0, 6);
+  }
   undoGoal = () => {
     const f = this.curFix(); if (!f || !f.events.length) return;
     const e = f.events.pop();
@@ -1340,9 +1370,18 @@ class Component extends DCLogic {
       curStage: cur ? cur.stage : '', curNum: cur ? 'MATCH ' + cur.num : '',
       curA: cur ? deco(cur.a) : deco(0), curB: cur ? deco(cur.b) : deco(1),
       curPickA: cur ? (cur.pickA || '') : '', curPickB: cur ? (cur.pickB || '') : '',
-      pickOptions: (st.picks || []).map(v => ({ v })),
       onPickA: (e) => this.setPick('A', e.target.value),
       onPickB: (e) => this.setPick('B', e.target.value),
+      onPickAFocus: () => this.pickFocus('A'), onPickABlur: () => this.pickBlur('A'),
+      onPickBFocus: () => this.pickFocus('B'), onPickBBlur: () => this.pickBlur('B'),
+      pickSuggestA: (() => {
+        const items = st.pickFocus === 'A' ? this.pickSuggestions('A', cur ? cur.pickA : '') : [];
+        return { open: items.length > 0, items: items.map(v => ({ v, onTap: () => this.pickChoose('A', v) })) };
+      })(),
+      pickSuggestB: (() => {
+        const items = st.pickFocus === 'B' ? this.pickSuggestions('B', cur ? cur.pickB : '') : [];
+        return { open: items.length > 0, items: items.map(v => ({ v, onTap: () => this.pickChoose('B', v) })) };
+      })(),
       scoreA: cur ? this.score(cur).a : 0, scoreB: cur ? this.score(cur).b : 0,
       recordCols, undoGoal: this.undoGoal, endGame: this.endGame,
       endLabel: cur && cur.stage === 'FINAL' ? 'END FINAL' : 'END GAME → NEXT MATCH',
