@@ -70,7 +70,7 @@ Section order top to bottom: Header → Hero → Meet the Teams → Opening Toss
 
 - **Purpose**: the dramatic moment that decides Match 1. Runs **once only**.
 - Panel: radius `20px`, border `1px rgba(200,255,46,.2)`, background `linear-gradient(180deg,#0d1118,#070a0e)`, padding `24px 14px 26px`, centered.
-- Behind: two side washes that **track the current candidates** — `radial-gradient(60% 90% at 0% 50%, <teamA tint>, transparent 60%)` and the mirror at `100% 50%` (tint = team color @13%), `transition: background .3s`; plus a center light seam (1px vertical lime gradient).
+- Behind: two side washes that **track the current candidates** — `radial-gradient(60% 90% at 0% 50%, <teamA tint>, transparent 60%)` and the mirror at `100% 50%` (tint = team color @13%), `transition: background .3s`.
 - Title chip: "OPENING TOSS" Orbitron 900 `12px` letter-spacing `4px`, `#0a0f05` on `linear-gradient(135deg,#d6ff5c,#8fce00)`, `skewX(-10deg)`.
 - Sub-line (state-driven): `RANDOM DRAW — WHO PLAYS FIRST` / `DRAWING THE OPENING FIXTURE` / `MATCH 1 IS SET` / `TWO TEAMS — STRAIGHT TO BATTLE`.
 - Two candidate panels: `flex:1; max-width:185px`, `transform: skewX(-7deg)`, radius `16px`, border `2px` team color, glow `0 0 34px` team color @45%; the crest inside is counter-skewed (`width:118%; margin-left:-9%; transform: skewX(7deg)`) so it fills the parallelogram squarely.
