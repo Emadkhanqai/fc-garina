@@ -14,7 +14,6 @@ The user writes in Roman Urdu / Hinglish. Reply in the same register, short and 
 - `index.html` — compiled standalone build for hosting. Regenerate it from the design file after changes; never hand-edit it.
 - `logos/*.png` — the five team crests (cropped from the client's crest sheet). Always use real crest images for a team, never text initials.
 - `BRIEF.md` — the original brief. It governs rules and UX principles.
-- `design_handoff_fc26_tournament_arena/README.md` — full spec; keep it in step with substantial design changes.
 
 ## Design rules
 
@@ -38,6 +37,7 @@ The user writes in Roman Urdu / Hinglish. Reply in the same register, short and 
 
 - Everything client-side: `localStorage` key `fc26_arena_v1` through a try/catch-safe wrapper; JSON backup/restore; no backend.
 - Sound is synthesized with Web Audio — no audio assets. The ⋯ menu toggles it; the choice persists.
+- Opening toss settles into a RE-ROLL / ACCEPT MATCH 1 choice before locking — nothing generates until accepted.
 - Preload all crests on mount, otherwise fast toss cycling paints a stale logo next to a new team name.
 - Touch targets ≥ 44px (goal buttons 56px), respect `env(safe-area-inset-bottom)`, no horizontal overflow at iPhone widths, `auto-fit`/`minmax` grids instead of breakpoints.
 - Print: the real UI prints in colour (`print-color-adjust:exact`). `[data-noprint]` hides only operator controls, `[data-printonly]` reveals the text appendix, `[data-printblock]` keeps cards whole, and `[data-printsheet]` un-fixes the team sheet for by-team prints.

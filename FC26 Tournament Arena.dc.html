@@ -9,6 +9,22 @@
 <x-dc>
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FC26 Tournament Arena</title>
+<meta name="description" content="Live FC26 tournament control room for a private 5-team night — opening toss, live per-player scoring, standings, and the champion celebration.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FC26 Tournament Arena">
+<meta property="og:description" content="Live FC26 tournament control room — toss, live scoring, standings, champion celebration.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FC26 Tournament Arena">
+<meta name="twitter:description" content="Live FC26 tournament control room — toss, live scoring, standings, champion celebration.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8ff2e'/%3E%3Ctext x='32' y='43' font-family='Verdana,sans-serif' font-size='27' font-weight='700' text-anchor='middle' fill='%230a0f05'%3E26%3C/text%3E%3C/svg%3E">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PM1R9LNMNP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PM1R9LNMNP');
+</script>
 <meta name="ext-resource-dependency" content="logos/eclipse.png">
 <meta name="ext-resource-dependency" content="logos/royals.png">
 <meta name="ext-resource-dependency" content="logos/raptors.png">
@@ -25,6 +41,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes pop{0%{transform:scale(.75);opacity:0}60%{transform:scale(1.05);opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes glowpulse{0%,100%{box-shadow:0 0 16px rgba(200,255,46,.5),0 0 2px rgba(200,255,46,.9)}50%{box-shadow:0 0 44px rgba(200,255,46,.95),0 0 4px rgba(200,255,46,1)}}
+@keyframes borderstrike{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 @keyframes slideup{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
 @keyframes toastin{0%{transform:translateY(24px);opacity:0}100%{transform:translateY(0);opacity:1}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
@@ -57,7 +74,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(48px,13vw,88px);line-height:.95;letter-spacing:2px;margin-top:8px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.55))"><span style="color:#f2f6fa;text-shadow:0 0 30px rgba(255,255,255,.2)">FC</span><span style="background:linear-gradient(180deg,#e8ffa0,#c8ff2e 50%,#6fa800);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 44px rgba(200,255,46,.4)">26</span></div>
   <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(16px,4.4vw,24px);letter-spacing:8px;color:#0a0f05;background:linear-gradient(100deg,#e9edf2,#c9d4de);padding:5px 18px 4px 22px;margin-top:10px;transform:skewX(-10deg);box-shadow:4px 4px 0 rgba(200,255,46,.55)">TOURNAMENT</div>
   <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:16px;font-weight:700;font-size:15px;letter-spacing:2px;color:#9fb0c0">
-    <span>{{ eventDate }}</span><span style="color:#c8ff2e">&#9670;</span><span>KING'S HOUSE</span><span style="color:#c8ff2e">&#9670;</span><span>PS5</span>
+    <span>{{ eventDate }}</span><span style="color:#c8ff2e">&#9670;</span><span>PS5</span>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:20px">
     <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:10px 6px"><div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:20px;color:#c8ff2e">{{ statTeams }}</div><div style="font-size:12px;letter-spacing:2px;color:#9fb0c0;font-weight:600">TEAMS</div></div>
@@ -103,6 +120,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 <!-- OPENING TOSS -->
 <sc-if value="{{ showToss }}" hint-placeholder-val="{{ true }}">
   <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.2);background:linear-gradient(180deg,#0d1118,#070a0e);padding:24px 14px 26px 14px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;border-radius:20px;padding:2.5px;box-sizing:border-box;background:conic-gradient(from 0deg,transparent 0%,rgba(200,255,46,.5) 4%,rgba(200,255,46,1) 9%,#f4ffd0 13%,rgba(200,255,46,1) 17%,rgba(200,255,46,.5) 22%,transparent 30%,transparent 100%);filter:drop-shadow(0 0 6px rgba(200,255,46,.9));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderstrike 2.8s linear infinite;pointer-events:none"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(60% 90% at 0% 50%,{{ slotA.tint }},transparent 60%),radial-gradient(60% 90% at 100% 50%,{{ slotB.tint }},transparent 60%);pointer-events:none;transition:background .3s"></div>
     <div style="position:relative">
       <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;letter-spacing:4px;color:#0a0f05;background:linear-gradient(135deg,#d6ff5c,#8fce00);padding:5px 16px 4px 16px;transform:skewX(-10deg)">OPENING TOSS</div>
@@ -141,6 +159,12 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
     </sc-if>
     <sc-if value="{{ tossRolling }}" hint-placeholder-val="{{ false }}">
       <div style="margin-top:24px;padding:16px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;letter-spacing:4px;color:#c8ff2e;animation:pulse 1s ease-in-out infinite">SHOWDOWN RUNNING</div>
+    </sc-if>
+    <sc-if value="{{ tossPending }}" hint-placeholder-val="{{ false }}">
+      <div data-noprint="1" style="position:relative;display:flex;gap:10px;margin-top:24px;animation:pop .4s ease">
+        <button onClick="{{ rerollToss }}" style="flex:1;min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#e9edf2;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;cursor:pointer" style-active="transform:scale(.96)">&#8635; RE-ROLL</button>
+        <button onClick="{{ acceptToss }}" style="flex:2;position:relative;overflow:hidden;min-height:52px;border:none;border-radius:12px;background:linear-gradient(180deg,#d6ff5c,#a4e000 60%,#78b400);color:#0a0f05;font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 22px rgba(200,255,46,.4)" style-active="transform:scale(.96)">ACCEPT MATCH 1</button>
+      </div>
     </sc-if>
     <sc-if value="{{ tossLocked }}" hint-placeholder-val="{{ false }}">
       <div style="margin-top:24px;display:inline-block;padding:14px 34px;border-radius:14px;border:1px solid rgba(200,255,46,.6);background:rgba(200,255,46,.1);font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;letter-spacing:4px;color:#c8ff2e;animation:pop .5s ease">MATCH 1 LOCKED</div>
@@ -333,6 +357,42 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       <div style="position:relative;font-weight:700;font-size:19px;color:#e9edf2;margin-top:4px;letter-spacing:2px">{{ champ.players }}</div>
       <div style="position:relative;font-weight:700;font-size:13px;letter-spacing:2px;color:#8a7a45;margin-top:8px">{{ champ.finalLine }}</div>
       <div style="position:relative;display:inline-block;margin-top:16px;background:linear-gradient(180deg,#ffe9a0,#ffd54a 60%,#c99a00);border-radius:999px;padding:10px 28px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:2px;color:#241d08;box-shadow:0 0 34px rgba(255,213,74,.5)">RS. {{ prizeLabel }} WINNERS</div>
+      <div style="position:relative;margin-top:30px;padding-top:22px;border-top:1px solid rgba(255,213,74,.15)">
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px">
+          <span style="width:22px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,213,74,.4))"></span>
+          <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;color:#8a7a45">FINAL STANDINGS</span>
+          <span style="width:22px;height:1px;background:linear-gradient(270deg,transparent,rgba(255,213,74,.4))"></span>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:flex-end;gap:6px">
+          <div style="display:flex;flex-direction:column;align-items:center;width:88px">
+            <img src="{{ podium.second.logo }}" alt="{{ podium.second.name }}" style="width:48px;height:48px;object-fit:cover;border-radius:11px;border:2px solid {{ podium.second.color }};box-shadow:0 0 14px {{ podium.second.glow }}">
+            <div style="font-weight:700;font-size:10.5px;color:#e9edf2;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:84px">{{ podium.second.name }}</div>
+            <div style="width:100%;height:34px;margin-top:8px;background:linear-gradient(180deg,rgba(200,210,220,.18),rgba(200,210,220,.04));border:1px solid rgba(200,210,220,.28);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;color:#c9d4de">2</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;width:96px">
+            <img src="{{ champ.logo }}" alt="{{ champ.name }}" style="width:58px;height:58px;object-fit:cover;border-radius:13px;border:2px solid #ffd54a;box-shadow:0 0 20px rgba(255,213,74,.5)">
+            <div style="font-weight:700;font-size:11px;color:#ffd54a;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92px">{{ champ.short }}</div>
+            <div style="width:100%;height:52px;margin-top:8px;background:linear-gradient(180deg,rgba(255,213,74,.26),rgba(255,213,74,.06));border:1px solid rgba(255,213,74,.4);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;color:#ffd54a">1</div>
+          </div>
+          <sc-if value="{{ podium.thirdSingle }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;width:88px">
+              <img src="{{ podium.third.logo }}" alt="{{ podium.third.name }}" style="width:44px;height:44px;object-fit:cover;border-radius:10px;border:2px solid {{ podium.third.color }};box-shadow:0 0 12px {{ podium.third.glow }}">
+              <div style="font-weight:700;font-size:10.5px;color:#e9edf2;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:84px">{{ podium.third.name }}</div>
+              <div style="width:100%;height:24px;margin-top:8px;background:linear-gradient(180deg,rgba(255,213,74,.1),rgba(255,213,74,.03));border:1px solid rgba(255,213,74,.18);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:rgba(255,213,74,.7)">3</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ podium.thirdJoint }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;width:88px">
+              <div style="display:flex;gap:4px">
+                <img src="{{ podium.thirdA.logo }}" alt="{{ podium.thirdA.name }}" style="width:32px;height:32px;object-fit:cover;border-radius:8px;border:2px solid {{ podium.thirdA.color }}">
+                <img src="{{ podium.thirdB.logo }}" alt="{{ podium.thirdB.name }}" style="width:32px;height:32px;object-fit:cover;border-radius:8px;border:2px solid {{ podium.thirdB.color }}">
+              </div>
+              <div style="font-weight:700;font-size:9.5px;color:#e9edf2;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:84px">{{ podium.thirdJointLabel }}</div>
+              <div style="width:100%;height:24px;margin-top:8px;background:linear-gradient(180deg,rgba(255,213,74,.1),rgba(255,213,74,.03));border:1px solid rgba(255,213,74,.18);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:rgba(255,213,74,.7)">3</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
     </div>
   </sc-if>
   <sc-if value="{{ noChampion }}" hint-placeholder-val="{{ true }}">
@@ -355,7 +415,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 <!-- PRINT SUMMARY -->
 <div data-printonly="{{ printTextReport }}" style="display:none;break-before:page;page-break-before:always;padding-top:8px;color:#e9edf2;font-family:'Rajdhani',sans-serif">
   <h1 style="font-size:22px;margin:0 0 4px 0">{{ printTitle }}</h1>
-  <p style="margin:0 0 14px 0;font-size:13px">FC26 Tournament &#183; {{ eventDate }} &#183; King's House &#183; PS5 &#183; Prize Rs. {{ prizeLabel }}</p>
+  <p style="margin:0 0 14px 0;font-size:13px">FC26 Tournament &#183; {{ eventDate }} &#183; PS5 &#183; Prize Rs. {{ prizeLabel }}</p>
   <sc-if value="{{ printFixturesMode }}" hint-placeholder-val="{{ true }}">
     <h2 style="font-size:15px;margin:14px 0 6px 0">League Table</h2>
     <sc-for list="{{ printTable }}" as="r" hint-placeholder-count="5">
@@ -595,6 +655,42 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
     <div style="position:relative;font-weight:700;font-size:18px;color:#e9edf2;margin-top:4px;letter-spacing:2px">{{ champ.players }}</div>
     <div style="position:relative;font-weight:700;font-size:12px;letter-spacing:2px;color:#8a7a45;margin-top:8px">{{ champ.finalLine }}</div>
     <div style="position:relative;display:inline-block;margin-top:14px;background:linear-gradient(180deg,#ffe9a0,#ffd54a 60%,#c99a00);border-radius:999px;padding:10px 26px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;color:#241d08;box-shadow:0 0 34px rgba(255,213,74,.5)">RS. {{ prizeLabel }} WINNERS</div>
+    <div style="position:relative;margin-top:26px;padding-top:20px;border-top:1px solid rgba(255,213,74,.15)">
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px">
+        <span style="width:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,213,74,.4))"></span>
+        <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:4px;color:#8a7a45">FINAL STANDINGS</span>
+        <span style="width:20px;height:1px;background:linear-gradient(270deg,transparent,rgba(255,213,74,.4))"></span>
+      </div>
+      <div style="display:flex;justify-content:center;align-items:flex-end;gap:6px">
+        <div style="display:flex;flex-direction:column;align-items:center;width:80px">
+          <img src="{{ podium.second.logo }}" alt="{{ podium.second.name }}" style="width:42px;height:42px;object-fit:cover;border-radius:10px;border:2px solid {{ podium.second.color }};box-shadow:0 0 12px {{ podium.second.glow }}">
+          <div style="font-weight:700;font-size:10px;color:#e9edf2;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:76px">{{ podium.second.name }}</div>
+          <div style="width:100%;height:30px;margin-top:8px;background:linear-gradient(180deg,rgba(200,210,220,.18),rgba(200,210,220,.04));border:1px solid rgba(200,210,220,.28);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;color:#c9d4de">2</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;width:88px">
+          <img src="{{ champ.logo }}" alt="{{ champ.name }}" style="width:50px;height:50px;object-fit:cover;border-radius:12px;border:2px solid #ffd54a;box-shadow:0 0 18px rgba(255,213,74,.5)">
+          <div style="font-weight:700;font-size:10.5px;color:#ffd54a;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:84px">{{ champ.short }}</div>
+          <div style="width:100%;height:46px;margin-top:8px;background:linear-gradient(180deg,rgba(255,213,74,.26),rgba(255,213,74,.06));border:1px solid rgba(255,213,74,.4);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:#ffd54a">1</div>
+        </div>
+        <sc-if value="{{ podium.thirdSingle }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;width:80px">
+            <img src="{{ podium.third.logo }}" alt="{{ podium.third.name }}" style="width:38px;height:38px;object-fit:cover;border-radius:9px;border:2px solid {{ podium.third.color }};box-shadow:0 0 10px {{ podium.third.glow }}">
+            <div style="font-weight:700;font-size:10px;color:#e9edf2;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:76px">{{ podium.third.name }}</div>
+            <div style="width:100%;height:22px;margin-top:8px;background:linear-gradient(180deg,rgba(255,213,74,.1),rgba(255,213,74,.03));border:1px solid rgba(255,213,74,.18);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;color:rgba(255,213,74,.7)">3</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ podium.thirdJoint }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;width:80px">
+            <div style="display:flex;gap:4px">
+              <img src="{{ podium.thirdA.logo }}" alt="{{ podium.thirdA.name }}" style="width:28px;height:28px;object-fit:cover;border-radius:7px;border:2px solid {{ podium.thirdA.color }}">
+              <img src="{{ podium.thirdB.logo }}" alt="{{ podium.thirdB.name }}" style="width:28px;height:28px;object-fit:cover;border-radius:7px;border:2px solid {{ podium.thirdB.color }}">
+            </div>
+            <div style="font-weight:700;font-size:9px;color:#e9edf2;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:76px">{{ podium.thirdJointLabel }}</div>
+            <div style="width:100%;height:22px;margin-top:8px;background:linear-gradient(180deg,rgba(255,213,74,.1),rgba(255,213,74,.03));border:1px solid rgba(255,213,74,.18);border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;color:rgba(255,213,74,.7)">3</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
   </div>
 </sc-if>
 
@@ -643,6 +739,26 @@ const SFX = {
   },
   tick() { this.tone(1500, 0.045, 'square', 0.05); },
   click() { this.tone(750, 0.05, 'triangle', 0.08); },
+  sweep(f, d, type, v, when) {
+    const c = this.ac(); if (!c || !this.on) return;
+    const t = c.currentTime + (when || 0);
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sawtooth';
+    o.frequency.setValueAtTime(f[0], t);
+    o.frequency.exponentialRampToValueAtTime(f[1], t + d);
+    o.connect(g); g.connect(c.destination);
+    const vv = (v || 0.14) * this.vol;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(Math.max(vv, 0.0002), t + d * 0.55);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.start(t); o.stop(t + d + 0.05);
+  },
+  showdown() {
+    this.sweep([140, 780], 0.38, 'sawtooth', 0.16);
+    this.sweep([90, 260], 0.4, 'sine', 0.22);
+    this.tone(1320, 0.14, 'square', 0.09, 0.36);
+    this.tone(1760, 0.16, 'square', 0.08, 0.4);
+  },
   lock() { this.tone(170, 0.4, 'sawtooth', 0.28); this.tone(85, 0.55, 'sine', 0.32); this.tone(1046, 0.3, 'square', 0.1, 0.08); },
   goal() { [523, 659, 784, 1046].forEach((f, i) => this.tone(f, 0.2, 'sawtooth', 0.16, i * 0.07)); this.tone(65, 0.45, 'sine', 0.3); },
   undo() { this.tone(320, 0.1, 'triangle', 0.1); this.tone(210, 0.16, 'triangle', 0.1, 0.09); },
@@ -655,7 +771,7 @@ class Component extends DCLogic {
     const fresh = { tossDone: false, fixtures: [], champion: null, sound: true, rosters: {}, removed: {}, prize: 5000, minMatches: 0, picks: [] };
     const saved = store.get();
     this.state = Object.assign(fresh, saved || {}, {
-      rolling: false, lockShow: false, slotA: 0, slotB: 1,
+      rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false
     });
     this._timers = [];
@@ -757,8 +873,8 @@ class Component extends DCLogic {
     return order.map((p, i) => ({ id: 'L' + (i + 1), stage: 'LEAGUE', num: i + 1, a: p[0], b: p[1], events: [], done: false, pen: null, pickA: '', pickB: '' }));
   }
   startToss = () => {
-    if (this.state.tossDone || this.state.rolling) return;
-    SFX.ac(); SFX.click();
+    if (this.state.tossDone || this.state.rolling || this.state.tossPending) return;
+    SFX.ac(); SFX.showdown();
     const act = this.active();
     if (act.length === 2) {
       const fixtures = this.genFixtures(act[0], act[1]);
@@ -768,7 +884,10 @@ class Component extends DCLogic {
       this.later(() => this.setState({ lockShow: false }), 2400);
       return;
     }
-    this.setState({ rolling: true });
+    this.runRoulette();
+  };
+  runRoulette() {
+    this.setState({ rolling: true, tossPending: false });
     const delays = [];
     const push = (n, d) => { for (let i = 0; i < n; i++) delays.push(d); };
     push(11, 95); push(5, 185); push(8, 88); push(4, 240);
@@ -779,13 +898,23 @@ class Component extends DCLogic {
       this.later(() => { const [a, b] = this.randPair(); this.setState({ slotA: a, slotB: b }); SFX.tick(); }, t);
     });
     this.later(() => {
-      const a = this.state.slotA, b = this.state.slotB;
-      const fixtures = this.genFixtures(a, b);
-      this.setState({ tossDone: true, rolling: false, lockShow: true, fixtures }, () => this.save());
-      SFX.lock();
-      this.toastMsg('MATCH 1 LOCKED', '#c8ff2e');
-      this.later(() => this.setState({ lockShow: false }), 3000);
+      SFX.click();
+      this.setState({ rolling: false, tossPending: true });
     }, t + 420);
+  }
+  rerollToss = () => {
+    if (this.state.tossDone || this.state.rolling) return;
+    SFX.ac(); SFX.click();
+    this.runRoulette();
+  };
+  acceptToss = () => {
+    if (this.state.tossDone || !this.state.tossPending) return;
+    const a = this.state.slotA, b = this.state.slotB;
+    const fixtures = this.genFixtures(a, b);
+    this.setState({ tossDone: true, rolling: false, tossPending: false, lockShow: true, fixtures }, () => this.save());
+    SFX.lock();
+    this.toastMsg('MATCH 1 LOCKED', '#c8ff2e');
+    this.later(() => this.setState({ lockShow: false }), 3000);
   };
   // ---------- match ops ----------
   curFix() { return this.state.fixtures.find(f => !f.done) || null; }
@@ -929,6 +1058,21 @@ class Component extends DCLogic {
     };
     rows.sort((x, y) => y.pts - x.pts || y.gd - x.gd || y.gf - x.gf || h2h(x, y) || x.idx - y.idx);
     return rows;
+  }
+  podium() {
+    const fx = this.state.fixtures;
+    const fin = fx.find(f => f.stage === 'FINAL' && f.done);
+    if (!fin) return null;
+    const first = this.winner(fin);
+    const second = fin.a === first ? fin.b : fin.a;
+    const sfs = fx.filter(f => f.stage === 'SEMI-FINAL' && f.done);
+    let thirds;
+    if (sfs.length === 2) {
+      thirds = sfs.map(f => { const w = this.winner(f); return f.a === w ? f.b : f.a; });
+    } else {
+      thirds = this.active().filter(i => i !== first && i !== second);
+    }
+    return { first, second, thirds };
   }
   playerGoals() {
     const map = {};
@@ -1318,9 +1462,25 @@ class Component extends DCLogic {
         finalLine = 'DEFEATED ' + team(oppIdx).short + ' ' + my + ' - ' + op + (fin.pen != null ? (fin.penA != null ? ' (' + myPen + '-' + opPen + ' PENS)' : ' ON PENALTIES') : '') + ' IN THE FINAL';
       }
       champ = {
-        name: team(st.champion).name, logo: team(st.champion).logo,
+        name: team(st.champion).name, short: team(st.champion).short, logo: team(st.champion).logo,
         color: team(st.champion).color, glow: glow(team(st.champion).color, 0.5),
         players: this.playersOf(st.champion).join(' & '), finalLine
+      };
+    }
+    // podium
+    const pod = this.podium();
+    let podium = null;
+    if (pod) {
+      const mk = idx => ({ logo: team(idx).logo, name: team(idx).short, color: team(idx).color, glow: glow(team(idx).color, 0.4) });
+      podium = {
+        second: mk(pod.second),
+        hasThird: pod.thirds.length > 0,
+        thirdSingle: pod.thirds.length === 1,
+        thirdJoint: pod.thirds.length === 2,
+        third: pod.thirds.length === 1 ? mk(pod.thirds[0]) : { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        thirdA: pod.thirds.length === 2 ? mk(pod.thirds[0]) : { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        thirdB: pod.thirds.length === 2 ? mk(pod.thirds[1]) : { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        thirdJointLabel: pod.thirds.length === 2 ? team(pod.thirds[0]).short + ' & ' + team(pod.thirds[1]).short : ''
       };
     }
     // print
@@ -1401,14 +1561,15 @@ class Component extends DCLogic {
         };
       }),
       showToss: !st.tossDone || st.lockShow,
-      tossReady: !st.tossDone && !st.rolling,
-      tossRolling: st.rolling, tossLocked: st.lockShow,
-      tossSub: st.lockShow ? 'MATCH 1 IS SET' : st.rolling ? 'DRAWING THE OPENING FIXTURE' : act.length === 2 ? 'TWO TEAMS — STRAIGHT TO BATTLE' : 'RANDOM DRAW — WHO PLAYS FIRST',
+      tossReady: !st.tossDone && !st.rolling && !st.tossPending,
+      tossRolling: st.rolling, tossLocked: st.lockShow, tossPending: !!st.tossPending && !st.lockShow,
+      tossSub: st.lockShow ? 'MATCH 1 IS SET' : st.tossPending ? 'LOCK THIS MATCHUP?' : st.rolling ? 'DRAWING THE OPENING FIXTURE' : act.length === 2 ? 'TWO TEAMS — STRAIGHT TO BATTLE' : 'RANDOM DRAW — WHO PLAYS FIRST',
       tossBtnLabel: act.length === 2 ? 'START TOURNAMENT' : 'START SHOWDOWN',
-      tossMystery: !st.tossDone && !st.rolling && act.length > 2,
-      tossReveal: st.rolling || st.tossDone || act.length === 2,
-      slotA: (!st.tossDone && !st.rolling) ? (act.length === 2 ? deco(act[0]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' }) : deco(st.slotA),
-      slotB: (!st.tossDone && !st.rolling) ? (act.length === 2 ? deco(act[1]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' }) : deco(st.slotB),
+      tossMystery: !st.tossDone && !st.rolling && !st.tossPending && act.length > 2,
+      tossReveal: st.rolling || st.tossPending || st.tossDone || act.length === 2,
+      rerollToss: this.rerollToss, acceptToss: this.acceptToss,
+      slotA: (!st.tossDone && !st.rolling && !st.tossPending) ? (act.length === 2 ? deco(act[0]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' }) : deco(st.slotA),
+      slotB: (!st.tossDone && !st.rolling && !st.tossPending) ? (act.length === 2 ? deco(act[1]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' }) : deco(st.slotB),
       startToss: this.startToss,
       hasCurrent: !!cur && !st.lockShow,
       curStage: cur ? cur.stage : '', curNum: cur ? 'MATCH ' + cur.num : '',
@@ -1460,7 +1621,15 @@ class Component extends DCLogic {
       champModalOpen: !!champ && !!st.champModal,
       closeChampModal: () => this.setState({ champModal: false }),
       stageAwaitLabel: stageIdx >= 3 ? 'THE FINAL DECIDES IT ALL' : stageIdx === 2 ? 'SEMI-FINALS IN PROGRESS' : 'THE THRONE AWAITS',
-      champ: champ || { name: '', logo: TEAMS[0].logo, color: '#000', glow: 'transparent', players: '' },
+      champ: champ || { name: '', short: '', logo: TEAMS[0].logo, color: '#000', glow: 'transparent', players: '' },
+      podium: podium || {
+        second: { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        hasThird: false, thirdSingle: false, thirdJoint: false,
+        third: { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        thirdA: { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        thirdB: { logo: TEAMS[0].logo, name: '', color: '#000', glow: 'transparent' },
+        thirdJointLabel: ''
+      },
       penaltyOpen: !!pen,
       confirmPens: this.confirmPens,
       penTeams: pen ? [['penA', pen.a], ['penB', pen.b]].map(([key, ti]) => ({
