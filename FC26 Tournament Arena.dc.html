@@ -265,6 +265,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       <button onClick="{{ undoGoal }}" style="flex:1;min-width:140px;min-height:50px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#c9d4de;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.97)">UNDO LAST GOAL</button>
       <button onClick="{{ endGame }}" style="flex:2;min-width:200px;min-height:50px;border-radius:12px;border:none;background:linear-gradient(180deg,#d6ff5c,#8fce00);color:#0a0f05;font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 22px rgba(200,255,46,.35)" style-active="transform:scale(.97)">{{ endLabel }}</button>
     </div>
+    <input value="{{ curNote }}" onChange="{{ setNote }}" placeholder="Note — what happened in this one?" maxLength="90" data-noprint="1" style="display:block;width:100%;box-sizing:border-box;margin-top:12px;min-height:44px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;color:#c9d4de;outline:none">
     <button onClick="{{ askRestartMatch }}" style="margin-top:10px;width:100%;min-height:44px;border-radius:10px;border:1px dashed rgba(255,107,107,.35);background:transparent;color:rgba(255,123,123,.75);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;cursor:pointer" style-active="transform:scale(.97)">&#8635; RESTART THIS MATCH</button>
   </div>
 </div>
@@ -354,6 +355,9 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           </sc-if>
           <sc-if value="{{ q.hasPicks }}" hint-placeholder-val="{{ false }}">
             <div style="flex-basis:100%;text-align:center;font-weight:700;font-size:11.5px;letter-spacing:2px;color:#8a99a8;margin-top:-2px">{{ q.picksLabel }}</div>
+          </sc-if>
+          <sc-if value="{{ q.hasNote }}" hint-placeholder-val="{{ false }}">
+            <div style="flex-basis:100%;text-align:center;font-weight:600;font-size:12.5px;color:#7d8b99;font-style:italic;margin-top:-2px">{{ q.noteLabel }}</div>
           </sc-if>
         </sc-if>
         <sc-if value="{{ q.placeholder }}" hint-placeholder-val="{{ false }}">
@@ -1339,6 +1343,11 @@ class Component extends DCLogic {
     if (side === 'A') f.pickA = val; else f.pickB = val;
     this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
   }
+  setNote = (e) => {
+    const f = this.curFix(); if (!f) return;
+    f.note = e.target.value.slice(0, 90);
+    this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
+  };
   pickFocus(side) {
     clearTimeout(this._pickBlurT);
     this.setState({ pickFocus: side });
@@ -2148,6 +2157,7 @@ class Component extends DCLogic {
           canEdit: !!f.done,
           edit: () => this.askEditFix(f.id),
           hasPicks: !!picks, picksLabel: picks,
+          hasNote: !!f.note, noteLabel: f.note || '',
           numLabel: String(f.num).padStart(2, '0'),
           stageShort: f.stage === 'LEAGUE' ? 'LGE' : f.stage === 'SEMI-FINAL' ? 'SF' : 'FINAL',
           numColor: isCur ? '#c8ff2e' : f.done ? '#5b6b7a' : '#9fb0c0',
@@ -2325,7 +2335,7 @@ class Component extends DCLogic {
       const s = this.score(f);
       const pen = f.pen != null ? ' (' + team(f.pen).short + ' won' + (f.penA != null ? ' ' + f.penA + '-' + f.penB : '') + ' on pens)' : '';
       const pk = (f.pickA || f.pickB) ? ' [' + (f.pickA || '?') + ' vs ' + (f.pickB || '?') + ']' : '';
-      return { line: 'M' + f.num + ' ' + f.stage + ': ' + team(f.a).short + ' ' + s.a + ' - ' + s.b + ' ' + team(f.b).short + pen + pk };
+      return { line: 'M' + f.num + ' ' + f.stage + ': ' + team(f.a).short + ' ' + s.a + ' - ' + s.b + ' ' + team(f.b).short + pen + pk + (f.note ? ' — ' + f.note : '') };
     });
     const printScorers = scorers.filter(s => s.goals > 0).map(s => ({ line: s.rank + '. ' + s.name + ' — ' + s.goals }));
     const stageIdx = champ ? 4 : st.fixtures.some(f => f.stage === 'FINAL') ? 3 : st.fixtures.some(f => f.stage === 'SEMI-FINAL') ? 2 : 1;
@@ -2502,6 +2512,7 @@ class Component extends DCLogic {
       curStage: cur ? cur.stage : '', curNum: cur ? 'MATCH ' + cur.num : '',
       curA: cur ? deco(cur.a) : deco(0), curB: cur ? deco(cur.b) : deco(1),
       curPickA: cur ? (cur.pickA || '') : '', curPickB: cur ? (cur.pickB || '') : '',
+      curNote: cur ? (cur.note || '') : '', setNote: this.setNote,
       onPickA: (e) => this.setPick('A', e.target.value),
       onPickB: (e) => this.setPick('B', e.target.value),
       onPickAFocus: () => this.pickFocus('A'), onPickABlur: () => this.pickBlur('A'),
