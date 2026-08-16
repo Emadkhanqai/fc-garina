@@ -502,14 +502,87 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"></path><path d="m7 8 5-5 5 5"></path><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
         SHARE THE BOARD
       </button>
+      <button onClick="{{ openHall }}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:12px;border:1px solid rgba(255,213,74,.32);background:rgba(255,213,74,.05);color:#ffd54a;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.98)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffd54a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"></path><path d="M17 5h3v2a3 3 0 0 1-3 3"></path><path d="M7 5H4v2a3 3 0 0 0 3 3"></path><path d="M10 20h4"></path><path d="M12 14v6"></path></svg>
+        HALL OF FAME
+      </button>
       <button onClick="{{ openRoster }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(200,255,46,.3);background:rgba(200,255,46,.05);color:#c8ff2e;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer">EDIT TEAM MEMBERS</button>
       <button onClick="{{ openSettings }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer">TOURNAMENT SETTINGS</button>
       <button onClick="{{ doBackup }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer">BACKUP — EXPORT JSON</button>
       <button onClick="{{ doRestore }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer">RESTORE — IMPORT JSON</button>
       <button onClick="{{ doPrint }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e9edf2;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer">PRINT SUMMARY</button>
       <button onClick="{{ doReset }}" style="min-height:52px;border-radius:12px;border:1px solid rgba(255,80,80,.4);background:rgba(255,80,80,.08);color:#ff7b7b;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer">{{ resetLabel }}</button>
+      <sc-if value="{{ resetArchivesNote }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;color:#ffd54a;margin-top:-2px">{{ resetArchiveLabel }} is saved to the Hall of Fame first.</div>
+      </sc-if>
     </div>
     <input id="fc26RestoreInput" type="file" accept=".json,application/json" onChange="{{ onRestoreFile }}" style="display:none">
+  </div>
+</sc-if>
+
+<sc-if value="{{ hallOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeHall }}" data-noprint="1" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:60"></div>
+  <div data-noprint="1" style="position:fixed;left:0;right:0;bottom:0;z-index:61;background:#0c0f14;border-radius:20px 20px 0 0;border-top:1px solid rgba(255,213,74,.3);padding:18px 18px calc(18px + env(safe-area-inset-bottom)) 18px;animation:slideup .25s ease;max-width:560px;margin:0 auto;max-height:86vh;overflow-y:auto;overscroll-behavior:contain">
+    <div style="width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:0 auto 16px auto"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:12px;height:12px;background:linear-gradient(135deg,#ffd54a,#c99700);transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:4px;color:#ffd54a">HALL OF FAME</span></div>
+      <sc-if value="{{ hallHasAny }}" hint-placeholder-val="{{ true }}">
+        <span style="font-weight:700;font-size:11px;letter-spacing:1.5px;color:#5b6b7a">{{ hallCount }}</span>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ hallEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:20px;border:1px dashed rgba(255,213,74,.25);border-radius:16px;padding:26px 18px;text-align:center">
+        <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;color:#8a99a8">NO TITLES YET</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;line-height:1.5;color:#5b6b7a;margin-top:8px">Whoever wins your next final lands here when the tournament is reset.</div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hallHasAny }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+        <sc-for list="{{ hallTitles }}" as="t" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid {{ t.glow }};border-radius:999px;padding:6px 14px 6px 6px">
+            <img src="{{ t.logo }}" alt="" style="width:26px;height:26px;object-fit:cover;border-radius:50%">
+            <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;color:{{ t.color }}">{{ t.short }}</span>
+            <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;color:#ffd54a">{{ t.count }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin-top:20px"><span style="width:10px;height:10px;background:#5b6b7a;transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:3px;color:#8a99a8">ALL-TIME SCORERS</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px">
+        <sc-for list="{{ hallTopScorers }}" as="s" hint-placeholder-count="3">
+          <span style="display:inline-flex;align-items:baseline;gap:6px;font-weight:700;font-size:14px;color:{{ s.color }}">{{ s.name }}<span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:#c8ff2e">{{ s.goals }}</span></span>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
+        <sc-for list="{{ hallRows }}" as="h" hint-placeholder-count="2">
+          <div style="position:relative;border:1px solid {{ h.glow }};border-radius:16px;background:linear-gradient(180deg,rgba(255,213,74,.05),rgba(255,255,255,.015));padding:14px 14px 15px 14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <span style="font-weight:700;font-size:10.5px;letter-spacing:2px;color:#5b6b7a">{{ h.dateLabel }}</span>
+              <button onClick="{{ h.remove }}" aria-label="Remove from the hall" style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:transparent;border:1px solid rgba(255,255,255,.1);color:#5b6b7a;cursor:pointer" style-active="transform:scale(.9);color:#ff7b7b;border-color:rgba(255,107,107,.4)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
+              <img src="{{ h.logo }}" alt="" style="flex:0 0 auto;width:52px;height:52px;object-fit:cover;border-radius:12px;box-shadow:0 0 18px {{ h.glow }}">
+              <div style="min-width:0">
+                <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:1px;color:{{ h.color }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</div>
+                <div style="font-weight:600;font-size:13.5px;color:#c9d4de;margin-top:2px">{{ h.players }}</div>
+              </div>
+            </div>
+            <sc-if value="{{ h.hasFinal }}" hint-placeholder-val="{{ true }}">
+              <div style="margin-top:10px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e9edf2">{{ h.finalLine }}</div>
+            </sc-if>
+            <div style="margin-top:6px;font-weight:600;font-size:11px;letter-spacing:1.2px;color:#5b6b7a">{{ h.metaLabel }}</div>
+            <sc-if value="{{ h.hasTop }}" hint-placeholder-val="{{ true }}">
+              <div style="margin-top:4px;font-weight:600;font-size:11px;letter-spacing:1.2px;color:#8a99a8">TOP SCORER {{ h.topLabel }}</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
   </div>
 </sc-if>
 
@@ -928,6 +1001,13 @@ const TEAMS = [
 ];
 const DEFAULT_PICKS = ['ARGENTINA', 'BARCELONA', 'BAYERN', 'ENGLAND', 'FRANCE', 'MANCHESTER CITY', 'PSG', 'REAL MADRID', 'SPAIN'];
 const KEY = 'fc26_arena_v1';
+// The roll of honour lives in its own key: resetting the tournament clears
+// the board, and the record of who won it must not go with it.
+const HALLKEY = 'fc26_arena_hall_v1';
+const hallStore = {
+  get() { try { const v = JSON.parse(localStorage.getItem(HALLKEY)); return Array.isArray(v) ? v : []; } catch (e) { return []; } },
+  set(v) { try { localStorage.setItem(HALLKEY, JSON.stringify(v)); } catch (e) {} }
+};
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } },
   set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} },
@@ -996,7 +1076,8 @@ class Component extends DCLogic {
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
-      editFixId: null, updateReady: false, ogArm: false, clockTick: 0, tvOpen: false
+      editFixId: null, updateReady: false, ogArm: false, clockTick: 0, tvOpen: false,
+      hall: hallStore.get(), hallOpen: false
     });
     this._timers = [];
   }
@@ -1804,7 +1885,7 @@ class Component extends DCLogic {
   closeMenu = () => this.setState({ menuOpen: false, resetArmed: false });
   doBackup = () => {
     const { tossDone, fixtures, champion, rosters, removed, prize, minMatches, picks } = this.state;
-    const blob = new Blob([JSON.stringify({ app: 'fc26-arena', v: 1, tossDone, fixtures, champion, rosters, removed, prize, minMatches, picks, exported: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ app: 'fc26-arena', v: 1, tossDone, fixtures, champion, rosters, removed, prize, minMatches, picks, hall: this.state.hall, exported: new Date().toISOString() }, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'fc26-tournament-backup.json';
@@ -1868,7 +1949,16 @@ class Component extends DCLogic {
       try {
         const d = JSON.parse(reader.result);
         if (d.app !== 'fc26-arena' || !Array.isArray(d.fixtures)) throw new Error('bad');
-        this.setState({ tossDone: !!d.tossDone, fixtures: d.fixtures, champion: d.champion ?? null, rosters: d.rosters || {}, removed: d.removed || {}, prize: d.prize ?? 5000, minMatches: d.minMatches || 0, picks: d.picks || [], menuOpen: false, editFixId: null }, () => this.save());
+        // Merge the roll rather than replace it, so restoring an older backup
+        // cannot erase tournaments won since it was taken.
+        let hall = this.state.hall;
+        if (Array.isArray(d.hall)) {
+          const seen = {};
+          hall = hall.concat(d.hall).filter(h => h && h.id && !seen[h.id] && (seen[h.id] = 1))
+            .sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 50);
+          hallStore.set(hall);
+        }
+        this.setState({ tossDone: !!d.tossDone, fixtures: d.fixtures, champion: d.champion ?? null, rosters: d.rosters || {}, removed: d.removed || {}, prize: d.prize ?? 5000, minMatches: d.minMatches || 0, picks: d.picks || [], menuOpen: false, editFixId: null, hall }, () => this.save());
         this.toastMsg('TOURNAMENT RESTORED', '#c8ff2e');
         if (d.champion != null) this.later(() => this.confetti(), 500);
       } catch (e) { this.toastMsg('INVALID BACKUP FILE', '#ff6b6b'); }
@@ -1879,11 +1969,51 @@ class Component extends DCLogic {
   doPrint = () => { SFX.click(); this.setState({ menuOpen: false, printOpen: true }); };
   printFixturesGo = () => { this.setState({ printOpen: false, printMode: 'fixtures', printTeam: null, modalTeam: null }); setTimeout(() => window.print(), 300); };
   printTeamGo(i) { this.setState({ printOpen: false, printMode: 'team', printTeam: i, modalTeam: i }); setTimeout(() => { window.print(); this.setState({ modalTeam: null }); }, 400); }
+  // ---------- hall of fame ----------
+  // Only finished tournaments are worth keeping; an abandoned board has no
+  // winner to record and would just be noise on the roll.
+  archiveTournament() {
+    const st = this.state;
+    if (st.champion == null) return null;
+    const rows = this.standings();
+    const goals = this.playerGoals();
+    const fin = st.fixtures.find(f => f.stage === 'FINAL' && f.done);
+    let finalLine = '', runnerUp = null;
+    if (fin) {
+      const s = this.score(fin);
+      const loser = this.winner(fin) === fin.a ? fin.b : fin.a;
+      runnerUp = TEAMS[loser].id;
+      finalLine = TEAMS[fin.a].short + ' ' + s.a + '-' + s.b + ' ' + TEAMS[fin.b].short + (fin.penA != null ? ' (' + fin.penA + '-' + fin.penB + ' P)' : '');
+    }
+    return {
+      id: 'T' + Date.now(),
+      date: new Date().toISOString(),
+      champion: TEAMS[st.champion].id,
+      players: this.playersOf(st.champion).join(' & '),
+      runnerUp, finalLine,
+      prize: Number(st.prize) || 0,
+      matches: st.fixtures.filter(f => f.done).length,
+      table: rows.map(r => ({ id: TEAMS[r.idx].id, pts: r.pts, p: r.p, gd: r.gd })),
+      scorers: Object.keys(goals).filter(n => goals[n] > 0).map(n => ({ name: n, goals: goals[n] })).sort((a, b) => b.goals - a.goals)
+    };
+  }
+  openHall = () => { SFX.click(); this.setState({ hallOpen: true, menuOpen: false }); };
+  closeHall = () => this.setState({ hallOpen: false });
+  removeHall(id) {
+    const next = this.state.hall.filter(h => h.id !== id);
+    hallStore.set(next);
+    SFX.undo();
+    this.toastMsg('REMOVED FROM THE HALL', '#9fb0c0');
+    this.setState({ hall: next });
+  }
   doReset = () => {
     if (!this.state.resetArmed) { this.setState({ resetArmed: true }); return; }
+    const entry = this.archiveTournament();
+    let hall = this.state.hall;
+    if (entry) { hall = [entry].concat(hall).slice(0, 50); hallStore.set(hall); }
     store.del();
-    this.setState({ tossDone: false, fixtures: [], champion: null, menuOpen: false, resetArmed: false, penaltyFor: null, modalTeam: null });
-    this.toastMsg('TOURNAMENT RESET', '#ff6b6b');
+    this.setState({ tossDone: false, fixtures: [], champion: null, menuOpen: false, resetArmed: false, penaltyFor: null, modalTeam: null, hall });
+    this.toastMsg(entry ? 'SAVED TO THE HALL OF FAME' : 'TOURNAMENT RESET', entry ? '#ffd54a' : '#ff6b6b');
   };
   printTeamVals(cur, standings, goals) {
     const ti = this.state.printTeam;
@@ -2180,6 +2310,8 @@ class Component extends DCLogic {
       menuOpen: st.menuOpen, doBackup: this.doBackup, doRestore: this.doRestore,
       onRestoreFile: this.onRestoreFile, doPrint: this.doPrint, doReset: this.doReset,
       resetLabel: st.resetArmed ? 'TAP AGAIN TO CONFIRM RESET' : 'RESET TOURNAMENT',
+      resetArchivesNote: st.champion != null,
+      resetArchiveLabel: st.champion != null ? TEAMS[st.champion].short : '',
       rosterOpen: !!st.rosterOpen,
       openRoster: () => { SFX.click(); this.setState({ menuOpen: false, rosterOpen: true, swapSel: null, rosterEdit: false, rosterAddSlot: null }); },
       closeRoster: () => this.setState({ rosterOpen: false, swapSel: null, rosterAddSlot: null }),
@@ -2265,6 +2397,35 @@ class Component extends DCLogic {
         return { open: items.length > 0, items: items.map(v => ({ v, onTap: () => this.pickChoose('B', v) })) };
       })(),
       scoreA: cur ? this.score(cur).a : 0, scoreB: cur ? this.score(cur).b : 0,
+      hallOpen: !!st.hallOpen, openHall: this.openHall, closeHall: this.closeHall,
+      hallEmpty: st.hall.length === 0, hallHasAny: st.hall.length > 0,
+      hallCount: st.hall.length === 1 ? '1 TOURNAMENT' : st.hall.length + ' TOURNAMENTS',
+      hallTitles: (() => {
+        const n = {};
+        st.hall.forEach(h => { n[h.champion] = (n[h.champion] || 0) + 1; });
+        return TEAMS.filter(t => n[t.id]).sort((a, b) => n[b.id] - n[a.id])
+          .map(t => ({ logo: t.logo, short: t.short, color: t.color, glow: glow(t.color, 0.4), count: String(n[t.id]) }));
+      })(),
+      hallTopScorers: (() => {
+        const g = {};
+        st.hall.forEach(h => (h.scorers || []).forEach(s => { g[s.name] = (g[s.name] || 0) + s.goals; }));
+        return Object.keys(g).sort((a, b) => g[b] - g[a] || a.localeCompare(b)).slice(0, 5)
+          .map((n, i) => ({ name: n, goals: String(g[n]), color: i === 0 ? '#ffd54a' : '#9fb0c0' }));
+      })(),
+      hallRows: st.hall.map(h => {
+        const t = TEAMS.find(x => x.id === h.champion) || TEAMS[0];
+        const ru = h.runnerUp ? TEAMS.find(x => x.id === h.runnerUp) : null;
+        const top = (h.scorers || [])[0];
+        return {
+          id: h.id, logo: t.logo, name: t.name, color: t.color, glow: glow(t.color, 0.4),
+          players: h.players || '',
+          dateLabel: new Date(h.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase(),
+          hasFinal: !!h.finalLine, finalLine: h.finalLine || '',
+          metaLabel: 'RS. ' + (h.prize || 0).toLocaleString('en-US') + ' · ' + h.matches + ' MATCHES' + (ru ? ' · RUNNER-UP ' + ru.short : ''),
+          hasTop: !!top, topLabel: top ? top.name + ' — ' + top.goals + (top.goals === 1 ? ' GOAL' : ' GOALS') : '',
+          remove: () => this.removeHall(h.id)
+        };
+      }),
       tvOpen: !!st.tvOpen, openTV: this.openTV, closeTV: this.closeTV,
       tvHasMatch: !!cur, tvNoMatch: !cur,
       tvStage: cur ? (cur.stage === 'LEAGUE' ? 'LEAGUE · MATCH ' + cur.num : cur.stage) : '',
