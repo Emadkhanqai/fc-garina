@@ -2344,8 +2344,9 @@ class Component extends DCLogic {
       const matchLive = !!(cur && cur.events.length > 0);
       // Only the result that was just entered can be fixed. Anything older is
       // history the rest of the board has already been built on, and a mistake
-      // that far back is a reset, not an edit.
-      const lastDone = st.fixtures.filter(f => f.done).slice(-1)[0] || null;
+      // that far back is a reset, not an edit. Once the final is played the
+      // tournament is closed and nothing on the board is editable.
+      const lastDone = st.champion != null ? null : (st.fixtures.filter(f => f.done).slice(-1)[0] || null);
       st.fixtures.forEach(f => {
         const s = this.score(f);
         const isCur = cur && f.id === cur.id;
