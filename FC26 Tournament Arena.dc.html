@@ -285,7 +285,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:#e9edf2">{{ r.pts }}</div>
         </div>
       </sc-for>
-      <div style="padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:1px;color:#5b6b7a">TOP 4 QUALIFY FOR SEMI-FINALS</div>
+      <div style="padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:1px;color:#5b6b7a">{{ qualifyNote }}</div>
     </div>
   </div>
   <div>
@@ -595,6 +595,19 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   </div>
 </sc-if>
 
+<sc-if value="{{ endConfirm }}" hint-placeholder-val="{{ false }}">
+  <div data-noprint="1" style="position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:71;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div style="background:#0a0f05;border:1px solid rgba(200,255,46,.4);border-radius:20px;padding:26px 22px;max-width:380px;width:100%;text-align:center;animation:pop .3s ease">
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:2px;color:#c8ff2e">{{ endConfirmTitle }}</div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;line-height:1.5;color:#9fb0c0;margin-top:12px">{{ endConfirmBody }}</div>
+      <div style="display:flex;gap:10px;margin-top:22px">
+        <button onClick="{{ cancelEndGame }}" style="flex:1;min-height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#c9d4de;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.96)">CANCEL</button>
+        <button onClick="{{ confirmEndGame }}" style="flex:1;min-height:48px;border-radius:12px;border:none;background:linear-gradient(180deg,#d6ff5c,#8fce00);color:#0a0f05;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:1.5px;cursor:pointer" style-active="transform:scale(.96)">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
 <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closeModal }}" data-noprint="1" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50"></div>
   <div data-printsheet="1" style="position:fixed;left:0;right:0;bottom:0;z-index:51;background:#0c1016;border-radius:22px 22px 0 0;border-top:1px solid rgba(255,255,255,.15);max-height:86vh;overflow-y:auto;padding:16px 16px calc(24px + env(safe-area-inset-bottom)) 16px;animation:slideup .28s ease;max-width:640px;margin:0 auto">
@@ -790,7 +803,7 @@ class Component extends DCLogic {
     const saved = store.get();
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
-      menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false
+      menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false
     });
     this._timers = [];
   }
@@ -1017,8 +1030,16 @@ class Component extends DCLogic {
   };
   endGame = () => {
     const f = this.curFix(); if (!f) return;
+    SFX.click();
+    this.setState({ endConfirm: true });
+  };
+  cancelEndGame = () => { SFX.click(); this.setState({ endConfirm: false }); };
+  confirmEndGame = () => {
+    const f = this.curFix();
+    if (!f) { this.setState({ endConfirm: false }); return; }
     const s = this.score(f);
-    if (f.stage !== 'LEAGUE' && s.a === s.b) { SFX.click(); this.setState({ penaltyFor: f.id, penA: 0, penB: 0 }); return; }
+    if (f.stage !== 'LEAGUE' && s.a === s.b) { SFX.click(); this.setState({ endConfirm: false, penaltyFor: f.id, penA: 0, penB: 0 }); return; }
+    this.setState({ endConfirm: false });
     this.completeFix(f, null);
   };
   confirmPens = () => {
@@ -1044,10 +1065,13 @@ class Component extends DCLogic {
     const leagueDone = fx.filter(x => x.stage === 'LEAGUE').every(x => x.done);
     if (leagueDone && !fx.some(x => x.stage === 'SEMI-FINAL') && !fx.some(x => x.stage === 'FINAL')) {
       const st = this.standings();
-      if (st.length >= 4) {
+      if (st.length >= 5) {
         fx.push({ id: 'SF1', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[0].idx, b: st[3].idx, events: [], done: false, pen: null });
         fx.push({ id: 'SF2', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[1].idx, b: st[2].idx, events: [], done: false, pen: null });
         this.later(() => this.toastMsg('SEMI-FINALS SET', '#c8ff2e'), 1200);
+      } else if (st.length === 4) {
+        fx.push({ id: 'SF1', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[1].idx, b: st[2].idx, events: [], done: false, pen: null });
+        this.later(() => this.toastMsg('SEMI-FINAL SET — RANK 1 BYES TO THE FINAL', '#c8ff2e'), 1200);
       } else {
         fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: st[0].idx, b: st[1].idx, events: [], done: false, pen: null });
         this.later(() => this.toastMsg('THE FINAL IS SET', '#ffd54a'), 1200);
@@ -1056,6 +1080,10 @@ class Component extends DCLogic {
     const sfs = fx.filter(x => x.stage === 'SEMI-FINAL');
     if (sfs.length === 2 && sfs.every(x => x.done) && !fx.some(x => x.stage === 'FINAL')) {
       fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: this.winner(sfs[0]), b: this.winner(sfs[1]), events: [], done: false, pen: null });
+      this.later(() => this.toastMsg('THE FINAL IS SET', '#ffd54a'), 1200);
+    } else if (sfs.length === 1 && sfs[0].done && !fx.some(x => x.stage === 'FINAL')) {
+      const byeIdx = this.standings()[0].idx;
+      fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: byeIdx, b: this.winner(sfs[0]), events: [], done: false, pen: null });
       this.later(() => this.toastMsg('THE FINAL IS SET', '#ffd54a'), 1200);
     }
     let champion = this.state.champion;
@@ -1536,10 +1564,13 @@ class Component extends DCLogic {
     const queueRows = [];
     if (!st.tossDone) {
       for (let i = 1; i <= leagueCount * this.rounds(); i++) queueRows.push({ real: false, placeholder: true, numLabel: String(i).padStart(2, '0'), stageShort: 'LGE', numColor: '#43515f', phLabel: 'AWAITING DRAW', bg: 'rgba(255,255,255,.02)', border: 'rgba(255,255,255,.06)' });
-      if (act.length >= 4) {
+      if (act.length >= 5) {
         queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 1 VS RANK 4', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
         queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 2), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
         queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 3), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'SF1 WINNER VS SF2 WINNER', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
+      } else if (act.length === 4) {
+        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 2), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS SF WINNER', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
       } else {
         queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS RANK 2', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
       }
@@ -1576,11 +1607,13 @@ class Component extends DCLogic {
       const hasSF = st.fixtures.some(f => f.stage === 'SEMI-FINAL');
       const hasF = st.fixtures.some(f => f.stage === 'FINAL');
       const lgN = st.fixtures.filter(f => f.stage === 'LEAGUE').length;
-      if (!hasSF && act.length >= 4) {
+      if (!hasSF && act.length >= 5) {
         queueRows.push({ real: false, placeholder: true, numLabel: String(lgN + 1), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 1 VS RANK 4', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
         queueRows.push({ real: false, placeholder: true, numLabel: String(lgN + 2), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
+      } else if (!hasSF && act.length === 4) {
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgN + 1), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
       }
-      if (!hasF) queueRows.push({ real: false, placeholder: true, numLabel: String(lgN + (act.length >= 4 ? 3 : 1)), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: act.length >= 4 ? 'SF1 WINNER VS SF2 WINNER' : 'RANK 1 VS RANK 2', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
+      if (!hasF) queueRows.push({ real: false, placeholder: true, numLabel: String(lgN + (act.length >= 5 ? 3 : act.length === 4 ? 2 : 1)), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: act.length >= 5 ? 'SF1 WINNER VS SF2 WINNER' : act.length === 4 ? 'RANK 1 VS SF WINNER' : 'RANK 1 VS RANK 2', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
     }
     // standings rows
     const played = standings.some(r => r.p > 0);
@@ -1804,6 +1837,11 @@ class Component extends DCLogic {
       askRestartMatch: this.askRestartMatch,
       restartConfirm: !!st.restartConfirm,
       cancelRestartMatch: this.cancelRestartMatch, confirmRestartMatch: this.confirmRestartMatch,
+      qualifyNote: act.length >= 5 ? 'TOP 4 QUALIFY FOR SEMI-FINALS' : act.length === 4 ? 'TOP 3 QUALIFY — RANK 1 BYES TO THE FINAL' : act.length === 3 ? 'TOP 2 QUALIFY — STRAIGHT TO THE FINAL' : 'WINNER TAKES THE FINAL',
+      endConfirm: !!st.endConfirm,
+      endConfirmTitle: cur && cur.stage === 'FINAL' ? 'END THIS FINAL?' : 'END THIS GAME?',
+      endConfirmBody: cur && cur.stage === 'FINAL' ? 'This will lock the score and crown the champion. Make sure the score is correct.' : 'This will lock the score and move on to the next match. Make sure the score is correct.',
+      cancelEndGame: this.cancelEndGame, confirmEndGame: this.confirmEndGame,
       hasNext: !!next && !st.lockShow,
       nextStage: next ? next.stage : '', nextNum: next ? 'MATCH ' + next.num : '',
       nextA: next ? deco(next.a) : deco(0), nextB: next ? deco(next.b) : deco(1),
