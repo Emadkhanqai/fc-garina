@@ -426,6 +426,27 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           </sc-if>
         </div>
       </div>
+      <sc-if value="{{ hasAwards }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,213,74,.15)">
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px">
+            <span style="width:22px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,213,74,.4))"></span>
+            <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;color:#8a7a45">NIGHT'S AWARDS</span>
+            <span style="width:22px;height:1px;background:linear-gradient(270deg,transparent,rgba(255,213,74,.4))"></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+            <sc-for list="{{ awards }}" as="aw" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:11px;text-align:left;background:rgba(255,255,255,.03);border:1px solid rgba(255,213,74,.2);border-radius:14px;padding:11px 13px">
+                <img src="{{ aw.logo }}" alt="" style="flex:0 0 auto;width:36px;height:36px;object-fit:cover;border-radius:10px;box-shadow:0 0 14px {{ aw.glow }}">
+                <div style="min-width:0">
+                  <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:1.2px;white-space:nowrap;color:#8a7a45">{{ aw.title }}</div>
+                  <div style="font-weight:700;font-size:14px;color:#e9edf2;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ aw.who }}</div>
+                  <div style="font-weight:600;font-size:11.5px;color:{{ aw.color }};margin-top:1px">{{ aw.detail }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
     </div>
   </sc-if>
   <sc-if value="{{ noChampion }}" hint-placeholder-val="{{ true }}">
@@ -777,6 +798,19 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
         </div>
       </sc-for>
     </div>
+    <sc-if value="{{ modal.hasRivals }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:10px;margin-top:18px"><span style="width:12px;height:12px;background:{{ modal.color }};transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;color:#8a99a8">HEAD TO HEAD</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+        <sc-for list="{{ modal.rivals }}" as="rv" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:8px 12px;box-shadow:inset 3px 0 0 {{ rv.edgeColor }}">
+            <img src="{{ rv.logo }}" alt="" style="width:28px;height:28px;object-fit:cover;border-radius:8px">
+            <div style="flex:1;min-width:0;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rv.short }}</div>
+            <div style="flex:0 0 auto;font-weight:700;font-size:12px;letter-spacing:1px;color:{{ rv.edgeColor }}">{{ rv.record }}</div>
+            <div style="flex:0 0 auto;min-width:52px;text-align:right;font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;color:#9fb0c0">{{ rv.goalsLabel }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
     <div style="display:flex;align-items:center;gap:10px;margin-top:18px"><span style="width:12px;height:12px;background:{{ modal.color }};transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;color:#8a99a8">LEAGUE MATCHES</span></div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
       <sc-for list="{{ modal.history }}" as="h" hint-placeholder-count="4">
@@ -1574,10 +1608,18 @@ class Component extends DCLogic {
       for (let r = 0; r < rd; r++) for (let x = 0; x < act.length; x++) for (let y = x + 1; y < act.length; y++) pending.push({ a: act[x], b: act[y], ga: 0, gb: 0, part: 1 });
     }
     const sfs = fx.filter(f => f.stage === 'SEMI-FINAL');
+    // With four teams the league winner byes into the final and only one semi
+    // is played, so the simulation has to follow that bracket too — otherwise
+    // the chances shown contradict the fixtures on screen.
+    const byeIdx = sfs.length === 1 ? this.standings()[0].idx : null;
     const ITER = 6000;
     for (let it = 0; it < ITER; it++) {
       let f1, f2;
-      if (sfs.length === 2) {
+      if (sfs.length === 1) {
+        const f = sfs[0], s = this.score(f);
+        f1 = byeIdx;
+        f2 = f.done ? this.winner(f) : ko(f.a, f.b, s.a, s.b, f.events.length ? 0.55 : 1);
+      } else if (sfs.length === 2) {
         const w = sfs.map(f => {
           if (f.done) return this.winner(f);
           const s = this.score(f);
@@ -1595,7 +1637,8 @@ class Component extends DCLogic {
           if (g[0] > g[1]) A.pts += 3; else if (g[1] > g[0]) B.pts += 3; else { A.pts++; B.pts++; }
         });
         rows.sort((x, y) => y.pts - x.pts || y.gd - x.gd || y.gf - x.gf || x.idx - y.idx);
-        if (act.length >= 4) { f1 = ko(rows[0].idx, rows[3].idx, 0, 0, 1); f2 = ko(rows[1].idx, rows[2].idx, 0, 0, 1); }
+        if (act.length >= 5) { f1 = ko(rows[0].idx, rows[3].idx, 0, 0, 1); f2 = ko(rows[1].idx, rows[2].idx, 0, 0, 1); }
+        else if (act.length === 4) { f1 = rows[0].idx; f2 = ko(rows[1].idx, rows[2].idx, 0, 0, 1); }
         else { f1 = rows[0].idx; f2 = rows[1].idx; }
       }
       out[f1]++; out[f2]++;
@@ -2184,6 +2227,30 @@ class Component extends DCLogic {
         ],
         wLabel: row.w + 'W', dLabel: row.d + 'D', lLabel: row.l + 'L', gfga: row.gf + ' GF / ' + row.ga + ' GA',
         playerGoals: this.playersOf(mt).map(p => ({ name: p, goals: goals[p] || 0 })),
+        hasRivals: st.fixtures.some(f => f.done && (f.a === mt || f.b === mt)),
+        // Head-to-head is already the last tiebreak in the table but was never
+        // visible; this is the same record, spelled out.
+        rivals: (() => {
+          const rows = act.filter(i => i !== mt).map(oi => {
+            let w = 0, d = 0, l = 0, gf = 0, ga = 0, p = 0;
+            st.fixtures.filter(f => f.done && ((f.a === mt && f.b === oi) || (f.a === oi && f.b === mt))).forEach(f => {
+              const s = this.score(f);
+              const mine = f.a === mt ? s.a : s.b, opp = f.a === mt ? s.b : s.a;
+              p++; gf += mine; ga += opp;
+              const won = this.winner(f) === mt;
+              if (mine > opp || (mine === opp && f.pen != null && won)) w++;
+              else if (mine < opp || (mine === opp && f.pen != null)) l++;
+              else d++;
+            });
+            return { oi, p, w, d, l, gf, ga };
+          }).filter(r => r.p > 0);
+          return rows.map(r => ({
+            logo: TEAMS[r.oi].logo, short: TEAMS[r.oi].short, played: r.p,
+            record: r.w + 'W ' + r.d + 'D ' + r.l + 'L',
+            goalsLabel: r.gf + ' - ' + r.ga,
+            edgeColor: r.w > r.l ? '#54e04a' : r.w < r.l ? '#ff6b6b' : '#9fb0c0'
+          }));
+        })(),
         history: st.fixtures.filter(f => f.stage === 'LEAGUE' && (f.a === mt || f.b === mt)).map(f => {
           const s = this.score(f);
           const isCur = cur && f.id === cur.id;
@@ -2278,6 +2345,57 @@ class Component extends DCLogic {
         })) : []
       };
     };
+    // Awards read off finished matches only, and any category with nothing to
+    // celebrate (no goals scored, nothing conceded) is left out rather than
+    // shown empty.
+    const awards = (() => {
+      const done = st.fixtures.filter(f => f.done);
+      if (!done.length) return [];
+      const list = [];
+      const boot = act.flatMap(i => this.playersOf(i).map(p => ({ p, i, g: goals[p] || 0 })))
+        .sort((x, y) => y.g - x.g || x.p.localeCompare(y.p))[0];
+      if (boot && boot.g > 0) list.push({
+        title: 'GOLDEN BOOT', who: boot.p, detail: boot.g + (boot.g === 1 ? ' goal' : ' goals'),
+        logo: team(boot.i).logo, glow: glow(team(boot.i).color, 0.45), color: '#ffd54a'
+      });
+      const conceded = {}, clean = {};
+      act.forEach(i => { conceded[i] = 0; clean[i] = 0; });
+      done.forEach(f => {
+        const s = this.score(f);
+        if (conceded[f.a] == null || conceded[f.b] == null) return;
+        conceded[f.a] += s.b; conceded[f.b] += s.a;
+        if (s.b === 0) clean[f.a]++;
+        if (s.a === 0) clean[f.b]++;
+      });
+      const played = {};
+      act.forEach(i => played[i] = done.filter(f => f.a === i || f.b === i).length);
+      const wall = act.filter(i => played[i] > 0).sort((x, y) => conceded[x] - conceded[y] || y - x)[0];
+      if (wall != null) list.push({
+        title: 'BEST DEFENCE', who: team(wall).short, detail: conceded[wall] + ' conceded',
+        logo: team(wall).logo, glow: glow(team(wall).color, 0.45), color: '#54e04a'
+      });
+      const sheets = act.filter(i => clean[i] > 0).sort((x, y) => clean[y] - clean[x])[0];
+      if (sheets != null) list.push({
+        title: 'CLEAN SHEETS', who: team(sheets).short, detail: clean[sheets] + (clean[sheets] === 1 ? ' shutout' : ' shutouts'),
+        logo: team(sheets).logo, glow: glow(team(sheets).color, 0.45), color: '#c8ff2e'
+      });
+      let big = null;
+      done.forEach(f => {
+        const s = this.score(f);
+        const m = Math.abs(s.a - s.b);
+        if (m > 0 && (!big || m > big.m)) big = { m, f, s };
+      });
+      if (big) {
+        const wi = big.s.a > big.s.b ? big.f.a : big.f.b;
+        const li = wi === big.f.a ? big.f.b : big.f.a;
+        list.push({
+          title: 'BIGGEST WIN', who: team(wi).short,
+          detail: Math.max(big.s.a, big.s.b) + '-' + Math.min(big.s.a, big.s.b) + ' v ' + team(li).short,
+          logo: team(wi).logo, glow: glow(team(wi).color, 0.45), color: '#9fb0c0'
+        });
+      }
+      return list;
+    })();
     const pen = st.penaltyFor ? st.fixtures.find(f => f.id === st.penaltyFor) : null;
     const editF = st.editFixId ? st.fixtures.find(f => f.id === st.editFixId) : null;
     const editDrop = editF ? this.dropForEdit(editF, st.fixtures) : [];
@@ -2397,6 +2515,7 @@ class Component extends DCLogic {
         return { open: items.length > 0, items: items.map(v => ({ v, onTap: () => this.pickChoose('B', v) })) };
       })(),
       scoreA: cur ? this.score(cur).a : 0, scoreB: cur ? this.score(cur).b : 0,
+      awards, hasAwards: awards.length > 0,
       hallOpen: !!st.hallOpen, openHall: this.openHall, closeHall: this.closeHall,
       hallEmpty: st.hall.length === 0, hallHasAny: st.hall.length > 0,
       hallCount: st.hall.length === 1 ? '1 TOURNAMENT' : st.hall.length + ' TOURNAMENTS',
