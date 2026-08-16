@@ -58,19 +58,8 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 </style>
 </helmet>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#0a0f05"/><rect x="14" y="14" width="172" height="172" rx="24" fill="#0e1a06"/><text x="100" y="118" font-family="Verdana,sans-serif" font-size="58" font-weight="bold" text-anchor="middle" fill="#c8ff2e">26</text></svg></template>
-<div data-printroot="1" style="max-width:820px;margin:0 auto;padding:0 14px 60px 14px">
+<div data-printroot="1" style="max-width:820px;margin:0 auto;padding:14px 14px 60px 14px">
 <div data-printmain="1">
-
-<!-- HEADER -->
-<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 2px 10px 2px">
-  <div style="display:flex;align-items:center;gap:10px">
-    <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#c8ff2e,#7ac800);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;color:#0a0f05">26</div>
-    <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;color:#e9edf2">FC26 TOURNAMENT ARENA</div>
-  </div>
-  <div data-noprint="1" style="display:flex;align-items:center;gap:8px">
-    <button onClick="{{ toggleMenu }}" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e9edf2;border-radius:8px;padding:4px 12px;font-size:20px;line-height:1.2;cursor:pointer">&#8943;</button>
-  </div>
-</div>
 
 <!-- HERO -->
 <div data-noprint="1" style="position:relative;overflow:hidden;border-radius:26px;border:1px solid rgba(200,255,46,.4);background:radial-gradient(120% 150% at 50% -25%,#141c08 0%,#090d11 52%,#05070a 100%);padding:34px 18px 26px 18px;text-align:center;box-shadow:0 0 42px -14px rgba(200,255,46,.4),inset 0 1px 0 rgba(255,255,255,.05)">
@@ -78,6 +67,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   <div style="position:absolute;top:0;left:0;width:150px;height:126px;background:repeating-linear-gradient(135deg,transparent 0 13px,rgba(200,255,46,.3) 13px 16px,transparent 16px 44px);clip-path:polygon(0 0,100% 0,0 100%);pointer-events:none"></div>
   <div style="position:absolute;bottom:0;right:0;width:150px;height:126px;background:repeating-linear-gradient(135deg,transparent 0 13px,rgba(200,255,46,.3) 13px 16px,transparent 16px 44px);clip-path:polygon(100% 0,100% 100%,0 100%);pointer-events:none"></div>
   <div style="position:absolute;inset:0;background:radial-gradient(38% 34% at 4% 2%,rgba(200,255,46,.13),transparent 70%),radial-gradient(38% 34% at 96% 98%,rgba(200,255,46,.13),transparent 70%);pointer-events:none"></div>
+  <button onClick="{{ toggleMenu }}" aria-label="Open menu" style="position:absolute;top:12px;right:12px;z-index:3;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:#c9d4de;font-size:20px;line-height:1;cursor:pointer;backdrop-filter:blur(6px)" style-active="transform:scale(.94);background:rgba(200,255,46,.12);border-color:rgba(200,255,46,.4);color:#c8ff2e">&#8943;</button>
   <div style="position:relative;display:flex;justify-content:center;align-items:center;gap:clamp(6px,2.4vw,12px);font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(9.5px,2.6vw,12px);letter-spacing:clamp(2.5px,1.4vw,6px);white-space:nowrap;color:#c8ff2e"><span style="flex:none;width:clamp(14px,5vw,26px);height:2px;background:linear-gradient(90deg,transparent,#c8ff2e)"></span>PLAY. COMPETE. WIN.<span style="flex:none;width:clamp(14px,5vw,26px);height:2px;background:linear-gradient(270deg,transparent,#c8ff2e)"></span></div>
   <div style="position:relative;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(48px,13vw,88px);line-height:.95;letter-spacing:2px;margin-top:12px"><span style="background:linear-gradient(180deg,#ffffff 0%,#eef3f8 30%,#a8b3c0 60%,#727e8b 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 rgba(0,0,0,.9)) drop-shadow(0 7px 9px rgba(0,0,0,.85))">FC</span><span style="background:linear-gradient(180deg,#f0ffbe 0%,#d8ff5a 34%,#a6e800 66%,#6fa800 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 rgba(0,0,0,.9)) drop-shadow(0 7px 9px rgba(0,0,0,.85)) drop-shadow(0 0 30px rgba(200,255,46,.5))">26</span></div>
   <div style="position:relative;display:inline-block;margin-top:12px;transform:skewX(-10deg);background:linear-gradient(180deg,#1b2129 0%,#10151b 55%,#0a0e13 100%);border:1px solid rgba(200,255,46,.3);padding:8px 22px 7px 26px;box-shadow:0 5px 0 -1px rgba(200,255,46,.6),0 12px 26px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.1)">
@@ -204,9 +194,23 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       </sc-if>
     </div>
     <div style="flex:0 0 auto;text-align:center;padding:0 4px">
-      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,59,59,.14);border:1px solid rgba(255,59,59,.5);border-radius:999px;padding:4px 12px;margin-bottom:10px">
-        <div style="width:7px;height:7px;border-radius:50%;background:#ff3b3b;animation:pulse 1.2s ease-in-out infinite"></div>
-        <div style="font-weight:700;font-size:11px;letter-spacing:2px;color:#ff6b6b">LIVE</div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin-bottom:10px">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,59,59,.14);border:1px solid rgba(255,59,59,.5);border-radius:999px;padding:4px 12px">
+          <div style="width:7px;height:7px;border-radius:50%;background:#ff3b3b;animation:pulse 1.2s ease-in-out infinite"></div>
+          <div style="font-weight:700;font-size:11px;letter-spacing:2px;color:#ff6b6b">LIVE</div>
+        </div>
+        <sc-if value="{{ clockRunning }}" hint-placeholder-val="{{ false }}">
+          <div aria-label="Time since kick-off" style="display:inline-flex;align-items:center;gap:6px;background:rgba(200,255,46,.1);border:1px solid rgba(200,255,46,.4);border-radius:999px;padding:4px 12px">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+            <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#c8ff2e;font-variant-numeric:tabular-nums">{{ clockLabel }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ clockIdle }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ kickOff }}" data-noprint="1" style="display:inline-flex;align-items:center;gap:6px;min-height:26px;background:rgba(200,255,46,.08);border:1px dashed rgba(200,255,46,.5);border-radius:999px;padding:4px 12px;color:#c8ff2e;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:1.5px;cursor:pointer" style-active="transform:scale(.95);background:rgba(200,255,46,.18)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+            KICK OFF
+          </button>
+        </sc-if>
       </div>
       <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.55);border:1px solid rgba(200,255,46,.35);border-radius:16px;padding:10px 16px;box-shadow:0 6px 30px rgba(0,0,0,.5),inset 0 -2px 0 rgba(200,255,46,.25)">
         <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:52px;line-height:1;color:#fff;text-shadow:0 0 26px {{ curA.glow }}">{{ scoreA }}</div>
@@ -230,15 +234,26 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 
   <!-- RECORD GOAL -->
   <div data-noprint="1" style="position:relative;margin-top:20px;border-top:1px solid rgba(200,255,46,.15);background:rgba(0,0,0,.3);padding:16px 14px 18px 14px">
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px"><span style="width:26px;height:2px;background:linear-gradient(90deg,transparent,#c8ff2e)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:5px;color:#c8ff2e;text-shadow:0 0 16px rgba(200,255,46,.5)">RECORD GOAL</span><span style="width:26px;height:2px;background:linear-gradient(270deg,transparent,#c8ff2e)"></span></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px"><span style="width:26px;height:2px;background:linear-gradient(90deg,transparent,{{ recordTitleColor }})"></span><span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:5px;color:{{ recordTitleColor }};text-shadow:{{ recordTitleGlow }}">{{ recordTitle }}</span><span style="width:26px;height:2px;background:linear-gradient(270deg,transparent,{{ recordTitleColor }})"></span></div>
+    <div style="display:flex;justify-content:center;margin-top:10px">
+      <sc-if value="{{ ogIdle }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ toggleOG }}" data-noprint="1" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);color:#8a99a8;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL</button>
+      </sc-if>
+      <sc-if value="{{ ogArmed }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ toggleOG }}" data-noprint="1" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,107,107,.6);background:rgba(255,107,107,.14);color:#ff9d9d;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL &#183; TAP TO CANCEL</button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ ogArmed }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;margin-top:8px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;color:#ff9d9d">It counts for the other team and stays out of his tally.</div>
+    </sc-if>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px">
       <sc-for list="{{ recordCols }}" as="col" hint-placeholder-count="2">
         <div style="position:relative;overflow:hidden;background:linear-gradient(180deg,{{ col.tint }},rgba(255,255,255,.02) 60%);border:1px solid {{ col.borderColor }};border-radius:16px;padding:12px">
           <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,{{ col.color }},transparent)"></div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <sc-for list="{{ col.players }}" as="p" hint-placeholder-count="2">
-              <button onClick="{{ p.onGoal }}" style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:56px;padding:10px 16px 10px 14px;border-radius:12px;border:1px solid {{ col.color }};background:linear-gradient(90deg,{{ col.tint }},rgba(0,0,0,.25) 55%);color:#e9edf2;cursor:pointer;font-family:'Rajdhani',sans-serif;box-shadow:inset 3px 0 0 {{ col.color }}" style-active="transform:scale(.96);box-shadow:inset 3px 0 0 {{ col.color }},0 0 22px {{ col.glow }}">
-                <span style="display:flex;align-items:center;gap:11px;min-width:0"><span style="display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:{{ col.color }};font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:#0a0f05">+</span><span style="font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span></span>
+              <button onClick="{{ p.onGoal }}" style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:56px;padding:10px 16px 10px 14px;border-radius:12px;border:1px solid {{ p.btnBorder }};background:linear-gradient(90deg,{{ col.tint }},rgba(0,0,0,.25) 55%);color:#e9edf2;cursor:pointer;font-family:'Rajdhani',sans-serif;box-shadow:inset 3px 0 0 {{ p.btnBorder }}" style-active="transform:scale(.96);box-shadow:inset 3px 0 0 {{ p.btnBorder }},0 0 22px {{ col.glow }}">
+                <span style="display:flex;align-items:center;gap:11px;min-width:0"><span style="display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:{{ p.badgeBg }};font-family:'Orbitron',sans-serif;font-weight:900;font-size:{{ p.badgeSize }};color:#0a0f05">{{ p.badge }}</span><span style="font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span></span>
                 <span style="flex:0 0 auto;font-family:'Orbitron',sans-serif;font-weight:900;font-size:22px;line-height:1;min-width:22px;text-align:right;color:{{ p.tallyColor }};text-shadow:{{ p.tallyGlow }}">{{ p.tally }}</span>
               </button>
             </sc-for>
@@ -699,6 +714,13 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           <sc-if value="{{ h.hasPicks }}" hint-placeholder-val="{{ false }}">
             <div style="flex-basis:100%;text-align:center;font-weight:700;font-size:11px;letter-spacing:2px;color:#8a99a8;margin-top:-2px">{{ h.picksLabel }}</div>
           </sc-if>
+          <sc-if value="{{ h.hasTimeline }}" hint-placeholder-val="{{ false }}">
+            <div style="flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 10px;margin-top:2px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)">
+              <sc-for list="{{ h.timeline }}" as="g" hint-placeholder-count="2">
+                <span style="display:inline-flex;align-items:baseline;gap:5px;font-weight:600;font-size:12px;color:{{ g.color }}"><span>{{ g.label }}</span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;color:#5b6b7a;font-variant-numeric:tabular-nums">{{ g.time }}</span></span>
+              </sc-for>
+            </div>
+          </sc-if>
         </div>
       </sc-for>
     </div>
@@ -864,7 +886,7 @@ class Component extends DCLogic {
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
-      editFixId: null, updateReady: false
+      editFixId: null, updateReady: false, ogArm: false, clockTick: 0
     });
     this._timers = [];
   }
@@ -939,6 +961,7 @@ class Component extends DCLogic {
   later(fn, ms) { this._timers.push(setTimeout(fn, ms)); }
   componentWillUnmount() {
     this._timers.forEach(clearTimeout);
+    if (this._clockTimer) clearInterval(this._clockTimer);
     if (this._onVis) document.removeEventListener('visibilitychange', this._onVis);
     if (this._wake) { const w = this._wake; this._wake = null; w.release().catch(() => {}); }
   }
@@ -1021,13 +1044,40 @@ class Component extends DCLogic {
     return { a, b };
   }
   winner(f) { const s = this.score(f); return s.a > s.b ? f.a : s.b > s.a ? f.b : f.pen; }
-  recordGoal(player, teamIdx) {
-    const f = this.curFix(); if (!f) return;
-    f.events.push({ player, team: teamIdx, ts: Date.now() });
-    SFX.goal();
-    this.toastMsg('GOAL — ' + player.toUpperCase(), TEAMS[teamIdx].color);
-    this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
+  // ---------- match clock ----------
+  // Anchored by an explicit kick-off rather than guessed from the first goal:
+  // the console is started by hand, and a clock that quietly invents its own
+  // start time would put a wrong minute against every goal.
+  kickOff = () => {
+    const f = this.curFix(); if (!f || f.startedAt) return;
+    f.startedAt = Date.now();
+    SFX.whistle();
+    this.toastMsg('KICK OFF', '#c8ff2e');
+    this.setState({ fixtures: this.state.fixtures.slice(), clockTick: Date.now() }, () => this.save());
+  };
+  mmss(ms) {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
   }
+  clockLabel(f) { return f && f.startedAt ? this.mmss(Date.now() - f.startedAt) : ''; }
+  // Goals recorded before kick-off get no stamp rather than a nonsense one.
+  goalTime(f, e) { return f.startedAt && e.ts >= f.startedAt ? this.mmss(e.ts - f.startedAt) : ''; }
+  // ---------- goals ----------
+  // An own goal counts for the other side but must never land in the scorer's
+  // tally, so the credited team is stored on the event and the player is only
+  // kept for the record.
+  recordGoal(player, playerTeam, og) {
+    const f = this.curFix(); if (!f) return;
+    const credited = og ? (playerTeam === f.a ? f.b : f.a) : playerTeam;
+    f.events.push(og ? { player, team: credited, og: true, ts: Date.now() } : { player, team: credited, ts: Date.now() });
+    SFX.goal();
+    this.toastMsg(og ? 'OWN GOAL — ' + player.toUpperCase() : 'GOAL — ' + player.toUpperCase(), og ? '#ff7b7b' : TEAMS[credited].color);
+    this.setState({ fixtures: this.state.fixtures.slice(), ogArm: false }, () => this.save());
+  }
+  toggleOG = () => {
+    SFX.click();
+    this.setState({ ogArm: !this.state.ogArm });
+  };
   promote(fid) {
     const fx = this.state.fixtures;
     const i = fx.findIndex(f => f.id === fid);
@@ -1075,8 +1125,8 @@ class Component extends DCLogic {
     const f = this.curFix(); if (!f || !f.events.length) return;
     const e = f.events.pop();
     SFX.undo();
-    this.toastMsg('GOAL REMOVED — ' + e.player.toUpperCase(), '#9fb0c0');
-    this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
+    this.toastMsg((e.og ? 'OWN GOAL REMOVED — ' : 'GOAL REMOVED — ') + e.player.toUpperCase(), '#9fb0c0');
+    this.setState({ fixtures: this.state.fixtures.slice(), ogArm: false }, () => this.save());
   };
   askRestartMatch = () => {
     const f = this.curFix(); if (!f) return;
@@ -1089,9 +1139,10 @@ class Component extends DCLogic {
     if (!f) { this.setState({ restartConfirm: false }); return; }
     f.events = [];
     f.pickA = ''; f.pickB = '';
+    delete f.startedAt;
     SFX.undo();
     this.toastMsg('MATCH RESTARTED', '#ff7b7b');
-    this.setState({ fixtures: this.state.fixtures.slice(), restartConfirm: false, penaltyFor: null }, () => this.save());
+    this.setState({ fixtures: this.state.fixtures.slice(), restartConfirm: false, penaltyFor: null, ogArm: false }, () => this.save());
   };
   // ---------- reopening a finished match ----------
   // Everything downstream of a result is derived, so a wrong score recorded
@@ -1232,7 +1283,7 @@ class Component extends DCLogic {
   playerGoals() {
     const map = {};
     this.active().forEach(i => this.playersOf(i).forEach(p => map[p] = 0));
-    this.state.fixtures.forEach(f => f.events.forEach(e => { map[e.player] = (map[e.player] || 0) + 1; }));
+    this.state.fixtures.forEach(f => f.events.forEach(e => { if (!e.og) map[e.player] = (map[e.player] || 0) + 1; }));
     return map;
   }
   // ---------- final chances ----------
@@ -1386,6 +1437,11 @@ class Component extends DCLogic {
     document.addEventListener('visibilitychange', this._onVis);
     this.syncWake();
     this.registerSW();
+    // Only re-renders while a clock is actually running.
+    this._clockTimer = setInterval(() => {
+      const f = this.curFix();
+      if (f && f.startedAt) this.setState({ clockTick: Date.now() });
+    }, 1000);
   }
   componentDidUpdate() { this.syncWake(); }
   // ---------- screen wake lock ----------
@@ -1722,7 +1778,9 @@ class Component extends DCLogic {
       else if (f.pen != null) res = (this.winner(f) === ti ? 'WIN' : 'LOSS') + (f.penA != null ? ' (' + (f.a === ti ? f.penA + '-' + f.penB : f.penB + '-' + f.penA) + ' pens)' : ' (pens)');
       else res = mine > opp ? 'WIN' : mine < opp ? 'LOSS' : 'DRAW';
       const scorers = {};
-      f.events.forEach(e => { if (e.team === ti) scorers[e.player] = (scorers[e.player] || 0) + 1; });
+      // An own goal is credited to this team but was put in by the opposition,
+      // so it must not turn up among this team's scorers.
+      f.events.forEach(e => { if (e.team === ti && !e.og) scorers[e.player] = (scorers[e.player] || 0) + 1; });
       const scLine = Object.keys(scorers).length ? ' — scorers: ' + Object.entries(scorers).map(([n, c]) => n + (c > 1 ? ' \u00D7' + c : '')).join(', ') : '';
       const myPick = f.a === ti ? f.pickA : f.pickB, opPick = f.a === ti ? f.pickB : f.pickA;
       const pk = (myPick || opPick) ? ' [' + (myPick || '?') + ' vs ' + (opPick || '?') + ']' : '';
@@ -1827,19 +1885,25 @@ class Component extends DCLogic {
     });
     // record columns
     let recordCols = [];
+    const og = !!st.ogArm;
     if (cur) {
       recordCols = [cur.a, cur.b].map(ti => {
         const t = team(ti);
         return {
           name: t.name, logo: t.logo, color: t.color,
-          glow: glow(t.color, 0.4), tint: glow(t.color, 0.1), borderColor: glow(t.color, 0.45),
+          glow: glow(t.color, 0.4), tint: glow(t.color, 0.1),
+          borderColor: og ? 'rgba(255,107,107,.5)' : glow(t.color, 0.45),
           players: this.playersOf(ti).map(p => {
-            const inMatch = cur.events.filter(e => e.player === p).length;
+            const inMatch = cur.events.filter(e => e.player === p && !e.og).length;
             return {
               name: p, tally: String(inMatch),
+              badge: og ? 'OG' : '+',
+              badgeBg: og ? '#ff6b6b' : t.color,
+              badgeSize: og ? '11px' : '16px',
+              btnBorder: og ? '#ff6b6b' : t.color,
               tallyColor: inMatch > 0 ? t.color : 'rgba(255,255,255,.22)',
               tallyGlow: inMatch > 0 ? '0 0 14px ' + glow(t.color, 0.5) : 'none',
-              onGoal: () => this.recordGoal(p, ti)
+              onGoal: () => this.recordGoal(p, ti, og)
             };
           })
         };
@@ -1878,7 +1942,15 @@ class Component extends DCLogic {
           const oppIdx = f.a === mt ? f.b : f.a;
           const myPick = f.a === mt ? f.pickA : f.pickB, oppPick = f.a === mt ? f.pickB : f.pickA;
           const picksLabel = (myPick || oppPick) ? (myPick || '?').toUpperCase() + ' vs ' + (oppPick || '?').toUpperCase() : '';
+          // Only stamped once a kick-off anchors the clock, so older matches
+          // simply show the scorers without times.
+          const timeline = f.events.map(e => ({
+            label: e.player + (e.og ? ' (OG)' : ''),
+            time: this.goalTime(f, e),
+            color: e.og ? '#ff9d9d' : (e.team === mt ? '#dfe6ee' : '#8a99a8')
+          }));
           return {
+            hasTimeline: timeline.length > 0, timeline,
             hasPicks: !!picksLabel, picksLabel,
             num: f.num,
             myLogo: t.logo, myName: t.short,
@@ -2051,6 +2123,14 @@ class Component extends DCLogic {
         return { open: items.length > 0, items: items.map(v => ({ v, onTap: () => this.pickChoose('B', v) })) };
       })(),
       scoreA: cur ? this.score(cur).a : 0, scoreB: cur ? this.score(cur).b : 0,
+      clockRunning: !!(cur && cur.startedAt),
+      clockIdle: !!(cur && !cur.startedAt),
+      clockLabel: cur ? this.clockLabel(cur) : '',
+      kickOff: this.kickOff,
+      ogArmed: og, ogIdle: !og, toggleOG: this.toggleOG,
+      recordTitle: og ? 'WHO PUT IT IN?' : 'RECORD GOAL',
+      recordTitleColor: og ? '#ff6b6b' : '#c8ff2e',
+      recordTitleGlow: og ? '0 0 16px rgba(255,107,107,.5)' : '0 0 16px rgba(200,255,46,.5)',
       recordCols, undoGoal: this.undoGoal, endGame: this.endGame,
       endLabel: cur && cur.stage === 'FINAL' ? 'END FINAL' : 'END GAME → NEXT MATCH',
       askRestartMatch: this.askRestartMatch,
