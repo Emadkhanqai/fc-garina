@@ -494,6 +494,10 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;letter-spacing:2px;padding:4px 12px 3px 12px;border-radius:999px;border:1px solid {{ awakeBorder }};background:{{ awakeBg }};color:{{ awakeColor }}">{{ awakeLabel }}</span>
         </button>
       </sc-if>
+      <button onClick="{{ openTV }}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:12px;border:1px solid rgba(200,255,46,.3);background:rgba(200,255,46,.05);color:#c8ff2e;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.98)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path></svg>
+        BIG SCREEN
+      </button>
       <button onClick="{{ shareSummary }}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:12px;border:1px solid rgba(200,255,46,.3);background:rgba(200,255,46,.05);color:#c8ff2e;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.98)">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13"></path><path d="m7 8 5-5 5 5"></path><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
         SHARE THE BOARD
@@ -795,16 +799,122 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   <div data-noprint="1" style="position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;background:#0d1118;border:1px solid {{ toastColor }};border-radius:999px;padding:12px 26px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;color:{{ toastColor }};box-shadow:0 0 30px {{ toastGlow }};animation:toastin .25s ease;white-space:nowrap">{{ toastMsg }}</div>
 </sc-if>
 
-<sc-if value="{{ updateReady }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ tvOpen }}" hint-placeholder-val="{{ false }}">
+  <div data-noprint="1" style="position:fixed;inset:0;z-index:40;background:radial-gradient(120% 90% at 50% 0%,#0e1508 0%,#07090d 55%,#03050a 100%);display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top)) 16px calc(12px + env(safe-area-inset-bottom)) 16px;box-sizing:border-box;overflow:hidden">
+    <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0">
+        <sc-if value="{{ tvHasMatch }}" hint-placeholder-val="{{ true }}">
+          <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(10px,1.5vmin,15px);letter-spacing:3px;color:#0a0f05;background:#c8ff2e;padding:6px 14px 5px 14px;transform:skewX(-10deg);display:inline-block">{{ tvStage }}</span>
+        </sc-if>
+        <sc-if value="{{ tvClockShow }}" hint-placeholder-val="{{ false }}">
+          <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,59,59,.14);border:1px solid rgba(255,59,59,.5);border-radius:999px;padding:5px 14px">
+            <span style="width:8px;height:8px;border-radius:50%;background:#ff3b3b;animation:pulse 1.2s ease-in-out infinite"></span>
+            <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(11px,1.7vmin,17px);letter-spacing:1px;color:#ff8f8f;font-variant-numeric:tabular-nums">{{ tvClock }}</span>
+          </span>
+        </sc-if>
+      </div>
+      <button onClick="{{ closeTV }}" aria-label="Leave big screen" style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);color:#9fb0c0;cursor:pointer" style-active="transform:scale(.94);color:#e9edf2">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H3v6"></path><path d="M3 3l7 7"></path><path d="M15 21h6v-6"></path><path d="M21 21l-7-7"></path></svg>
+      </button>
+    </div>
+
+    <sc-if value="{{ tvHasMatch }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vmin,40px);padding:clamp(8px,2vmin,24px) 0">
+        <div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vmin,16px)">
+          <div style="width:clamp(78px,26vmin,300px);transform:skewX(-7deg);border-radius:clamp(10px,2vmin,22px);overflow:hidden;border:3px solid {{ tvA.color }};box-shadow:0 0 clamp(22px,5vmin,60px) {{ tvA.glow }};background:#0a0d12"><img src="{{ tvA.logo }}" alt="{{ tvA.short }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)"></div>
+          <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(14px,3.2vmin,38px);letter-spacing:2px;color:{{ tvA.color }};text-align:center;line-height:1.1">{{ tvA.short }}</div>
+          <div style="font-weight:600;font-size:clamp(11px,1.8vmin,20px);color:#9fb0c0;text-align:center;line-height:1.3">{{ tvA.players }}</div>
+          <sc-if value="{{ tvA.hasPick }}" hint-placeholder-val="{{ false }}">
+            <div style="font-weight:700;font-size:clamp(9.5px,1.4vmin,15px);letter-spacing:2px;color:#5b6b7a;text-align:center">{{ tvA.pick }}</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:clamp(2px,.8vmin,8px)">
+            <sc-for list="{{ tvA.scorers }}" as="g" hint-placeholder-count="0">
+              <div style="display:flex;align-items:baseline;gap:7px;font-weight:600;font-size:clamp(11px,1.7vmin,19px);color:{{ g.color }}"><span>{{ g.label }}</span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(9px,1.3vmin,14px);color:#5b6b7a;font-variant-numeric:tabular-nums">{{ g.time }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:0 0 auto;display:flex;align-items:center;gap:clamp(6px,1.4vmin,18px)">
+          <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(54px,22vmin,230px);line-height:.9;color:#fff;text-shadow:0 0 clamp(18px,4vmin,50px) {{ tvA.glow }};font-variant-numeric:tabular-nums">{{ tvA.score }}</div>
+          <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(22px,6vmin,66px);color:#c8ff2e;font-style:italic;line-height:1">:</div>
+          <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(54px,22vmin,230px);line-height:.9;color:#fff;text-shadow:0 0 clamp(18px,4vmin,50px) {{ tvB.glow }};font-variant-numeric:tabular-nums">{{ tvB.score }}</div>
+        </div>
+        <div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vmin,16px)">
+          <div style="width:clamp(78px,26vmin,300px);transform:skewX(-7deg);border-radius:clamp(10px,2vmin,22px);overflow:hidden;border:3px solid {{ tvB.color }};box-shadow:0 0 clamp(22px,5vmin,60px) {{ tvB.glow }};background:#0a0d12"><img src="{{ tvB.logo }}" alt="{{ tvB.short }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)"></div>
+          <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(14px,3.2vmin,38px);letter-spacing:2px;color:{{ tvB.color }};text-align:center;line-height:1.1">{{ tvB.short }}</div>
+          <div style="font-weight:600;font-size:clamp(11px,1.8vmin,20px);color:#9fb0c0;text-align:center;line-height:1.3">{{ tvB.players }}</div>
+          <sc-if value="{{ tvB.hasPick }}" hint-placeholder-val="{{ false }}">
+            <div style="font-weight:700;font-size:clamp(9.5px,1.4vmin,15px);letter-spacing:2px;color:#5b6b7a;text-align:center">{{ tvB.pick }}</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:clamp(2px,.8vmin,8px)">
+            <sc-for list="{{ tvB.scorers }}" as="g" hint-placeholder-count="0">
+              <div style="display:flex;align-items:baseline;gap:7px;font-weight:600;font-size:clamp(11px,1.7vmin,19px);color:{{ g.color }}"><span>{{ g.label }}</span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(9px,1.3vmin,14px);color:#5b6b7a;font-variant-numeric:tabular-nums">{{ g.time }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="flex:0 0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin-bottom:10px">
+        <sc-for list="{{ recordCols }}" as="col" hint-placeholder-count="2">
+          <div style="display:flex;gap:8px">
+            <sc-for list="{{ col.players }}" as="p" hint-placeholder-count="2">
+              <button onClick="{{ p.onGoal }}" style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;border-radius:12px;border:1px solid {{ p.btnBorder }};background:linear-gradient(180deg,{{ col.tint }},rgba(0,0,0,.3));color:#e9edf2;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(13px,1.8vmin,18px);padding:0 10px" style-active="transform:scale(.96);box-shadow:0 0 22px {{ col.glow }}">
+                <span style="display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:24px;height:24px;border-radius:7px;background:{{ p.badgeBg }};font-family:'Orbitron',sans-serif;font-weight:900;font-size:{{ p.badgeSize }};color:#0a0f05">{{ p.badge }}</span>
+                <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex:0 0 auto;display:flex;gap:10px">
+        <button onClick="{{ undoGoal }}" style="flex:0 0 auto;min-width:120px;min-height:52px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#c9d4de;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(13px,1.7vmin,17px);letter-spacing:1px;cursor:pointer" style-active="transform:scale(.97)">UNDO</button>
+        <button onClick="{{ endGame }}" style="flex:1;min-height:52px;border-radius:12px;border:none;background:linear-gradient(180deg,#d6ff5c,#8fce00);color:#0a0f05;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(12px,1.7vmin,17px);letter-spacing:2px;cursor:pointer;box-shadow:0 0 22px rgba(200,255,46,.3)" style-active="transform:scale(.98)">{{ endLabel }}</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tvNoMatch }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,2.5vmin,28px);overflow-y:auto">
+        <sc-if value="{{ tvChampShow }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vmin,20px)">
+            <div style="width:clamp(110px,26vmin,280px);transform:skewX(-7deg);border-radius:clamp(12px,2.4vmin,26px);overflow:hidden;border:3px solid {{ tvChampColor }};box-shadow:0 0 clamp(30px,7vmin,80px) rgba(255,213,74,.5);background:#0a0d12"><img src="{{ tvChampLogo }}" alt="{{ tvChampName }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)"></div>
+            <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(11px,1.7vmin,17px);letter-spacing:6px;color:#ffd54a">CHAMPIONS</div>
+            <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,5.5vmin,64px);letter-spacing:2px;color:#fff;text-align:center;line-height:1.05">{{ tvChampName }}</div>
+            <div style="font-weight:600;font-size:clamp(13px,2.2vmin,24px);color:#9fb0c0">{{ tvChampPlayers }}</div>
+          </div>
+        </sc-if>
+        <div style="width:100%;max-width:760px;display:flex;flex-direction:column;gap:clamp(5px,1vmin,10px)">
+          <sc-for list="{{ tvTable }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:clamp(8px,1.6vmin,18px);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:clamp(7px,1.3vmin,14px) clamp(10px,1.8vmin,20px)">
+              <div style="flex:0 0 auto;min-width:26px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(15px,2.4vmin,28px);color:{{ r.posColor }}">{{ r.pos }}</div>
+              <img src="{{ r.logo }}" alt="" style="flex:0 0 auto;width:clamp(30px,4.6vmin,52px);height:clamp(30px,4.6vmin,52px);object-fit:cover;border-radius:10px">
+              <div style="flex:1;min-width:0;font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(13px,2.2vmin,26px);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.short }}</div>
+              <div style="flex:0 0 auto;font-weight:600;font-size:clamp(10px,1.5vmin,17px);color:#5b6b7a">{{ r.played }}</div>
+              <div style="flex:0 0 auto;min-width:38px;text-align:right;font-weight:600;font-size:clamp(11px,1.6vmin,18px);color:#9fb0c0">{{ r.gd }}</div>
+              <div style="flex:0 0 auto;min-width:48px;text-align:right;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(16px,2.6vmin,32px);color:#c8ff2e">{{ r.pts }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ tvNextShow }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(10px,1.5vmin,15px);letter-spacing:5px;color:#5b6b7a">UP NEXT</div>
+            <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(15px,2.8vmin,32px);letter-spacing:2px;color:#e9edf2;text-align:center">{{ tvNextLabel }}</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ updatePillShow }}" hint-placeholder-val="{{ false }}">
   <button onClick="{{ applyUpdate }}" data-noprint="1" style="position:fixed;left:calc(16px + env(safe-area-inset-left));bottom:calc(16px + env(safe-area-inset-bottom));z-index:56;display:flex;align-items:center;gap:9px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(200,255,46,.45);background:#0d1118;color:#c8ff2e;font-family:'Orbitron',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:1.5px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 24px -8px rgba(200,255,46,.7);animation:slideup .3s ease" style-active="transform:scale(.96)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 4v5h-5"></path></svg>
     NEW VERSION — RELOAD
   </button>
 </sc-if>
 
+<sc-if value="{{ chromeShow }}" hint-placeholder-val="{{ true }}">
 <a href="https://wa.me/923452362514?text=Hi!%20I%20have%20a%20feature%20request%20/%20bug%20report%20for%20FC26%20Tournament%20Arena%3A%20" target="_blank" rel="noopener" aria-label="WhatsApp us — request a feature or report an issue" data-noprint="1" style="position:fixed;right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));z-index:55;width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.08);text-decoration:none" style-active="transform:scale(.92)">
   <svg width="26" height="26" viewBox="0 0 16 16" fill="#ffffff"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.588-.525-.986-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.395 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.336-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"></path></svg>
 </a>
+</sc-if>
 </div>
 </div>
 </x-dc>
@@ -886,7 +996,7 @@ class Component extends DCLogic {
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
-      editFixId: null, updateReady: false, ogArm: false, clockTick: 0
+      editFixId: null, updateReady: false, ogArm: false, clockTick: 0, tvOpen: false
     });
     this._timers = [];
   }
@@ -1077,6 +1187,21 @@ class Component extends DCLogic {
   toggleOG = () => {
     SFX.click();
     this.setState({ ogArm: !this.state.ogArm });
+  };
+  // ---------- big screen ----------
+  // The room reads the score off a propped-up tablet while the operator keeps
+  // scoring on the same device, so the goal buttons stay on this view instead
+  // of forcing a trip back out for every goal.
+  openTV = () => {
+    SFX.click();
+    this.setState({ tvOpen: true, menuOpen: false });
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+  };
+  closeTV = () => {
+    SFX.click();
+    this.setState({ tvOpen: false });
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
   };
   promote(fid) {
     const fx = this.state.fixtures;
@@ -2007,6 +2132,22 @@ class Component extends DCLogic {
     });
     const printScorers = scorers.filter(s => s.goals > 0).map(s => ({ line: s.rank + '. ' + s.name + ' — ' + s.goals }));
     const stageIdx = champ ? 4 : st.fixtures.some(f => f.stage === 'FINAL') ? 3 : st.fixtures.some(f => f.stage === 'SEMI-FINAL') ? 2 : 1;
+    const tvSide = (f, ti, key) => {
+      const t = TEAMS[ti];
+      return {
+        logo: t.logo, short: t.short, color: t.color, glow: glow(t.color, 0.5),
+        players: this.playersOf(ti).join(' & '),
+        score: f ? String(this.score(f)[key]) : '0',
+        hasPick: !!(f && (key === 'a' ? f.pickA : f.pickB)),
+        pick: (f && (key === 'a' ? f.pickA : f.pickB)) || '',
+        hasScorers: !!(f && f.events.some(e => e.team === ti)),
+        scorers: f ? f.events.filter(e => e.team === ti).map(e => ({
+          label: e.player + (e.og ? ' (OG)' : ''),
+          time: this.goalTime(f, e),
+          color: e.og ? '#ff9d9d' : '#dfe6ee'
+        })) : []
+      };
+    };
     const pen = st.penaltyFor ? st.fixtures.find(f => f.id === st.penaltyFor) : null;
     const editF = st.editFixId ? st.fixtures.find(f => f.id === st.editFixId) : null;
     const editDrop = editF ? this.dropForEdit(editF, st.fixtures) : [];
@@ -2033,7 +2174,8 @@ class Component extends DCLogic {
       awakeBorder: st.awake ? 'rgba(200,255,46,.3)' : 'rgba(255,255,255,.12)',
       toggleAwake: this.toggleAwake,
       shareSummary: this.shareSummary,
-      updateReady: !!st.updateReady, applyUpdate: this.applyUpdate,
+      updateReady: !!st.updateReady, updatePillShow: !!st.updateReady && !st.tvOpen,
+      chromeShow: !st.tvOpen, applyUpdate: this.applyUpdate,
       toggleSound: this.toggleSound, toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
       menuOpen: st.menuOpen, doBackup: this.doBackup, doRestore: this.doRestore,
       onRestoreFile: this.onRestoreFile, doPrint: this.doPrint, doReset: this.doReset,
@@ -2123,6 +2265,22 @@ class Component extends DCLogic {
         return { open: items.length > 0, items: items.map(v => ({ v, onTap: () => this.pickChoose('B', v) })) };
       })(),
       scoreA: cur ? this.score(cur).a : 0, scoreB: cur ? this.score(cur).b : 0,
+      tvOpen: !!st.tvOpen, openTV: this.openTV, closeTV: this.closeTV,
+      tvHasMatch: !!cur, tvNoMatch: !cur,
+      tvStage: cur ? (cur.stage === 'LEAGUE' ? 'LEAGUE · MATCH ' + cur.num : cur.stage) : '',
+      tvClockShow: !!(cur && cur.startedAt), tvClock: cur ? this.clockLabel(cur) : '',
+      tvA: tvSide(cur, cur ? cur.a : 0, 'a'), tvB: tvSide(cur, cur ? cur.b : 1, 'b'),
+      tvTable: standings.map((r, i) => ({
+        pos: String(i + 1), logo: team(r.idx).logo, short: team(r.idx).short,
+        pts: String(r.pts), played: r.p + ' PL', gd: (r.gd > 0 ? '+' : '') + r.gd,
+        posColor: st.champion != null && r.idx === st.champion ? '#ffd54a' : i < 4 ? '#c8ff2e' : '#9fb0c0'
+      })),
+      tvNextShow: !!next, tvNextLabel: next ? team(next.a).short + '  vs  ' + team(next.b).short : '',
+      tvChampShow: st.champion != null,
+      tvChampName: st.champion != null ? TEAMS[st.champion].name : '',
+      tvChampLogo: st.champion != null ? TEAMS[st.champion].logo : TEAMS[0].logo,
+      tvChampColor: st.champion != null ? TEAMS[st.champion].color : '#ffd54a',
+      tvChampPlayers: st.champion != null ? this.playersOf(st.champion).join(' & ') : '',
       clockRunning: !!(cur && cur.startedAt),
       clockIdle: !!(cur && !cur.startedAt),
       clockLabel: cur ? this.clockLabel(cur) : '',
