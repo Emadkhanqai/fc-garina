@@ -177,11 +177,17 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 <sc-if value="{{ hasCurrent }}" hint-placeholder-val="{{ false }}">
 <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.3);background:linear-gradient(180deg,#0c1014,#070a0e);padding:0;position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(55% 75% at 0% 30%,{{ curA.tint }},transparent 55%),radial-gradient(55% 75% at 100% 30%,{{ curB.tint }},transparent 55%);pointer-events:none"></div>
-  <button onClick="{{ openTV }}" aria-label="Show this match on the big screen" data-noprint="1" style="position:absolute;top:9px;right:9px;z-index:4;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:13px;border:1px solid rgba(200,255,46,.32);background:rgba(200,255,46,.07);box-shadow:0 4px 14px rgba(0,0,0,.45);cursor:pointer" style-active="transform:scale(.92);background:rgba(200,255,46,.18)">
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path></svg>
-  </button>
-  <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:16px 62px 0 62px">
-    <div style="display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;letter-spacing:3px;color:#0a0f05;background:linear-gradient(135deg,#d6ff5c,#8fce00);padding:4px 14px 3px 14px;transform:skewX(-10deg)">{{ curStage }} &#183; {{ curNum }}</div>
+  <!-- The pill stays optically centred against the crests below it, so the
+       button gets a matching empty column on the left rather than being
+       floated into the card's rounded corner. -->
+  <div style="position:relative;display:flex;align-items:center;padding:10px 10px 0 10px">
+    <div style="flex:0 0 44px" data-noprint="1"></div>
+    <div style="flex:1;min-width:0;display:flex;justify-content:center">
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;letter-spacing:3px;color:#0a0f05;background:linear-gradient(135deg,#d6ff5c,#8fce00);padding:4px 14px 3px 14px;transform:skewX(-10deg);white-space:nowrap">{{ curStage }} &#183; {{ curNum }}</div>
+    </div>
+    <button onClick="{{ openTV }}" aria-label="Show this match on the big screen" data-noprint="1" style="flex:0 0 44px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid rgba(200,255,46,.28);background:rgba(200,255,46,.06);cursor:pointer" style-active="transform:scale(.92);background:rgba(200,255,46,.18)">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#c8ff2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path></svg>
+    </button>
   </div>
   <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;padding:0 12px">
     <div style="flex:1;min-width:0;max-width:170px;text-align:center;position:relative">
@@ -289,25 +295,25 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 </sc-if>
 
 <!-- TABLE + SCORERS -->
-<div data-printstack="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:24px;align-items:start">
+<div data-printstack="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px;margin-top:24px;align-items:start">
   <div>
     <div style="display:flex;align-items:center;gap:10px;padding:0 2px"><span style="width:14px;height:14px;background:linear-gradient(135deg,#c8ff2e,#6fa800);transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;letter-spacing:5px">LEAGUE TABLE</span></div>
     <div data-printblock="1" style="margin-top:12px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:#0a0d12;overflow:hidden">
-      <div style="display:grid;grid-template-columns:26px 1fr 24px 24px 24px 24px 28px 28px 30px 34px;gap:2px;align-items:center;padding:10px 12px;font-weight:700;font-size:11px;letter-spacing:1px;color:#5b6b7a;border-bottom:1px solid rgba(255,255,255,.07)">
+      <div style="display:grid;grid-template-columns:16px minmax(0,1fr) 18px 18px 18px 18px 22px 22px 26px 28px;gap:2px;align-items:center;padding:10px 7px;font-weight:700;font-size:10.5px;letter-spacing:.5px;color:#5b6b7a;border-bottom:1px solid rgba(255,255,255,.07)">
         <div>#</div><div>TEAM</div><div style="text-align:center">P</div><div style="text-align:center">W</div><div style="text-align:center">D</div><div style="text-align:center">L</div><div style="text-align:center">GF</div><div style="text-align:center">GA</div><div style="text-align:center">GD</div><div style="text-align:center">PTS</div>
       </div>
       <sc-for list="{{ standingsRows }}" as="r" hint-placeholder-count="5">
-        <div style="display:grid;grid-template-columns:26px 1fr 24px 24px 24px 24px 28px 28px 30px 34px;gap:2px;align-items:center;padding:9px 12px;background:{{ r.bg }};border-bottom:1px solid rgba(255,255,255,.05)">
+        <div style="display:grid;grid-template-columns:16px minmax(0,1fr) 18px 18px 18px 18px 22px 22px 26px 28px;gap:2px;align-items:center;padding:9px 7px;background:{{ r.bg }};border-bottom:1px solid rgba(255,255,255,.05)">
           <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;color:{{ r.posColor }}">{{ r.pos }}</div>
-          <div style="display:flex;align-items:center;gap:8px;min-width:0"><img src="{{ r.logo }}" alt="" style="width:26px;height:26px;object-fit:cover;border-radius:7px"><span style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.shortName }}</span></div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.p }}</div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.w }}</div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.d }}</div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.l }}</div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.gf }}</div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.ga }}</div>
-          <div style="text-align:center;font-weight:600;font-size:13px;color:#9fb0c0">{{ r.gd }}</div>
-          <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:#e9edf2">{{ r.pts }}</div>
+          <div style="display:flex;align-items:center;gap:4px;min-width:0"><img src="{{ r.logo }}" alt="" style="flex:0 0 auto;width:20px;height:20px;object-fit:cover;border-radius:6px"><span style="min-width:0;font-weight:700;font-size:clamp(11px,3.3vw,13px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.shortName }}</span></div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.p }}</div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.w }}</div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.d }}</div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.l }}</div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.gf }}</div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.ga }}</div>
+          <div style="text-align:center;font-weight:600;font-size:clamp(11px,3.1vw,13px);color:#9fb0c0">{{ r.gd }}</div>
+          <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:700;font-size:clamp(11px,3.1vw,13px);color:#e9edf2">{{ r.pts }}</div>
         </div>
       </sc-for>
       <div style="padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:1px;color:#5b6b7a">{{ qualifyNote }}</div>
@@ -338,14 +344,14 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   <div style="display:flex;align-items:center;gap:10px;padding:0 2px"><span style="width:14px;height:14px;background:linear-gradient(135deg,#c8ff2e,#6fa800);transform:skewX(-14deg)"></span><span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;letter-spacing:5px;color:#e9edf2">FIXTURES</span></div>
   <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
     <sc-for list="{{ queueRows }}" as="q" hint-placeholder-count="10">
-      <div data-printblock="1" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-radius:14px;padding:10px 12px;background:{{ q.bg }};border:1px solid {{ q.border }};animation:pop .4s ease">
-        <div style="flex:0 0 46px;text-align:center"><div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:{{ q.numColor }}">{{ q.numLabel }}</div><div style="font-size:10px;letter-spacing:1px;color:#5b6b7a;font-weight:700">{{ q.stageShort }}</div></div>
+      <div data-printblock="1" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;border-radius:14px;padding:10px 10px;background:{{ q.bg }};border:1px solid {{ q.border }};animation:pop .4s ease">
+        <div style="flex:0 0 32px;text-align:center"><div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:{{ q.numColor }}">{{ q.numLabel }}</div><div style="font-size:10px;letter-spacing:1px;color:#5b6b7a;font-weight:700">{{ q.stageShort }}</div></div>
         <sc-if value="{{ q.real }}" hint-placeholder-val="{{ true }}">
-          <img src="{{ q.aLogo }}" alt="" style="width:30px;height:30px;object-fit:cover;border-radius:8px">
-          <div style="flex:1;min-width:0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ q.aColor }}">{{ q.aName }} {{ q.aTag }}</div>
+          <img src="{{ q.aLogo }}" alt="" style="flex:0 0 auto;width:26px;height:26px;object-fit:cover;border-radius:8px">
+          <div style="flex:1 1 64px;min-width:0;font-weight:700;font-size:clamp(11px,3.4vw,14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ q.aColor }}">{{ q.aName }} {{ q.aTag }}</div>
           <div style="flex:0 0 auto;font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:{{ q.scoreColor }}">{{ q.scoreLabel }}</div>
-          <div style="flex:1;min-width:0;font-weight:700;font-size:14px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ q.bColor }}">{{ q.bTag }} {{ q.bName }}</div>
-          <img src="{{ q.bLogo }}" alt="" style="width:30px;height:30px;object-fit:cover;border-radius:8px">
+          <div style="flex:1 1 64px;min-width:0;font-weight:700;font-size:clamp(11px,3.4vw,14px);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ q.bColor }}">{{ q.bTag }} {{ q.bName }}</div>
+          <img src="{{ q.bLogo }}" alt="" style="flex:0 0 auto;width:26px;height:26px;object-fit:cover;border-radius:8px">
           <sc-if value="{{ q.canPromote }}" hint-placeholder-val="{{ false }}">
             <button onClick="{{ q.promote }}" data-noprint="1" aria-label="Play this match next" style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(200,255,46,.08);border:1px solid rgba(200,255,46,.4);border-radius:50%;padding:0;cursor:pointer" style-active="transform:scale(.9);background:rgba(200,255,46,.2)"><span style="display:block;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #c8ff2e;margin-left:3px"></span></button>
           </sc-if>
@@ -441,11 +447,11 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
             <sc-for list="{{ awards }}" as="aw" hint-placeholder-count="4">
-              <div style="display:flex;align-items:center;gap:11px;text-align:left;background:rgba(255,255,255,.03);border:1px solid rgba(255,213,74,.2);border-radius:14px;padding:11px 13px">
-                <img src="{{ aw.logo }}" alt="" style="flex:0 0 auto;width:36px;height:36px;object-fit:cover;border-radius:10px;box-shadow:0 0 14px {{ aw.glow }}">
+              <div style="display:flex;align-items:center;gap:9px;text-align:left;background:rgba(255,255,255,.03);border:1px solid rgba(255,213,74,.2);border-radius:14px;padding:11px 12px">
+                <img src="{{ aw.logo }}" alt="" style="flex:0 0 auto;width:32px;height:32px;object-fit:cover;border-radius:10px;box-shadow:0 0 14px {{ aw.glow }}">
                 <div style="min-width:0">
                   <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:1.2px;white-space:nowrap;color:#8a7a45">{{ aw.title }}</div>
-                  <div style="font-weight:700;font-size:14px;color:#e9edf2;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ aw.who }}</div>
+                  <div style="font-weight:700;font-size:14px;line-height:1.2;color:#e9edf2;margin-top:3px;overflow-wrap:anywhere">{{ aw.who }}</div>
                   <div style="font-weight:600;font-size:11.5px;color:{{ aw.color }};margin-top:1px">{{ aw.detail }}</div>
                 </div>
               </div>
@@ -773,20 +779,84 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 </sc-if>
 
 <sc-if value="{{ editFixOpen }}" hint-placeholder-val="{{ false }}">
-  <div data-noprint="1" style="position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:72;display:flex;align-items:center;justify-content:center;padding:20px">
-    <div style="background:#0b0f15;border:1px solid rgba(255,213,74,.4);border-radius:20px;padding:26px 22px;max-width:390px;width:100%;text-align:center;animation:pop .3s ease;box-shadow:0 26px 60px -20px rgba(0,0,0,.95)">
-      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:2px;color:#ffd54a">FIX THIS RESULT?</div>
-      <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;color:#c9d4de;margin-top:14px">{{ editFixLine }}</div>
-      <div style="font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;line-height:1.5;color:#9fb0c0;margin-top:12px">It reopens as the current match so you can add or undo goals. The table rebuilds from the corrected score.</div>
+  <div data-noprint="1" style="position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:72;display:flex;align-items:center;justify-content:center;padding:14px">
+    <div style="background:#0b0f15;border:1px solid rgba(255,213,74,.4);border-radius:20px;padding:20px 16px calc(18px + env(safe-area-inset-bottom)) 16px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;overscroll-behavior:contain;animation:pop .3s ease;box-shadow:0 26px 60px -20px rgba(0,0,0,.95)">
+      <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:2px;color:#ffd54a">FIX THIS RESULT</div>
+      <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:2.5px;color:#8a99a8;margin-top:6px">{{ editFixTitle }}</div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px">
+        <div style="flex:1;min-width:0;text-align:center">
+          <img src="{{ editA.logo }}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:11px;box-shadow:0 0 18px {{ editA.glow }}">
+          <div style="display:inline-block;max-width:100%;box-sizing:border-box;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10px;letter-spacing:1px;color:#0a0f05;background:{{ editA.color }};padding:3px 9px 2px 9px;transform:skewX(-10deg);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ editA.name }}</div>
+        </div>
+        <div style="flex:0 0 auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.5);border:1px solid rgba(255,213,74,.3);border-radius:12px;padding:7px 13px">
+          <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:26px;line-height:1;color:#fff">{{ editA.score }}</span>
+          <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:#ffd54a;font-style:italic">:</span>
+          <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:26px;line-height:1;color:#fff">{{ editB.score }}</span>
+        </div>
+        <div style="flex:1;min-width:0;text-align:center">
+          <img src="{{ editB.logo }}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:11px;box-shadow:0 0 18px {{ editB.glow }}">
+          <div style="display:inline-block;max-width:100%;box-sizing:border-box;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10px;letter-spacing:1px;color:#0a0f05;background:{{ editB.color }};padding:3px 9px 2px 9px;transform:skewX(-10deg);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ editB.name }}</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:16px">
+        <sc-if value="{{ editOgIdle }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ toggleEditOG }}" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);color:#8a99a8;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL</button>
+        </sc-if>
+        <sc-if value="{{ editOgArmed }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ toggleEditOG }}" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,107,107,.6);background:rgba(255,107,107,.14);color:#ff9d9d;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL &#183; TAP TO CANCEL</button>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px">
+        <sc-for list="{{ editCols }}" as="col" hint-placeholder-count="2">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ col.players }}" as="p" hint-placeholder-count="2">
+              <button onClick="{{ p.onGoal }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:46px;padding:8px 13px;border-radius:11px;border:1px solid {{ col.borderColor }};background:linear-gradient(90deg,{{ col.tint }},rgba(0,0,0,.25) 60%);color:#e9edf2;cursor:pointer;font-family:'Rajdhani',sans-serif" style-active="transform:scale(.96);box-shadow:0 0 18px {{ col.glow }}">
+                <span style="display:flex;align-items:center;gap:9px;min-width:0"><span style="display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:22px;height:22px;border-radius:7px;background:{{ col.color }};font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:#0a0f05">+</span><span style="font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span></span>
+                <span style="flex:0 0 auto;font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;line-height:1;color:{{ p.tallyColor }}">{{ p.tally }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ editHasGoals }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:16px">
+          <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:2.5px;color:#5b6b7a">TAP A GOAL TO REMOVE IT</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:9px">
+            <sc-for list="{{ editGoals }}" as="g" hint-placeholder-count="3">
+              <button onClick="{{ g.onDrop }}" style="display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 11px;border-radius:9px;border:1px solid {{ g.border }};background:{{ g.bg }};color:{{ g.color }};font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer" style-active="transform:scale(.94)">
+                {{ g.label }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12"></path><path d="M18 6 6 18"></path></svg>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ editNoGoals }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:16px;text-align:center;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13.5px;color:#5b6b7a">Goalless so far — tap a player to add one.</div>
+      </sc-if>
+
+      <sc-if value="{{ editPenShow }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:16px;border:1px solid rgba(255,213,74,.28);background:rgba(255,213,74,.05);border-radius:12px;padding:12px 13px">
+          <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:2.5px;color:#ffd54a;text-align:center">LEVEL — SHOOTOUT SCORE</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px">
+            <input value="{{ editPenA }}" onChange="{{ onEditPenA }}" type="number" inputMode="numeric" min="0" max="99" aria-label="{{ editA.name }} penalties" style="width:66px;min-height:46px;box-sizing:border-box;background:rgba(0,0,0,.45);border:1px solid {{ editA.color }};border-radius:10px;text-align:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:20px;color:#fff;outline:none">
+            <span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:#ffd54a">P</span>
+            <input value="{{ editPenB }}" onChange="{{ onEditPenB }}" type="number" inputMode="numeric" min="0" max="99" aria-label="{{ editB.name }} penalties" style="width:66px;min-height:46px;box-sizing:border-box;background:rgba(0,0,0,.45);border:1px solid {{ editB.color }};border-radius:10px;text-align:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:20px;color:#fff;outline:none">
+          </div>
+        </div>
+      </sc-if>
+
       <sc-if value="{{ editFixHasWarn }}" hint-placeholder-val="{{ false }}">
         <div style="margin-top:16px;border:1px solid rgba(255,107,107,.35);background:rgba(255,107,107,.07);border-radius:12px;padding:11px 13px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13.5px;line-height:1.45;color:#ff9d9d">{{ editFixWarn }}</div>
       </sc-if>
-      <sc-if value="{{ editFixHasChampWarn }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:8px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13.5px;line-height:1.45;color:#ff9d9d">{{ editFixChampWarn }}</div>
-      </sc-if>
-      <div style="display:flex;gap:10px;margin-top:22px">
+
+      <div style="display:flex;gap:10px;margin-top:18px">
         <button onClick="{{ cancelEditFix }}" style="flex:1;min-height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#c9d4de;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;cursor:pointer" style-active="transform:scale(.96)">CANCEL</button>
-        <button onClick="{{ confirmEditFix }}" style="flex:1;min-height:48px;border-radius:12px;border:none;background:linear-gradient(180deg,#ffe07a,#e0a800);color:#1a1404;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:1.5px;cursor:pointer" style-active="transform:scale(.96)">FIX IT</button>
+        <button onClick="{{ confirmEditFix }}" style="flex:1;min-height:48px;border-radius:12px;border:none;background:linear-gradient(180deg,#ffe07a,#e0a800);color:#1a1404;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:1.5px;cursor:pointer" style-active="transform:scale(.96)">SAVE RESULT</button>
       </div>
     </div>
   </div>
@@ -1136,7 +1206,8 @@ class Component extends DCLogic {
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
-      editFixId: null, updateReady: false, ogArm: false, clockTick: 0, tvOpen: false,
+      editFixId: null, editEvents: null, editOG: false, editPenA: 0, editPenB: 0,
+      updateReady: false, ogArm: false, clockTick: 0, tvOpen: false,
       hall: hallStore.get(), hallOpen: false
     });
     this._timers = [];
@@ -1416,35 +1487,92 @@ class Component extends DCLogic {
     this.toastMsg('MATCH RESTARTED', '#ff7b7b');
     this.setState({ fixtures: this.state.fixtures.slice(), restartConfirm: false, penaltyFor: null, ogArm: false }, () => this.save());
   };
-  // ---------- reopening a finished match ----------
-  // Everything downstream of a result is derived, so a wrong score recorded
-  // three matches ago cannot just be patched in place: the knockouts it seeded
-  // have to go back in the hat too.
+  // ---------- fixing a finished result ----------
+  // The correction happens inside its own dialog on a working copy of the
+  // goals: the live board keeps the match it is on, and nothing downstream
+  // moves until the fix is saved. Everything after a result is derived from
+  // it, so a changed score still sends the knockouts it seeded back in the hat.
   dropForEdit(f, fx) {
     if (f.stage === 'LEAGUE') return fx.filter(x => x.stage !== 'LEAGUE');
     if (f.stage === 'SEMI-FINAL') return fx.filter(x => x.stage === 'FINAL');
     return [];
   }
-  askEditFix = (fid) => { SFX.click(); this.setState({ editFixId: fid }); };
-  cancelEditFix = () => { SFX.click(); this.setState({ editFixId: null }); };
-  confirmEditFix = () => {
-    const fx = this.state.fixtures.slice();
-    const f = fx.find(x => x.id === this.state.editFixId);
-    if (!f) { this.setState({ editFixId: null }); return; }
-    const drop = this.dropForEdit(f, fx);
-    const keep = fx.filter(x => drop.indexOf(x) < 0);
-    f.done = false; f.pen = null; f.penA = null; f.penB = null;
-    // The old clock belongs to the match as it was played; this is a fresh
-    // correction session, so it re-anchors when the match becomes current.
-    delete f.startedAt;
-    // Pull it to the front of the queue so it is the match being played.
-    keep.splice(keep.indexOf(f), 1);
-    const at = keep.findIndex(x => !x.done);
-    keep.splice(at < 0 ? keep.length : at, 0, f);
-    keep.forEach((x, i) => { x.num = i + 1; });
+  editFix() { return this.state.editFixId ? this.state.fixtures.find(x => x.id === this.state.editFixId) : null; }
+  editScore() {
+    const f = this.editFix();
+    if (!f) return { a: 0, b: 0 };
+    let a = 0, b = 0;
+    (this.state.editEvents || []).forEach(e => { if (e.team === f.a) a++; else if (e.team === f.b) b++; });
+    return { a, b };
+  }
+  askEditFix = (fid) => {
+    const f = this.state.fixtures.find(x => x.id === fid);
+    if (!f) return;
+    SFX.click();
+    this.setState({
+      editFixId: fid,
+      editEvents: f.events.map(e => Object.assign({}, e)),
+      editOG: false,
+      editPenA: f.penA != null ? f.penA : 0,
+      editPenB: f.penB != null ? f.penB : 0
+    });
+  };
+  cancelEditFix = () => { SFX.click(); this.setState({ editFixId: null, editEvents: null, editOG: false }); };
+  toggleEditOG = () => { SFX.click(); this.setState({ editOG: !this.state.editOG }); };
+  editAddGoal(player, playerTeam) {
+    const f = this.editFix(); if (!f) return;
+    const og = !!this.state.editOG;
+    const credited = og ? (playerTeam === f.a ? f.b : f.a) : playerTeam;
+    const e = og ? { player, team: credited, og: true, ts: Date.now() } : { player, team: credited, ts: Date.now() };
+    SFX.goal();
+    this.setState({ editEvents: (this.state.editEvents || []).concat([e]), editOG: false });
+  }
+  editDropGoal(i) {
+    const ev = (this.state.editEvents || []).slice();
+    if (i < 0 || i >= ev.length) return;
+    ev.splice(i, 1);
     SFX.undo();
-    this.toastMsg('EDITING MATCH ' + f.num, '#ffd54a');
-    this.setState({ fixtures: keep, champion: null, editFixId: null, penaltyFor: null, champModal: false }, () => this.save());
+    this.setState({ editEvents: ev });
+  }
+  setEditPen(side, v) {
+    const n = Math.max(0, Math.min(99, parseInt(v, 10) || 0));
+    this.setState(side === 'A' ? { editPenA: n } : { editPenB: n });
+  }
+  confirmEditFix = () => {
+    const target = this.editFix();
+    if (!target) { this.setState({ editFixId: null, editEvents: null }); return; }
+    const fx = this.state.fixtures.map(x => (x.id === target.id ? Object.assign({}, x) : x));
+    const f = fx.find(x => x.id === target.id);
+    const before = this.score(target);
+    f.events = (this.state.editEvents || []).slice();
+    const s = this.score(f);
+    let penChanged = false;
+    if (f.stage !== 'LEAGUE') {
+      if (s.a === s.b) {
+        const pa = Number(this.state.editPenA) || 0, pb = Number(this.state.editPenB) || 0;
+        if (pa === pb) { this.toastMsg('A SHOOTOUT CANNOT END LEVEL', '#ff6b6b'); return; }
+        penChanged = f.penA !== pa || f.penB !== pb;
+        f.penA = pa; f.penB = pb; f.pen = pa > pb ? f.a : f.b;
+      } else if (f.penA != null) {
+        penChanged = true;
+        f.penA = null; f.penB = null; f.pen = null;
+      }
+    }
+    // An unchanged result must not cost anyone a bracket: only a real change
+    // to who won, or by how much, sends the later rounds back in the hat.
+    const same = s.a === before.a && s.b === before.b && !penChanged;
+    const drop = same ? [] : this.dropForEdit(f, fx);
+    const keep = fx.filter(x => drop.indexOf(x) < 0);
+    this.growBracket(keep, false);
+    const fin = keep.find(x => x.stage === 'FINAL' && x.done);
+    const champion = fin ? this.winner(fin) : null;
+    SFX.click();
+    this.toastMsg('RESULT UPDATED — MATCH ' + f.num, '#ffd54a');
+    this.setState({ fixtures: keep, champion, editFixId: null, editEvents: null, editOG: false, champModal: false }, () => {
+      this.save();
+      // The roll keeps the same title but the scorers behind it just changed.
+      if (champion != null && this.state.tourId) this.syncHall();
+    });
   };
   endGame = () => {
     const f = this.curFix(); if (!f) return;
@@ -1468,6 +1596,37 @@ class Component extends DCLogic {
     f.penA = pa; f.penB = pb;
     this.completeFix(f, pa > pb ? f.a : f.b);
   };
+  // Whatever the table now says, draw the rounds that follow from it. Called
+  // both when a match finishes and after a result is corrected, so a fixed
+  // score reseeds the bracket by exactly the same rules that built it.
+  growBracket(fx, announce) {
+    const say = (m, c) => { if (announce) this.later(() => this.toastMsg(m, c), 1200); };
+    const leagueDone = fx.filter(x => x.stage === 'LEAGUE').every(x => x.done);
+    if (leagueDone && !fx.some(x => x.stage === 'SEMI-FINAL') && !fx.some(x => x.stage === 'FINAL')) {
+      const st = this.standings(fx);
+      if (st.length >= 5) {
+        fx.push({ id: 'SF1', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[0].idx, b: st[3].idx, events: [], done: false, pen: null });
+        fx.push({ id: 'SF2', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[1].idx, b: st[2].idx, events: [], done: false, pen: null });
+        say('SEMI-FINALS SET', '#c8ff2e');
+      } else if (st.length === 4) {
+        fx.push({ id: 'SF1', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[1].idx, b: st[2].idx, events: [], done: false, pen: null });
+        say('SEMI-FINAL SET — RANK 1 BYES TO THE FINAL', '#c8ff2e');
+      } else {
+        fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: st[0].idx, b: st[1].idx, events: [], done: false, pen: null });
+        say('THE FINAL IS SET', '#ffd54a');
+      }
+    }
+    const sfs = fx.filter(x => x.stage === 'SEMI-FINAL');
+    if (sfs.length === 2 && sfs.every(x => x.done) && !fx.some(x => x.stage === 'FINAL')) {
+      fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: this.winner(sfs[0]), b: this.winner(sfs[1]), events: [], done: false, pen: null });
+      say('THE FINAL IS SET', '#ffd54a');
+    } else if (sfs.length === 1 && sfs[0].done && !fx.some(x => x.stage === 'FINAL')) {
+      fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: this.standings(fx)[0].idx, b: this.winner(sfs[0]), events: [], done: false, pen: null });
+      say('THE FINAL IS SET', '#ffd54a');
+    }
+    fx.forEach((x, i) => { x.num = i + 1; });
+    return fx;
+  }
   completeFix(f, penWinner) {
     f.done = true;
     if (penWinner != null) f.pen = penWinner;
@@ -1480,30 +1639,7 @@ class Component extends DCLogic {
       picks.unshift(s);
     });
     const fx = this.state.fixtures;
-    const leagueDone = fx.filter(x => x.stage === 'LEAGUE').every(x => x.done);
-    if (leagueDone && !fx.some(x => x.stage === 'SEMI-FINAL') && !fx.some(x => x.stage === 'FINAL')) {
-      const st = this.standings();
-      if (st.length >= 5) {
-        fx.push({ id: 'SF1', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[0].idx, b: st[3].idx, events: [], done: false, pen: null });
-        fx.push({ id: 'SF2', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[1].idx, b: st[2].idx, events: [], done: false, pen: null });
-        this.later(() => this.toastMsg('SEMI-FINALS SET', '#c8ff2e'), 1200);
-      } else if (st.length === 4) {
-        fx.push({ id: 'SF1', stage: 'SEMI-FINAL', num: fx.length + 1, a: st[1].idx, b: st[2].idx, events: [], done: false, pen: null });
-        this.later(() => this.toastMsg('SEMI-FINAL SET — RANK 1 BYES TO THE FINAL', '#c8ff2e'), 1200);
-      } else {
-        fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: st[0].idx, b: st[1].idx, events: [], done: false, pen: null });
-        this.later(() => this.toastMsg('THE FINAL IS SET', '#ffd54a'), 1200);
-      }
-    }
-    const sfs = fx.filter(x => x.stage === 'SEMI-FINAL');
-    if (sfs.length === 2 && sfs.every(x => x.done) && !fx.some(x => x.stage === 'FINAL')) {
-      fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: this.winner(sfs[0]), b: this.winner(sfs[1]), events: [], done: false, pen: null });
-      this.later(() => this.toastMsg('THE FINAL IS SET', '#ffd54a'), 1200);
-    } else if (sfs.length === 1 && sfs[0].done && !fx.some(x => x.stage === 'FINAL')) {
-      const byeIdx = this.standings()[0].idx;
-      fx.push({ id: 'F', stage: 'FINAL', num: fx.length + 1, a: byeIdx, b: this.winner(sfs[0]), events: [], done: false, pen: null });
-      this.later(() => this.toastMsg('THE FINAL IS SET', '#ffd54a'), 1200);
-    }
+    this.growBracket(fx, true);
     let champion = this.state.champion;
     if (f.stage === 'FINAL') {
       champion = this.winner(f);
@@ -1516,11 +1652,13 @@ class Component extends DCLogic {
     this.setState({ fixtures: fx.slice(), penaltyFor: null, champion, picks: picks.slice(0, 30) }, () => this.save());
   }
   // ---------- standings ----------
-  standings() {
+  // `list` lets a table be read off a corrected set of fixtures that has not
+  // reached state yet — the bracket is redrawn from it before either is saved.
+  standings(list) {
     const rows = this.active().map(idx => ({ idx, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }));
     const byIdx = {};
     rows.forEach(r => { byIdx[r.idx] = r; });
-    const league = this.state.fixtures.filter(f => f.stage === 'LEAGUE' && f.done);
+    const league = (list || this.state.fixtures).filter(f => f.stage === 'LEAGUE' && f.done);
     league.forEach(f => {
       const s = this.score(f), A = byIdx[f.a], B = byIdx[f.b];
       if (!A || !B) return;
@@ -2204,6 +2342,10 @@ class Component extends DCLogic {
       }
     } else {
       const matchLive = !!(cur && cur.events.length > 0);
+      // Only the result that was just entered can be fixed. Anything older is
+      // history the rest of the board has already been built on, and a mistake
+      // that far back is a reset, not an edit.
+      const lastDone = st.fixtures.filter(f => f.done).slice(-1)[0] || null;
       st.fixtures.forEach(f => {
         const s = this.score(f);
         const isCur = cur && f.id === cur.id;
@@ -2221,7 +2363,7 @@ class Component extends DCLogic {
           canPromote: !f.done && !isCur && !matchLive,
           promoteDisabled: !f.done && !isCur && matchLive,
           promote: () => this.promote(f.id),
-          canEdit: !!f.done,
+          canEdit: !!lastDone && f.id === lastDone.id,
           edit: () => this.askEditFix(f.id),
           hasPicks: !!picks, picksLabel: picks,
           hasNote: !!f.note, noteLabel: f.note || '',
@@ -2475,18 +2617,52 @@ class Component extends DCLogic {
     })();
     const pen = st.penaltyFor ? st.fixtures.find(f => f.id === st.penaltyFor) : null;
     const editF = st.editFixId ? st.fixtures.find(f => f.id === st.editFixId) : null;
-    const editDrop = editF ? this.dropForEdit(editF, st.fixtures) : [];
-    const editScore = editF ? this.score(editF) : null;
+    const editEv = editF ? (st.editEvents || []) : [];
+    const editWas = editF ? this.score(editF) : { a: 0, b: 0 };
+    const editNow = this.editScore();
+    // The bracket is only disturbed by a result that actually changed, so the
+    // warning appears the moment the score differs and not a tap before.
+    const editChanged = !!editF && (editNow.a !== editWas.a || editNow.b !== editWas.b);
+    const editDrop = editF && editChanged ? this.dropForEdit(editF, st.fixtures) : [];
+    const editSide = (ti, isA) => {
+      const t = TEAMS[ti];
+      return { name: t.short, logo: t.logo, color: t.color, glow: glow(t.color, 0.45), score: String(isA ? editNow.a : editNow.b) };
+    };
     return {
       editFixOpen: !!editF,
-      editFixLine: editF ? 'MATCH ' + editF.num + ' · ' + TEAMS[editF.a].short + ' ' + editScore.a + '-' + editScore.b + ' ' + TEAMS[editF.b].short + (editF.penA != null ? ' (' + editF.penA + '-' + editF.penB + ' P)' : '') : '',
+      editFixTitle: editF ? 'MATCH ' + editF.num + ' · ' + editF.stage : '',
+      editA: editSide(editF ? editF.a : 0, true),
+      editB: editSide(editF ? editF.b : 1, false),
+      editOgArmed: !!st.editOG, editOgIdle: !st.editOG, toggleEditOG: this.toggleEditOG,
+      editCols: editF ? [editF.a, editF.b].map(ti => {
+        const t = TEAMS[ti];
+        return {
+          color: t.color, glow: glow(t.color, 0.35), tint: glow(t.color, 0.14), borderColor: glow(t.color, 0.5),
+          players: this.playersOf(ti).map(p => {
+            const n = editEv.filter(e => e.player === p && !e.og).length;
+            return { name: p, tally: String(n), tallyColor: n > 0 ? t.color : '#3a4550', onGoal: () => this.editAddGoal(p, ti) };
+          })
+        };
+      }) : [],
+      editHasGoals: editEv.length > 0,
+      editNoGoals: !!editF && editEv.length === 0,
+      editGoals: editEv.map((e, i) => ({
+        label: e.player + (e.og ? ' (OG)' : ''),
+        color: e.og ? '#ff9d9d' : TEAMS[e.team].color,
+        bg: e.og ? 'rgba(255,107,107,.1)' : glow(TEAMS[e.team].color, 0.12),
+        border: e.og ? 'rgba(255,107,107,.45)' : glow(TEAMS[e.team].color, 0.45),
+        onDrop: () => this.editDropGoal(i)
+      })),
+      editPenShow: !!editF && editF.stage !== 'LEAGUE' && editNow.a === editNow.b,
+      editPenA: String(st.editPenA ?? 0), editPenB: String(st.editPenB ?? 0),
+      onEditPenA: (e) => this.setEditPen('A', e.target.value),
+      onEditPenB: (e) => this.setEditPen('B', e.target.value),
       editFixHasWarn: editDrop.length > 0,
       editFixWarn: editDrop.length === 0 ? '' :
         (editF && editF.stage === 'LEAGUE'
-          ? (editDrop.length > 1 ? 'The ' + (editDrop.filter(x => x.stage === 'SEMI-FINAL').length > 1 ? 'semi-finals' : 'semi-final') + ' and final are cleared and drawn again from the corrected table.' : 'The final is cleared and drawn again from the corrected table.')
-          : 'The final is cleared and drawn again from the corrected result.'),
-      editFixChampWarn: st.champion != null ? TEAMS[st.champion].short + ' loses the title until the bracket is replayed.' : '',
-      editFixHasChampWarn: st.champion != null,
+          ? (editDrop.length > 1 ? 'Saving this reseeds the bracket: the ' + (editDrop.filter(x => x.stage === 'SEMI-FINAL').length > 1 ? 'semi-finals' : 'semi-final') + ' and final are drawn again from the corrected table.' : 'Saving this reseeds the bracket: the final is drawn again from the corrected table.')
+          : 'Saving this clears the final — it is drawn again from the corrected result.')
+        + (st.champion != null ? ' ' + TEAMS[st.champion].short + ' loses the title until the bracket is replayed.' : ''),
       cancelEditFix: this.cancelEditFix, confirmEditFix: this.confirmEditFix,
       soundLabel: st.sound ? 'ON' : 'OFF',
       soundColor: st.sound ? '#c8ff2e' : '#8a99a8',
