@@ -1018,9 +1018,14 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       </div>
       <div style="position:absolute;left:59.9%;top:90.9%;transform:translate(-50%,-50%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:calc(min(100vw - 24px,(100dvh - 24px)*0.80028)*0.027);line-height:1;letter-spacing:.06em;color:#c8ff2e;text-shadow:0 0 16px rgba(200,255,46,.4)">{{ bootGoals }}</div>
     </div>
-    <button onClick="{{ closeBoot }}" aria-label="Close the poster" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);color:#9fb0c0;cursor:pointer" style-active="transform:scale(.94);color:#e9edf2">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg>
-    </button>
+    <div style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));display:flex;align-items:center;gap:10px">
+      <button onClick="{{ savePoster }}" aria-label="Save this poster" style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:rgba(255,213,74,.14);border:1px solid rgba(255,213,74,.45);color:#ffd54a;cursor:pointer" style-active="transform:scale(.94);background:rgba(255,213,74,.28)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"></path><path d="M7.5 10.5 12 15l4.5-4.5"></path><path d="M4 19h16"></path></svg>
+      </button>
+      <button onClick="{{ closeBoot }}" aria-label="Close the poster" style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);color:#9fb0c0;cursor:pointer" style-active="transform:scale(.94);color:#e9edf2">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg>
+      </button>
+    </div>
   </div>
 </sc-if>
 <sc-if value="{{ tvOpen }}" hint-placeholder-val="{{ false }}">
@@ -1520,6 +1525,96 @@ class Component extends DCLogic {
     SFX.click();
     this.setState({ bootOpen: false });
     if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  };
+  // The boot goes to the leading scorer, and only once a goal has been scored;
+  // ties settle by name so the poster and the awards strip never disagree.
+  bootWinner() {
+    const goals = this.playerGoals();
+    const top = this.active().flatMap(i => this.playersOf(i).map(p => ({ name: p, goals: goals[p] || 0 })))
+      .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name))[0];
+    return top && top.goals > 0 ? top : null;
+  }
+  // The poster on screen is the art with two lines laid over it, so saving it
+  // means painting those same two lines into a canvas at the art's own size —
+  // the fractions below are the ones the overlay is positioned with. iOS has no
+  // usable file download, so the share sheet (Save Image, or straight into
+  // WhatsApp) is tried first and a plain download is the fallback.
+  savePoster = async () => {
+    if (this._saving) return;
+    const win = this.bootWinner();
+    if (!win) return;
+    this._saving = true;
+    SFX.click();
+    try {
+      const img = new Image();
+      img.src = 'posters/golden-boot.jpg';
+      await img.decode();
+      if (document.fonts && document.fonts.load) {
+        try { await document.fonts.load('900 100px Orbitron'); await document.fonts.ready; } catch (e) {}
+      }
+      const W = img.naturalWidth, H = img.naturalHeight;
+      const cv = document.createElement('canvas');
+      cv.width = W; cv.height = H;
+      const g = cv.getContext('2d');
+      g.drawImage(img, 0, 0, W, H);
+
+      const name = win.name.trim().toUpperCase();
+      const words = name.split(/\s+/);
+      const fs = Math.min(0.085, 0.085 * 9 / win.name.trim().length) * W;
+      g.font = '900 ' + fs + 'px Orbitron, sans-serif';
+      g.textAlign = 'left';
+      g.textBaseline = 'middle';
+      const gap = fs * 0.3;
+      const parts = words.length > 1
+        ? [{ t: words[0], c: '#dfe6ee' }, { t: words.slice(1).join(' '), c: '#c8ff2e' }]
+        : [{ t: name, c: '#c8ff2e' }];
+      const total = parts.reduce((a, q) => a + g.measureText(q.t).width, 0) + gap * (parts.length - 1);
+      g.save();
+      // The nameplate art leans; the lettering leans with it.
+      g.translate(W * 0.5145, H * 0.831);
+      g.transform(1, 0, Math.tan(-6 * Math.PI / 180), 1, 0, 0);
+      let x = -total / 2;
+      parts.forEach(q => {
+        g.fillStyle = 'rgba(0,0,0,.55)';
+        g.fillText(q.t, x, fs * 0.035);
+        g.save();
+        g.shadowColor = q.c === '#c8ff2e' ? 'rgba(200,255,46,.45)' : 'rgba(255,255,255,.22)';
+        g.shadowBlur = fs * 0.24;
+        g.fillStyle = q.c;
+        g.fillText(q.t, x, 0);
+        g.restore();
+        x += g.measureText(q.t).width + gap;
+      });
+      g.restore();
+
+      const nfs = W * 0.027;
+      g.font = '900 ' + nfs + 'px Orbitron, sans-serif';
+      g.textAlign = 'center';
+      g.fillStyle = '#c8ff2e';
+      g.save();
+      g.shadowColor = 'rgba(200,255,46,.4)';
+      g.shadowBlur = nfs * 0.5;
+      g.fillText(String(win.goals), W * 0.599, H * 0.909);
+      g.restore();
+
+      const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', 0.92));
+      if (!blob) throw new Error('no blob');
+      const fname = 'golden-boot-' + win.name.trim().toLowerCase().replace(/\s+/g, '-') + '.jpg';
+      const file = new File([blob], fname, { type: 'image/jpeg' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file] }); this._saving = false; return; }
+        catch (e) { this._saving = false; if (e && e.name === 'AbortError') return; }
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = fname;
+      document.body.appendChild(a); a.click(); a.remove();
+      this.later(() => URL.revokeObjectURL(url), 5000);
+      this.toastMsg('POSTER SAVED', '#ffd54a');
+    } catch (e) {
+      this.toastMsg('COULD NOT SAVE THE POSTER', '#ff6b6b');
+    }
+    this._saving = false;
   };
   promote(fid) {
     const fx = this.state.fixtures;
@@ -2437,7 +2532,7 @@ class Component extends DCLogic {
       });
     // The golden boot goes to the top of the scorers list, and only when a goal
     // was actually scored — the list itself already settles ties by name.
-    const bootWin = scorers.length && scorers[0].boot ? scorers[0] : null;
+    const bootWin = this.bootWinner();
     const bootWords = bootWin ? bootWin.name.trim().split(/\s+/) : [];
     // A long name has to give width back, otherwise it runs past the nameplate.
     const bootNameK = bootWin ? Math.min(0.085, 0.085 * 9 / Math.max(1, bootWin.name.trim().length)) : 0.085;
@@ -2933,7 +3028,7 @@ class Component extends DCLogic {
       // The poster art is a fixed-ratio plate; the winner's name and tally are
       // the only live parts, so they are sized off the same expression that
       // sizes the plate and stay locked to it at any screen size.
-      bootOpen: !!st.bootOpen, openBoot: this.openBoot, closeBoot: this.closeBoot,
+      bootOpen: !!st.bootOpen, openBoot: this.openBoot, closeBoot: this.closeBoot, savePoster: this.savePoster,
       bootShow: !!bootWin,
       bootHasFirst: bootWords.length > 1,
       bootFirst: bootWords.length > 1 ? bootWords[0] : '',
