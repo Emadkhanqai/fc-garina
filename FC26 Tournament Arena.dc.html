@@ -54,7 +54,8 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes spinslow{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes trophyfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@keyframes tossshake{0%,100%{transform:translate3d(0,0,0)}20%{transform:translate3d(-2px,1px,0)}40%{transform:translate3d(2px,-1px,0)}60%{transform:translate3d(-1px,-2px,0)}80%{transform:translate3d(1px,2px,0)}}
+@keyframes appshake{0%,100%{transform:translate3d(0,0,0)}20%{transform:translate3d(-3px,2px,0)}40%{transform:translate3d(3px,-2px,0)}60%{transform:translate3d(-2px,-3px,0)}80%{transform:translate3d(2px,3px,0)}}
+@keyframes appshakesoft{0%,100%{transform:translate3d(0,0,0)}25%{transform:translate3d(-1.5px,1px,0)}50%{transform:translate3d(1.5px,-1px,0)}75%{transform:translate3d(-1px,-1.5px,0)}}
 @keyframes reelstreak{0%{transform:translateY(-130%)}100%{transform:translateY(130%)}}
 @keyframes lockflash{0%{filter:brightness(2.6) saturate(1.4)}55%{filter:brightness(1.2)}100%{filter:brightness(1)}}
 @keyframes vshit{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
@@ -131,7 +132,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 
 <!-- OPENING TOSS -->
 <sc-if value="{{ showToss }}" hint-placeholder-val="{{ true }}">
-  <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.2);background:linear-gradient(180deg,#0d1118,#070a0e);padding:24px 14px 26px 14px;text-align:center;position:relative;overflow:hidden;animation:{{ tossShake }}">
+  <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.2);background:linear-gradient(180deg,#0d1118,#070a0e);padding:24px 14px 26px 14px;text-align:center;position:relative;overflow:hidden">
     <div style="position:absolute;inset:0;border-radius:20px;padding:2.5px;box-sizing:border-box;background:conic-gradient(from 0deg,transparent 0%,rgba(200,255,46,.5) 4%,rgba(200,255,46,1) 9%,#f4ffd0 13%,rgba(200,255,46,1) 17%,rgba(200,255,46,.5) 22%,transparent 30%,transparent 100%);filter:drop-shadow(0 0 6px rgba(200,255,46,.9));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderstrike 2.8s linear infinite;pointer-events:none"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(60% 90% at 0% 50%,{{ slotA.tint }},transparent 60%),radial-gradient(60% 90% at 100% 50%,{{ slotB.tint }},transparent 60%);pointer-events:none;transition:background .3s"></div>
     <div style="position:relative">
@@ -800,6 +801,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
     <div style="background:#0b0f15;border:1px solid rgba(255,213,74,.4);border-radius:20px;padding:20px 16px calc(18px + env(safe-area-inset-bottom)) 16px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;overscroll-behavior:contain;animation:pop .3s ease;box-shadow:0 26px 60px -20px rgba(0,0,0,.95)">
       <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:2px;color:#ffd54a">FIX THIS RESULT</div>
       <div style="text-align:center;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:2.5px;color:#8a99a8;margin-top:6px">{{ editFixTitle }}</div>
+      <div style="text-align:center;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;line-height:1.4;color:#ffd54a;margin-top:8px">One fix per match — saving spends it, and this result cannot be opened again.</div>
 
       <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px">
         <div style="flex:1;min-width:0;text-align:center">
@@ -1188,6 +1190,9 @@ const SFX = {
     o.start(t); o.stop(t + d + 0.05);
   },
   tick() { this.tone(1500, 0.045, 'square', 0.05); },
+  // The phone is in the operator's hand through the draw, so the wheel is
+  // felt as well as heard. iOS ignores this; Android does not.
+  buzz(pattern) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} },
   click() { this.tone(750, 0.05, 'triangle', 0.08); },
   sweep(f, d, type, v, when) {
     const c = this.ac(); if (!c || !this.on) return;
@@ -1353,13 +1358,15 @@ class Component extends DCLogic {
   stopRoll() {
     (this._rollTimers || []).forEach(clearTimeout);
     this._rollTimers = [];
+    this.shakePage(0);
+    SFX.buzz(0);
   }
   randOther(not) {
     const act = this.active().filter(i => i !== not);
     return act[Math.floor(Math.random() * act.length)];
   }
   rollSteps() {
-    const FLAT = 2100, MAXD = 430, GROW = 1.075;
+    const FLAT = 3200, MAXD = 480, GROW = 1.055;
     const steps = [];
     let t = 0, d = 45;
     while (t < FLAT) { steps.push({ t, d }); t += d; }
@@ -1367,15 +1374,27 @@ class Component extends DCLogic {
     steps.push({ t, d: MAXD });
     return { steps, end: t + MAXD };
   }
+  // The shake belongs to the whole page, not one card, so the room sees the
+  // board itself rattle. Written only when the level changes — rewriting it
+  // every step would restart the keyframes and kill the motion.
+  shakePage(level) {
+    if (this._shake === level) return;
+    this._shake = level;
+    if (typeof document === 'undefined' || !document.body) return;
+    document.body.style.animation = level === 2 ? 'appshake .15s linear infinite'
+      : level === 1 ? 'appshakesoft .22s linear infinite' : '';
+  }
   runRoulette() {
     this.stopRoll();
     const at = (ms, fn) => { this._rollTimers.push(setTimeout(fn, ms)); };
     this.setState({ rolling: true, tossPending: false, rollA: true, rollB: true, spinD: 45, lockA: 0 });
-    SFX.sweep([110, 700], 2.4, 'sawtooth', 0.085);
-    SFX.sweep([55, 190], 2.6, 'sine', 0.13);
+    SFX.sweep([110, 700], 3.2, 'sawtooth', 0.085);
+    SFX.sweep([55, 190], 3.4, 'sine', 0.13);
+    this.shakePage(2);
+    SFX.buzz(160);
     const { steps, end } = this.rollSteps();
     // one side settles once the wheel is visibly slowing, not on a fixed count
-    let aIdx = steps.findIndex(s => s.d >= 250);
+    let aIdx = steps.findIndex(s => s.d >= 300);
     if (aIdx < 0) aIdx = steps.length - 1;
     steps.forEach((s, i) => {
       const prog = i / steps.length;
@@ -1386,14 +1405,20 @@ class Component extends DCLogic {
           const [a, b] = this.randPair();
           this.setState({ slotA: a, slotB: b, spinD: s.d });
         }
-        if (i === aIdx) { SFX.lock(); this.setState({ lockA: Date.now() }); }
+        this.shakePage(s.d <= 70 ? 2 : s.d <= 240 ? 1 : 0);
+        if (i === aIdx) { SFX.lock(); SFX.buzz([50, 40, 90]); this.setState({ lockA: Date.now() }); }
         // at full speed a tick every step is a buzz, so thin them out early
-        if (s.d >= 80 || i % 3 === 0) SFX.tone(820 + prog * 900, 0.04, 'square', 0.045 + prog * 0.045);
+        if (s.d >= 80 || i % 3 === 0) {
+          SFX.tone(820 + prog * 900, 0.04, 'square', 0.045 + prog * 0.045);
+          SFX.buzz(Math.round(Math.min(26, 9 + s.d / 24)));
+        }
       });
     });
     at(end, () => {
       SFX.lock();
       SFX.tone(1760, 0.22, 'square', 0.1, 0.06);
+      SFX.buzz([70, 50, 140]);
+      this.shakePage(0);
       this.setState({ rolling: false, tossPending: true, rollA: false, rollB: false, spinD: 0, lockB: Date.now() });
     });
   }
@@ -1599,6 +1624,9 @@ class Component extends DCLogic {
     const fx = this.state.fixtures.map(x => (x.id === target.id ? Object.assign({}, x) : x));
     const f = fx.find(x => x.id === target.id);
     const before = this.score(target);
+    // One fix per match: saving spends it, whatever the new score turns out to
+    // be. A result that needs correcting twice is a result nobody trusts.
+    f.fixed = true;
     f.events = (this.state.editEvents || []).slice();
     const s = this.score(f);
     let penChanged = false;
@@ -2320,8 +2348,19 @@ class Component extends DCLogic {
     // is what stops the change watcher from taking it straight back off.
     const kept = this.state.champion != null;
     this._lastChamp = null;
+    // A reset taken while the draw was still on screen used to leave the toss
+    // mid-roll — the board was empty but the panels still offered RE-ROLL on a
+    // matchup that no longer existed.
+    this.stopRoll();
+    const act = this.active();
     store.del();
-    this.setState({ tossDone: false, fixtures: [], champion: null, tourId: null, menuOpen: false, resetArmed: false, penaltyFor: null, modalTeam: null });
+    this.setState({
+      tossDone: false, fixtures: [], champion: null, tourId: null,
+      menuOpen: false, resetArmed: false, penaltyFor: null, modalTeam: null,
+      rolling: false, tossPending: false, lockShow: false,
+      slotA: act[0], slotB: act[1] != null ? act[1] : act[0],
+      rollA: false, rollB: false, spinD: 0, lockA: 0, lockB: 0
+    });
     this.toastMsg(kept ? 'BOARD CLEARED — TITLE KEPT' : 'TOURNAMENT RESET', kept ? '#ffd54a' : '#ff6b6b');
   };
   printTeamVals(cur, standings, goals) {
@@ -2401,7 +2440,8 @@ class Component extends DCLogic {
       // history the rest of the board has already been built on, and a mistake
       // that far back is a reset, not an edit. Once the final is played the
       // tournament is closed and nothing on the board is editable.
-      const lastDone = st.champion != null ? null : (st.fixtures.filter(f => f.done).slice(-1)[0] || null);
+      const lastDoneFix = st.champion != null ? null : (st.fixtures.filter(f => f.done).slice(-1)[0] || null);
+      const lastDone = lastDoneFix && !lastDoneFix.fixed ? lastDoneFix : null;
       st.fixtures.forEach(f => {
         const s = this.score(f);
         const isCur = cur && f.id === cur.id;
@@ -2822,7 +2862,6 @@ class Component extends DCLogic {
       tossReveal: st.rolling || st.tossPending || st.tossDone || act.length === 2,
       rerollToss: this.rerollToss, acceptToss: this.acceptToss,
       slotA: tossSlot(0), slotB: tossSlot(1),
-      tossShake: st.rolling && st.spinD && st.spinD <= 95 ? 'tossshake .16s linear infinite' : 'none',
       vsAnim: st.rolling ? 'vshit .32s ease-in-out infinite' : 'none',
       startToss: this.startToss,
       hasCurrent: !!cur && !st.lockShow,
