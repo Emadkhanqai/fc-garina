@@ -54,6 +54,11 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes spinslow{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes trophyfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes tossshake{0%,100%{transform:translate3d(0,0,0)}20%{transform:translate3d(-2px,1px,0)}40%{transform:translate3d(2px,-1px,0)}60%{transform:translate3d(-1px,-2px,0)}80%{transform:translate3d(1px,2px,0)}}
+@keyframes reelstreak{0%{transform:translateY(-130%)}100%{transform:translateY(130%)}}
+@keyframes lockflash{0%{filter:brightness(2.6) saturate(1.4)}55%{filter:brightness(1.2)}100%{filter:brightness(1)}}
+@keyframes vshit{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
 @media print{html,body{background:#06080c !important;background-image:none !important;color:#e9edf2 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}[data-noprint]{display:none !important}[data-printonly="1"]{display:block !important}[data-printstack]{grid-template-columns:1fr !important}[data-printblock]{break-inside:avoid;page-break-inside:avoid}[data-printsheet]{position:static !important;transform:none !important;width:auto !important;max-width:none !important;max-height:none !important;overflow:visible !important;animation:none !important;margin:0 !important;border-radius:18px !important;padding:16px !important}body:has([data-printsheet]) [data-printmain]{display:none !important}body:has([data-printsheet]) [data-printroot]{display:flex;flex-direction:column}body:has([data-printsheet]) [data-printonly="1"]{order:2}*{animation:none !important}@page{margin:10mm}}
 </style>
 </helmet>
@@ -126,7 +131,7 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 
 <!-- OPENING TOSS -->
 <sc-if value="{{ showToss }}" hint-placeholder-val="{{ true }}">
-  <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.2);background:linear-gradient(180deg,#0d1118,#070a0e);padding:24px 14px 26px 14px;text-align:center;position:relative;overflow:hidden">
+  <div data-noprint="1" style="margin-top:16px;border-radius:20px;border:1px solid rgba(200,255,46,.2);background:linear-gradient(180deg,#0d1118,#070a0e);padding:24px 14px 26px 14px;text-align:center;position:relative;overflow:hidden;animation:{{ tossShake }}">
     <div style="position:absolute;inset:0;border-radius:20px;padding:2.5px;box-sizing:border-box;background:conic-gradient(from 0deg,transparent 0%,rgba(200,255,46,.5) 4%,rgba(200,255,46,1) 9%,#f4ffd0 13%,rgba(200,255,46,1) 17%,rgba(200,255,46,.5) 22%,transparent 30%,transparent 100%);filter:drop-shadow(0 0 6px rgba(200,255,46,.9));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderstrike 2.8s linear infinite;pointer-events:none"></div>
     <div style="position:absolute;inset:0;background:radial-gradient(60% 90% at 0% 50%,{{ slotA.tint }},transparent 60%),radial-gradient(60% 90% at 100% 50%,{{ slotB.tint }},transparent 60%);pointer-events:none;transition:background .3s"></div>
     <div style="position:relative">
@@ -134,23 +139,29 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
       <div style="font-weight:600;font-size:14px;color:#8a99a8;letter-spacing:2px;margin-top:8px">{{ tossSub }}</div>
     </div>
     <div style="position:relative;display:flex;align-items:stretch;justify-content:center;gap:0;margin-top:22px">
-      <div style="flex:1;max-width:185px;min-width:0;transform:skewX(-7deg);border-radius:16px;overflow:hidden;border:2px solid {{ slotA.color }};box-shadow:0 0 34px {{ slotA.glow }};background:#0a0d12;transition:box-shadow .15s,border-color .15s">
+      <div style="position:relative;flex:1;max-width:185px;min-width:0;transform:skewX(-7deg) scale({{ slotA.scale }});border-radius:16px;overflow:hidden;border:2px solid {{ slotA.color }};box-shadow:0 0 34px {{ slotA.glow }};background:#0a0d12;transition:box-shadow .15s,border-color .15s,transform .12s ease-out;animation:{{ slotA.flash }}">
         <sc-if value="{{ tossMystery }}" hint-placeholder-val="{{ true }}">
           <div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(-45deg,rgba(200,255,46,.05) 0 10px,transparent 10px 22px)"><div style="transform:skewX(7deg);font-family:'Orbitron',sans-serif;font-weight:900;font-size:56px;color:rgba(200,255,46,.5);animation:pulse 2s ease-in-out infinite">?</div></div>
         </sc-if>
         <sc-if value="{{ tossReveal }}" hint-placeholder-val="{{ false }}">
-          <img src="{{ slotA.logo }}" alt="{{ slotA.name }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)">
+          <img src="{{ slotA.logo }}" alt="{{ slotA.name }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg);filter:blur({{ slotA.blur }});transition:filter .09s linear">
+          <sc-if value="{{ slotA.spin }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(180deg,transparent,rgba(230,255,190,.28),transparent);animation:reelstreak .42s linear infinite;pointer-events:none;z-index:2"></div>
+          </sc-if>
         </sc-if>
       </div>
       <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:72px;position:relative;z-index:2">
-        <div style="position:absolute;font-family:'Orbitron',sans-serif;font-weight:900;font-size:34px;font-style:italic;letter-spacing:1px;background:linear-gradient(180deg,#f4ffd0,#c8ff2e 60%,#6fa800);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(200,255,46,.55)) drop-shadow(0 3px 0 rgba(0,0,0,.6))">VS</div>
+        <div style="position:absolute;font-family:'Orbitron',sans-serif;font-weight:900;font-size:34px;font-style:italic;letter-spacing:1px;background:linear-gradient(180deg,#f4ffd0,#c8ff2e 60%,#6fa800);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(200,255,46,.55)) drop-shadow(0 3px 0 rgba(0,0,0,.6));animation:{{ vsAnim }}">VS</div>
       </div>
-      <div style="flex:1;max-width:185px;min-width:0;transform:skewX(-7deg);border-radius:16px;overflow:hidden;border:2px solid {{ slotB.color }};box-shadow:0 0 34px {{ slotB.glow }};background:#0a0d12;transition:box-shadow .15s,border-color .15s">
+      <div style="position:relative;flex:1;max-width:185px;min-width:0;transform:skewX(-7deg) scale({{ slotB.scale }});border-radius:16px;overflow:hidden;border:2px solid {{ slotB.color }};box-shadow:0 0 34px {{ slotB.glow }};background:#0a0d12;transition:box-shadow .15s,border-color .15s,transform .12s ease-out;animation:{{ slotB.flash }}">
         <sc-if value="{{ tossMystery }}" hint-placeholder-val="{{ true }}">
           <div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(-45deg,rgba(200,255,46,.05) 0 10px,transparent 10px 22px)"><div style="transform:skewX(7deg);font-family:'Orbitron',sans-serif;font-weight:900;font-size:56px;color:rgba(200,255,46,.5);animation:pulse 2s ease-in-out infinite">?</div></div>
         </sc-if>
         <sc-if value="{{ tossReveal }}" hint-placeholder-val="{{ false }}">
-          <img src="{{ slotB.logo }}" alt="{{ slotB.name }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg)">
+          <img src="{{ slotB.logo }}" alt="{{ slotB.name }}" style="display:block;width:118%;margin-left:-9%;aspect-ratio:1;object-fit:cover;transform:skewX(7deg);filter:blur({{ slotB.blur }});transition:filter .09s linear">
+          <sc-if value="{{ slotB.spin }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(180deg,transparent,rgba(230,255,190,.28),transparent);animation:reelstreak .42s linear infinite;pointer-events:none;z-index:2"></div>
+          </sc-if>
         </sc-if>
       </div>
     </div>
@@ -1211,6 +1222,7 @@ class Component extends DCLogic {
     const saved = store.get();
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
+      rollA: false, rollB: false, spinD: 0, lockA: 0, lockB: 0,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
       editFixId: null, editEvents: null, editOG: false, editPenA: 0, editPenB: 0,
       updateReady: false, ogArm: false, clockTick: 0, tvOpen: false,
@@ -1289,6 +1301,7 @@ class Component extends DCLogic {
   later(fn, ms) { this._timers.push(setTimeout(fn, ms)); }
   componentWillUnmount() {
     this._timers.forEach(clearTimeout);
+    this.stopRoll();
     if (this._clockTimer) clearInterval(this._clockTimer);
     if (this._onVis) document.removeEventListener('visibilitychange', this._onVis);
     if (this._wake) { const w = this._wake; this._wake = null; w.release().catch(() => {}); }
@@ -1333,27 +1346,63 @@ class Component extends DCLogic {
     }
     this.runRoulette();
   };
+  // The draw is the one moment the whole room is watching, so it is built like
+  // a wheel rather than a list of jumps: flat out until the crests are a blur,
+  // then an exponential slow-down, and the two sides land one after the other
+  // so there is a second reveal to shout at instead of one.
+  stopRoll() {
+    (this._rollTimers || []).forEach(clearTimeout);
+    this._rollTimers = [];
+  }
+  randOther(not) {
+    const act = this.active().filter(i => i !== not);
+    return act[Math.floor(Math.random() * act.length)];
+  }
+  rollSteps() {
+    const FLAT = 2100, MAXD = 430, GROW = 1.075;
+    const steps = [];
+    let t = 0, d = 45;
+    while (t < FLAT) { steps.push({ t, d }); t += d; }
+    while (d < MAXD) { steps.push({ t, d }); t += d; d = Math.min(MAXD, d * GROW); }
+    steps.push({ t, d: MAXD });
+    return { steps, end: t + MAXD };
+  }
   runRoulette() {
-    this.setState({ rolling: true, tossPending: false });
-    const delays = [];
-    const push = (n, d) => { for (let i = 0; i < n; i++) delays.push(d); };
-    push(11, 95); push(5, 185); push(8, 88); push(4, 240);
-    [320, 430, 570, 760].forEach(d => delays.push(d));
-    let t = 0;
-    delays.forEach(d => {
-      t += d;
-      this.later(() => { const [a, b] = this.randPair(); this.setState({ slotA: a, slotB: b }); SFX.tick(); }, t);
+    this.stopRoll();
+    const at = (ms, fn) => { this._rollTimers.push(setTimeout(fn, ms)); };
+    this.setState({ rolling: true, tossPending: false, rollA: true, rollB: true, spinD: 45, lockA: 0 });
+    SFX.sweep([110, 700], 2.4, 'sawtooth', 0.085);
+    SFX.sweep([55, 190], 2.6, 'sine', 0.13);
+    const { steps, end } = this.rollSteps();
+    // one side settles once the wheel is visibly slowing, not on a fixed count
+    let aIdx = steps.findIndex(s => s.d >= 250);
+    if (aIdx < 0) aIdx = steps.length - 1;
+    steps.forEach((s, i) => {
+      const prog = i / steps.length;
+      at(s.t, () => {
+        if (i >= aIdx) {
+          this.setState({ slotB: this.randOther(this.state.slotA), spinD: s.d, rollA: false });
+        } else {
+          const [a, b] = this.randPair();
+          this.setState({ slotA: a, slotB: b, spinD: s.d });
+        }
+        if (i === aIdx) { SFX.lock(); this.setState({ lockA: Date.now() }); }
+        // at full speed a tick every step is a buzz, so thin them out early
+        if (s.d >= 80 || i % 3 === 0) SFX.tone(820 + prog * 900, 0.04, 'square', 0.045 + prog * 0.045);
+      });
     });
-    this.later(() => {
-      SFX.click();
-      this.setState({ rolling: false, tossPending: true });
-    }, t + 420);
+    at(end, () => {
+      SFX.lock();
+      SFX.tone(1760, 0.22, 'square', 0.1, 0.06);
+      this.setState({ rolling: false, tossPending: true, rollA: false, rollB: false, spinD: 0, lockB: Date.now() });
+    });
   }
   rerollToss = () => {
     if (this.state.tossDone || this.state.rolling) return;
     SFX.ac(); SFX.click();
     this.runRoulette();
   };
+  cancelRoll() { this.stopRoll(); }
   acceptToss = () => {
     if (this.state.tossDone || !this.state.tossPending) return;
     const a = this.state.slotA, b = this.state.slotB;
@@ -2622,6 +2671,23 @@ class Component extends DCLogic {
       }
       return list;
     })();
+    // Crest panels carry the wheel: motion blur and a light streak while a side
+    // is still turning, a brightness snap the moment it lands.
+    const spinBlur = (d) => Math.max(0, Math.min(3.4, (430 - d) / 118));
+    const tossSlot = (side) => {
+      const idle = !st.tossDone && !st.rolling && !st.tossPending;
+      const base = idle
+        ? (act.length === 2 ? deco(act[side]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' })
+        : deco(side === 0 ? st.slotA : st.slotB);
+      const spinning = !!st.rolling && (side === 0 ? !!st.rollA : !!st.rollB);
+      const landed = side === 0 ? st.lockA : st.lockB;
+      return Object.assign({}, base, {
+        spin: spinning,
+        blur: (spinning ? spinBlur(st.spinD || 45) : 0).toFixed(2) + 'px',
+        scale: spinning ? '1.03' : '1',
+        flash: landed && Date.now() - landed < 700 ? 'lockflash .5s ease' : 'none'
+      });
+    };
     const pen = st.penaltyFor ? st.fixtures.find(f => f.id === st.penaltyFor) : null;
     const editF = st.editFixId ? st.fixtures.find(f => f.id === st.editFixId) : null;
     const editEv = editF ? (st.editEvents || []) : [];
@@ -2750,13 +2816,14 @@ class Component extends DCLogic {
       showToss: !st.tossDone || st.lockShow,
       tossReady: !st.tossDone && !st.rolling && !st.tossPending,
       tossRolling: st.rolling, tossLocked: st.lockShow, tossPending: !!st.tossPending && !st.lockShow,
-      tossSub: st.lockShow ? 'MATCH 1 IS SET' : st.tossPending ? 'LOCK THIS MATCHUP?' : st.rolling ? 'DRAWING THE OPENING FIXTURE' : act.length === 2 ? 'TWO TEAMS — STRAIGHT TO BATTLE' : 'RANDOM DRAW — WHO PLAYS FIRST',
+      tossSub: st.lockShow ? 'MATCH 1 IS SET' : st.tossPending ? 'LOCK THIS MATCHUP?' : st.rolling ? (st.rollA ? 'DRAWING THE OPENING FIXTURE' : 'ONE SIDE IS SET — WHO FACES THEM?') : act.length === 2 ? 'TWO TEAMS — STRAIGHT TO BATTLE' : 'RANDOM DRAW — WHO PLAYS FIRST',
       tossBtnLabel: act.length === 2 ? 'START TOURNAMENT' : 'START SHOWDOWN',
       tossMystery: !st.tossDone && !st.rolling && !st.tossPending && act.length > 2,
       tossReveal: st.rolling || st.tossPending || st.tossDone || act.length === 2,
       rerollToss: this.rerollToss, acceptToss: this.acceptToss,
-      slotA: (!st.tossDone && !st.rolling && !st.tossPending) ? (act.length === 2 ? deco(act[0]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' }) : deco(st.slotA),
-      slotB: (!st.tossDone && !st.rolling && !st.tossPending) ? (act.length === 2 ? deco(act[1]) : { logo: '', name: '? ? ?', color: 'rgba(200,255,46,.35)', glow: 'rgba(200,255,46,.14)', tint: 'rgba(200,255,46,.05)' }) : deco(st.slotB),
+      slotA: tossSlot(0), slotB: tossSlot(1),
+      tossShake: st.rolling && st.spinD && st.spinD <= 95 ? 'tossshake .16s linear infinite' : 'none',
+      vsAnim: st.rolling ? 'vshit .32s ease-in-out infinite' : 'none',
       startToss: this.startToss,
       hasCurrent: !!cur && !st.lockShow,
       curStage: cur ? cur.stage : '', curNum: cur ? 'MATCH ' + cur.num : '',
