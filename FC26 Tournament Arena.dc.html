@@ -256,17 +256,6 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   <!-- RECORD GOAL -->
   <div data-noprint="1" style="position:relative;margin-top:20px;border-top:1px solid rgba(200,255,46,.15);background:rgba(0,0,0,.3);padding:16px 14px 18px 14px">
     <div style="display:flex;align-items:center;justify-content:center;gap:10px"><span style="width:26px;height:2px;background:linear-gradient(90deg,transparent,{{ recordTitleColor }})"></span><span style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:5px;color:{{ recordTitleColor }};text-shadow:{{ recordTitleGlow }}">{{ recordTitle }}</span><span style="width:26px;height:2px;background:linear-gradient(270deg,transparent,{{ recordTitleColor }})"></span></div>
-    <div style="display:flex;justify-content:center;margin-top:10px">
-      <sc-if value="{{ ogIdle }}" hint-placeholder-val="{{ true }}">
-        <button onClick="{{ toggleOG }}" data-noprint="1" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);color:#8a99a8;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL</button>
-      </sc-if>
-      <sc-if value="{{ ogArmed }}" hint-placeholder-val="{{ false }}">
-        <button onClick="{{ toggleOG }}" data-noprint="1" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,107,107,.6);background:rgba(255,107,107,.14);color:#ff9d9d;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL &#183; TAP TO CANCEL</button>
-      </sc-if>
-    </div>
-    <sc-if value="{{ ogArmed }}" hint-placeholder-val="{{ false }}">
-      <div style="text-align:center;margin-top:8px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;color:#ff9d9d">It counts for the other team and stays out of his tally.</div>
-    </sc-if>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px">
       <sc-for list="{{ recordCols }}" as="col" hint-placeholder-count="2">
         <div style="position:relative;overflow:hidden;background:linear-gradient(180deg,{{ col.tint }},rgba(255,255,255,.02) 60%);border:1px solid {{ col.borderColor }};border-radius:16px;padding:12px">
@@ -818,15 +807,6 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
         </div>
       </div>
 
-      <div style="display:flex;justify-content:center;margin-top:16px">
-        <sc-if value="{{ editOgIdle }}" hint-placeholder-val="{{ true }}">
-          <button onClick="{{ toggleEditOG }}" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);color:#8a99a8;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL</button>
-        </sc-if>
-        <sc-if value="{{ editOgArmed }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ toggleEditOG }}" style="min-height:32px;border-radius:999px;border:1px solid rgba(255,107,107,.6);background:rgba(255,107,107,.14);color:#ff9d9d;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;padding:0 16px;cursor:pointer" style-active="transform:scale(.96)">OWN GOAL &#183; TAP TO CANCEL</button>
-        </sc-if>
-      </div>
-
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px">
         <sc-for list="{{ editCols }}" as="col" hint-placeholder-count="2">
           <div style="display:flex;flex-direction:column;gap:7px">
@@ -1236,8 +1216,8 @@ class Component extends DCLogic {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
       rollA: false, rollB: false, spinD: 0, lockA: 0, lockB: 0,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
-      editFixId: null, editEvents: null, editOG: false, editPenA: 0, editPenB: 0,
-      updateReady: false, ogArm: false, clockTick: 0, tvOpen: false,
+      editFixId: null, editEvents: null, editPenA: 0, editPenB: 0,
+      updateReady: false, clockTick: 0, tvOpen: false,
       hall: hallStore.get(), hallOpen: false
     });
     this._timers = [];
@@ -1476,18 +1456,13 @@ class Component extends DCLogic {
   // An own goal counts for the other side but must never land in the scorer's
   // tally, so the credited team is stored on the event and the player is only
   // kept for the record.
-  recordGoal(player, playerTeam, og) {
+  recordGoal(player, playerTeam) {
     const f = this.curFix(); if (!f) return;
-    const credited = og ? (playerTeam === f.a ? f.b : f.a) : playerTeam;
-    f.events.push(og ? { player, team: credited, og: true, ts: Date.now() } : { player, team: credited, ts: Date.now() });
+    f.events.push({ player, team: playerTeam, ts: Date.now() });
     SFX.goal();
-    this.toastMsg(og ? 'OWN GOAL — ' + player.toUpperCase() : 'GOAL — ' + player.toUpperCase(), og ? '#ff7b7b' : TEAMS[credited].color);
-    this.setState({ fixtures: this.state.fixtures.slice(), ogArm: false }, () => this.save());
+    this.toastMsg('GOAL — ' + player.toUpperCase(), TEAMS[playerTeam].color);
+    this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
   }
-  toggleOG = () => {
-    SFX.click();
-    this.setState({ ogArm: !this.state.ogArm });
-  };
   // ---------- big screen ----------
   // The room reads the score off a propped-up tablet while the operator keeps
   // scoring on the same device, so the goal buttons stay on this view instead
@@ -1551,7 +1526,7 @@ class Component extends DCLogic {
     const e = f.events.pop();
     SFX.undo();
     this.toastMsg((e.og ? 'OWN GOAL REMOVED — ' : 'GOAL REMOVED — ') + e.player.toUpperCase(), '#9fb0c0');
-    this.setState({ fixtures: this.state.fixtures.slice(), ogArm: false }, () => this.save());
+    this.setState({ fixtures: this.state.fixtures.slice() }, () => this.save());
   };
   askRestartMatch = () => {
     const f = this.curFix(); if (!f) return;
@@ -1567,7 +1542,7 @@ class Component extends DCLogic {
     delete f.startedAt;
     SFX.undo();
     this.toastMsg('MATCH RESTARTED', '#ff7b7b');
-    this.setState({ fixtures: this.state.fixtures.slice(), restartConfirm: false, penaltyFor: null, ogArm: false }, () => this.save());
+    this.setState({ fixtures: this.state.fixtures.slice(), restartConfirm: false, penaltyFor: null }, () => this.save());
   };
   // ---------- fixing a finished result ----------
   // The correction happens inside its own dialog on a working copy of the
@@ -1594,20 +1569,15 @@ class Component extends DCLogic {
     this.setState({
       editFixId: fid,
       editEvents: f.events.map(e => Object.assign({}, e)),
-      editOG: false,
       editPenA: f.penA != null ? f.penA : 0,
       editPenB: f.penB != null ? f.penB : 0
     });
   };
-  cancelEditFix = () => { SFX.click(); this.setState({ editFixId: null, editEvents: null, editOG: false }); };
-  toggleEditOG = () => { SFX.click(); this.setState({ editOG: !this.state.editOG }); };
+  cancelEditFix = () => { SFX.click(); this.setState({ editFixId: null, editEvents: null }); };
   editAddGoal(player, playerTeam) {
-    const f = this.editFix(); if (!f) return;
-    const og = !!this.state.editOG;
-    const credited = og ? (playerTeam === f.a ? f.b : f.a) : playerTeam;
-    const e = og ? { player, team: credited, og: true, ts: Date.now() } : { player, team: credited, ts: Date.now() };
+    if (!this.editFix()) return;
     SFX.goal();
-    this.setState({ editEvents: (this.state.editEvents || []).concat([e]), editOG: false });
+    this.setState({ editEvents: (this.state.editEvents || []).concat([{ player, team: playerTeam, ts: Date.now() }]) });
   }
   editDropGoal(i) {
     const ev = (this.state.editEvents || []).slice();
@@ -1653,7 +1623,7 @@ class Component extends DCLogic {
     const champion = fin ? this.winner(fin) : null;
     SFX.click();
     this.toastMsg('RESULT UPDATED — MATCH ' + f.num, '#ffd54a');
-    this.setState({ fixtures: keep, champion, editFixId: null, editEvents: null, editOG: false, champModal: false }, () => {
+    this.setState({ fixtures: keep, champion, editFixId: null, editEvents: null, champModal: false }, () => {
       this.save();
       // The roll keeps the same title but the scorers behind it just changed.
       if (champion != null && this.state.tourId) this.syncHall();
@@ -2500,25 +2470,24 @@ class Component extends DCLogic {
     });
     // record columns
     let recordCols = [];
-    const og = !!st.ogArm;
     if (cur) {
       recordCols = [cur.a, cur.b].map(ti => {
         const t = team(ti);
         return {
           name: t.name, logo: t.logo, color: t.color,
           glow: glow(t.color, 0.4), tint: glow(t.color, 0.1),
-          borderColor: og ? 'rgba(255,107,107,.5)' : glow(t.color, 0.45),
+          borderColor: glow(t.color, 0.45),
           players: this.playersOf(ti).map(p => {
             const inMatch = cur.events.filter(e => e.player === p && !e.og).length;
             return {
               name: p, tally: String(inMatch),
-              badge: og ? 'OG' : '+',
-              badgeBg: og ? '#ff6b6b' : t.color,
-              badgeSize: og ? '11px' : '16px',
-              btnBorder: og ? '#ff6b6b' : t.color,
+              badge: '+',
+              badgeBg: t.color,
+              badgeSize: '16px',
+              btnBorder: t.color,
               tallyColor: inMatch > 0 ? t.color : 'rgba(255,255,255,.22)',
               tallyGlow: inMatch > 0 ? '0 0 14px ' + glow(t.color, 0.5) : 'none',
-              onGoal: () => this.recordGoal(p, ti, og)
+              onGoal: () => this.recordGoal(p, ti)
             };
           })
         };
@@ -2748,7 +2717,6 @@ class Component extends DCLogic {
       editFixTitle: editF ? 'MATCH ' + editF.num + ' · ' + editF.stage : '',
       editA: editSide(editF ? editF.a : 0, true),
       editB: editSide(editF ? editF.b : 1, false),
-      editOgArmed: !!st.editOG, editOgIdle: !st.editOG, toggleEditOG: this.toggleEditOG,
       editCols: editF ? [editF.a, editF.b].map(ti => {
         const t = TEAMS[ti];
         return {
@@ -2938,10 +2906,9 @@ class Component extends DCLogic {
       tvChampPlayers: st.champion != null ? this.playersOf(st.champion).join(' & ') : '',
       clockRunning: !!(cur && cur.startedAt),
       clockLabel: cur ? this.clockLabel(cur) : '',
-      ogArmed: og, ogIdle: !og, toggleOG: this.toggleOG,
-      recordTitle: og ? 'WHO PUT IT IN?' : 'RECORD GOAL',
-      recordTitleColor: og ? '#ff6b6b' : '#c8ff2e',
-      recordTitleGlow: og ? '0 0 16px rgba(255,107,107,.5)' : '0 0 16px rgba(200,255,46,.5)',
+      recordTitle: 'RECORD GOAL',
+      recordTitleColor: '#c8ff2e',
+      recordTitleGlow: '0 0 16px rgba(200,255,46,.5)',
       recordCols, undoGoal: this.undoGoal, endGame: this.endGame,
       endLabel: cur && cur.stage === 'FINAL' ? 'END FINAL' : 'END GAME → NEXT MATCH',
       askRestartMatch: this.askRestartMatch,
