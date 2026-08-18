@@ -463,6 +463,12 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
               </div>
             </sc-for>
           </div>
+          <sc-if value="{{ bootShow }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ openBoot }}" data-noprint="1" style="display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:52px;margin-top:12px;box-sizing:border-box;border-radius:14px;border:1px solid rgba(255,213,74,.45);background:linear-gradient(180deg,rgba(255,213,74,.17),rgba(255,213,74,.05));color:#ffd54a;font-family:'Orbitron',sans-serif;font-weight:900;font-size:11.5px;letter-spacing:3px;cursor:pointer" style-active="transform:scale(.98);background:rgba(255,213,74,.26)">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="#ffd54a" aria-hidden="true"><path d="M3 3h5v4.6c0 .8.5 1.4 1.3 1.6l6.2 1.3C18.4 11.2 21 14.3 21 18v.4H3z"></path><path d="M2 20h20v2.2H2z"></path></svg>
+              GOLDEN BOOT POSTER
+            </button>
+          </sc-if>
         </div>
       </sc-if>
     </div>
@@ -1000,6 +1006,23 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
   <div data-noprint="1" style="position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;background:#0d1118;border:1px solid {{ toastColor }};border-radius:999px;padding:12px 26px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;color:{{ toastColor }};box-shadow:0 0 30px {{ toastGlow }};animation:toastin .25s ease;white-space:nowrap">{{ toastMsg }}</div>
 </sc-if>
 
+<sc-if value="{{ bootOpen }}" hint-placeholder-val="{{ false }}">
+  <div data-noprint="1" style="position:fixed;inset:0;z-index:45;background:#03050a;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;overflow:hidden">
+    <div style="position:relative;width:min(100vw - 24px,(100dvh - 24px)*0.80028);aspect-ratio:1122 / 1402">
+      <img src="posters/golden-boot.jpg" alt="Golden boot winner poster" style="display:block;width:100%;height:100%;object-fit:contain">
+      <div style="position:absolute;left:15.5%;right:12.6%;top:83.1%;transform:translateY(-50%) skewX(-6deg);display:flex;align-items:baseline;justify-content:center;gap:.3em;white-space:nowrap;font-family:'Orbitron',sans-serif;font-weight:900;font-size:{{ bootNameFont }};line-height:1;letter-spacing:.01em;text-transform:uppercase">
+        <sc-if value="{{ bootHasFirst }}" hint-placeholder-val="{{ true }}">
+          <span style="color:#dfe6ee;text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 20px rgba(255,255,255,.22)">{{ bootFirst }}</span>
+        </sc-if>
+        <span style="color:#c8ff2e;text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 24px rgba(200,255,46,.45)">{{ bootRest }}</span>
+      </div>
+      <div style="position:absolute;left:59.9%;top:90.9%;transform:translate(-50%,-50%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:calc(min(100vw - 24px,(100dvh - 24px)*0.80028)*0.027);line-height:1;letter-spacing:.06em;color:#c8ff2e;text-shadow:0 0 16px rgba(200,255,46,.4)">{{ bootGoals }}</div>
+    </div>
+    <button onClick="{{ closeBoot }}" aria-label="Close the poster" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);color:#9fb0c0;cursor:pointer" style-active="transform:scale(.94);color:#e9edf2">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg>
+    </button>
+  </div>
+</sc-if>
 <sc-if value="{{ tvOpen }}" hint-placeholder-val="{{ false }}">
   <div data-noprint="1" style="position:fixed;inset:0;z-index:40;background:radial-gradient(120% 90% at 50% 0%,#0e1508 0%,#07090d 55%,#03050a 100%);display:flex;flex-direction:column;padding-top:calc(12px + env(safe-area-inset-top));padding-right:calc(clamp(16px,4.5vw,34px) + env(safe-area-inset-right));padding-bottom:calc(16px + env(safe-area-inset-bottom));padding-left:calc(clamp(16px,4.5vw,34px) + env(safe-area-inset-left));box-sizing:border-box;overflow:hidden">
     <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px">
@@ -1135,6 +1158,12 @@ const TEAMS = [
   { id: 'warriors', name: 'TEAM WARRIORS', short: 'WARRIORS', players: ['Sami', 'Danish'], logo: 'logos/warriors.png', color: '#ff4b4b', tagline: 'WE FIGHT. WE WIN.' },
   { id: 'falcons', name: 'TEAM FALCONS', short: 'FALCONS', players: ['Ali', 'Abdur Rehman'], logo: 'logos/falcons.png', color: '#54e04a', tagline: 'AIM HIGH. FLY HIGHER.' }
 ];
+// The golden boot poster is one fixed-ratio image with two live lines painted
+// on top of it. Everything on the plate — the plate itself and the type — is
+// sized off this one expression so the lettering never drifts off its slot,
+// whatever the screen. Keep it in step with the poster's real pixel ratio.
+const POSTER_RATIO = 1122 / 1402;
+const POSTER_W = 'min(100vw - 24px,(100dvh - 24px)*' + POSTER_RATIO.toFixed(5) + ')';
 const DEFAULT_PICKS = ['ARGENTINA', 'BARCELONA', 'BAYERN', 'ENGLAND', 'FRANCE', 'MANCHESTER CITY', 'PSG', 'REAL MADRID', 'SPAIN'];
 const KEY = 'fc26_arena_v1';
 // The roll of honour lives in its own key: resetting the tournament clears
@@ -1217,7 +1246,7 @@ class Component extends DCLogic {
       rollA: false, rollB: false, spinD: 0, lockA: 0, lockB: 0,
       menuOpen: false, modalTeam: null, toast: null, penaltyFor: null, resetArmed: false, restartConfirm: false, endConfirm: false,
       editFixId: null, editEvents: null, editPenA: 0, editPenB: 0,
-      updateReady: false, clockTick: 0, tvOpen: false,
+      updateReady: false, clockTick: 0, tvOpen: false, bootOpen: false,
       hall: hallStore.get(), hallOpen: false
     });
     this._timers = [];
@@ -1476,6 +1505,20 @@ class Component extends DCLogic {
   closeTV = () => {
     SFX.click();
     this.setState({ tvOpen: false });
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  };
+  // ---------- golden boot poster ----------
+  // The poster is a printed-looking plate the room gets shown at the end of the
+  // night, so it takes the whole screen the same way the big screen does.
+  openBoot = () => {
+    SFX.click();
+    this.setState({ bootOpen: true, menuOpen: false });
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+  };
+  closeBoot = () => {
+    SFX.click();
+    this.setState({ bootOpen: false });
     if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
   };
   promote(fid) {
@@ -2392,6 +2435,12 @@ class Component extends DCLogic {
         const boot = i === 0 && s.goals > 0;
         return { ...s, rank: i + 1, boot, rankColor: boot ? '#ffd54a' : '#5b6b7a', nameColor: boot ? '#ffd54a' : '#e9edf2', goalColor: s.goals > 0 ? '#c8ff2e' : '#43515f' };
       });
+    // The golden boot goes to the top of the scorers list, and only when a goal
+    // was actually scored — the list itself already settles ties by name.
+    const bootWin = scorers.length && scorers[0].boot ? scorers[0] : null;
+    const bootWords = bootWin ? bootWin.name.trim().split(/\s+/) : [];
+    // A long name has to give width back, otherwise it runs past the nameplate.
+    const bootNameK = bootWin ? Math.min(0.085, 0.085 * 9 / Math.max(1, bootWin.name.trim().length)) : 0.085;
     // queue
     const queueRows = [];
     if (!st.tossDone) {
@@ -2758,8 +2807,8 @@ class Component extends DCLogic {
       awakeBorder: st.awake ? 'rgba(200,255,46,.3)' : 'rgba(255,255,255,.12)',
       toggleAwake: this.toggleAwake,
       shareSummary: this.shareSummary,
-      updateReady: !!st.updateReady, updatePillShow: !!st.updateReady && !st.tvOpen,
-      chromeShow: !st.tvOpen, applyUpdate: this.applyUpdate,
+      updateReady: !!st.updateReady, updatePillShow: !!st.updateReady && !st.tvOpen && !st.bootOpen,
+      chromeShow: !st.tvOpen && !st.bootOpen, applyUpdate: this.applyUpdate,
       toggleSound: this.toggleSound, toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
       menuOpen: st.menuOpen, doBackup: this.doBackup, doRestore: this.doRestore,
       onRestoreFile: this.onRestoreFile, doPrint: this.doPrint, doReset: this.doReset,
@@ -2881,6 +2930,16 @@ class Component extends DCLogic {
           remove: () => this.removeHall(h.id)
         };
       }),
+      // The poster art is a fixed-ratio plate; the winner's name and tally are
+      // the only live parts, so they are sized off the same expression that
+      // sizes the plate and stay locked to it at any screen size.
+      bootOpen: !!st.bootOpen, openBoot: this.openBoot, closeBoot: this.closeBoot,
+      bootShow: !!bootWin,
+      bootHasFirst: bootWords.length > 1,
+      bootFirst: bootWords.length > 1 ? bootWords[0] : '',
+      bootRest: bootWords.length > 1 ? bootWords.slice(1).join(' ') : (bootWords[0] || ''),
+      bootGoals: bootWin ? String(bootWin.goals) : '',
+      bootNameFont: 'calc(' + POSTER_W + '*' + bootNameK + ')',
       tvOpen: !!st.tvOpen, openTV: this.openTV, closeTV: this.closeTV,
       tvHasMatch: !!cur, tvNoMatch: !cur,
       tvStage: cur ? (cur.stage === 'LEAGUE' ? 'LEAGUE · MATCH ' + cur.num : cur.stage) : '',

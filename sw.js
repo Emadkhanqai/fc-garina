@@ -17,6 +17,7 @@ const SHELL = [
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png',
+  './posters/golden-boot.jpg',
   './logos/eclipse.png',
   './logos/royals.png',
   './logos/raptors.png',
