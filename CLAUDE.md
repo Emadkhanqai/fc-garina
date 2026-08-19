@@ -2,7 +2,7 @@
 
 ## Project
 
-FC26 Tournament Arena — a live tournament control-room web app for a private 5-team FC26 (FIFA) tournament on PS5 at King's House. Operator-driven on iPhone/iPad beside the console while players watch.
+FC26 Tournament Arena — a live tournament control-room web app for a private FC26 (FIFA) tournament on PS5 at King's House. Five teams exist; the board ships with four of them playing (Falcons sit out by default and can be restored from the team sheet). Operator-driven on iPhone/iPad beside the console while players watch.
 
 ## Working language
 

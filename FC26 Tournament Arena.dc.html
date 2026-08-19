@@ -1158,10 +1158,10 @@ a{color:#c8ff2e;} a:hover{color:#e4ff8a;}
 <script type="text/x-dc" data-dc-script data-props="{&quot;sfxVolume&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 1, &quot;step&quot;: 0.1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Sound&quot;}, &quot;confetti&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Celebration&quot;}}">
 const TEAMS = [
   { id: 'eclipse', name: 'TEAM ECLIPSE', short: 'ECLIPSE', players: ['Emad', 'Haris'], logo: 'logos/eclipse.png', color: '#f0b429', tagline: "SHADOWS DON'T LOSE" },
-  { id: 'royals', name: 'TEAM ROYALS', short: 'ROYALS', players: ['Roshan', 'Ibtesam'], logo: 'logos/royals.png', color: '#3f8cff', tagline: 'BORN TO DOMINATE' },
-  { id: 'raptors', name: 'TEAM RAPTORS', short: 'RAPTORS', players: ['Rafay', 'Abdullah'], logo: 'logos/raptors.png', color: '#a259ff', tagline: 'FAST. FIERCE. FEARLESS.' },
-  { id: 'warriors', name: 'TEAM WARRIORS', short: 'WARRIORS', players: ['Sami', 'Danish'], logo: 'logos/warriors.png', color: '#ff4b4b', tagline: 'WE FIGHT. WE WIN.' },
-  { id: 'falcons', name: 'TEAM FALCONS', short: 'FALCONS', players: ['Ali', 'Abdur Rehman'], logo: 'logos/falcons.png', color: '#54e04a', tagline: 'AIM HIGH. FLY HIGHER.' }
+  { id: 'royals', name: 'TEAM ROYALS', short: 'ROYALS', players: ['Roshan', 'Danish'], logo: 'logos/royals.png', color: '#3f8cff', tagline: 'BORN TO DOMINATE' },
+  { id: 'raptors', name: 'TEAM RAPTORS', short: 'RAPTORS', players: ['Rafay', 'Ibtesam'], logo: 'logos/raptors.png', color: '#a259ff', tagline: 'FAST. FIERCE. FEARLESS.' },
+  { id: 'warriors', name: 'TEAM WARRIORS', short: 'WARRIORS', players: ['Sami', 'Abdur Rehman'], logo: 'logos/warriors.png', color: '#ff4b4b', tagline: 'WE FIGHT. WE WIN.' },
+  { id: 'falcons', name: 'TEAM FALCONS', short: 'FALCONS', players: ['Ali', 'Abdullah'], logo: 'logos/falcons.png', color: '#54e04a', tagline: 'AIM HIGH. FLY HIGHER.' }
 ];
 // The golden boot poster is one fixed-ratio image with two live lines painted
 // on top of it. Everything on the plate — the plate itself and the type — is
@@ -1244,7 +1244,7 @@ const SFX = {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    const fresh = { tossDone: false, fixtures: [], champion: null, tourId: null, sound: true, awake: true, rosters: {}, removed: {}, prize: 5000, minMatches: 0, picks: [] };
+    const fresh = { tossDone: false, fixtures: [], champion: null, tourId: null, sound: true, awake: true, rosters: {}, removed: { falcons: true }, prize: 5000, minMatches: 0, picks: [] };
     const saved = store.get();
     this.state = Object.assign(fresh, saved || {}, {
       rolling: false, tossPending: false, lockShow: false, slotA: 0, slotB: 1,
@@ -3178,7 +3178,7 @@ class Component extends DCLogic {
       statPlayers: act.reduce((n, i) => n + this.playersOf(i).length, 0),
       // Once the draw exists it is the truth: a setting changed mid-tournament
       // waits for a reset, so the headline must not count matches nobody will play.
-      statMatches: (st.tossDone ? st.fixtures.filter(f => f.stage === 'LEAGUE').length : leagueCount * this.rounds()) + (act.length >= 4 ? 3 : 1),
+      statMatches: (st.tossDone ? st.fixtures.filter(f => f.stage === 'LEAGUE').length : leagueCount * this.rounds()) + (act.length >= 5 ? 3 : act.length === 4 ? 2 : 1),
       eventDate: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }).toUpperCase(),
       prizeLabel: (Number(st.prize) || 0).toLocaleString('en-US'),
       settingsOpen: !!st.settingsOpen,
