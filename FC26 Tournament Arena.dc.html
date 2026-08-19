@@ -2562,16 +2562,20 @@ class Component extends DCLogic {
     // queue
     const queueRows = [];
     if (!st.tossDone) {
-      for (let i = 1; i <= leagueCount * this.rounds(); i++) queueRows.push({ real: false, placeholder: true, numLabel: String(i).padStart(2, '0'), stageShort: 'LGE', numColor: '#43515f', phLabel: 'AWAITING DRAW', bg: 'rgba(255,255,255,.02)', border: 'rgba(255,255,255,.06)' });
+      // The knockouts follow the whole league, which is a full round robin per
+      // round — numbering them off a single round robin left them repeating
+      // numbers the league had already used.
+      const lgeTotal = leagueCount * this.rounds();
+      for (let i = 1; i <= lgeTotal; i++) queueRows.push({ real: false, placeholder: true, numLabel: String(i).padStart(2, '0'), stageShort: 'LGE', numColor: '#43515f', phLabel: 'AWAITING DRAW', bg: 'rgba(255,255,255,.02)', border: 'rgba(255,255,255,.06)' });
       if (act.length >= 5) {
-        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 1 VS RANK 4', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
-        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 2), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
-        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 3), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'SF1 WINNER VS SF2 WINNER', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgeTotal + 1).padStart(2, '0'), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 1 VS RANK 4', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgeTotal + 2).padStart(2, '0'), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgeTotal + 3).padStart(2, '0'), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'SF1 WINNER VS SF2 WINNER', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
       } else if (act.length === 4) {
-        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
-        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 2), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS SF WINNER', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgeTotal + 1).padStart(2, '0'), stageShort: 'SF', numColor: '#c8ff2e', phLabel: 'RANK 2 VS RANK 3', bg: 'rgba(200,255,46,.04)', border: 'rgba(200,255,46,.22)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgeTotal + 2).padStart(2, '0'), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS SF WINNER', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
       } else {
-        queueRows.push({ real: false, placeholder: true, numLabel: String(leagueCount + 1), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS RANK 2', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
+        queueRows.push({ real: false, placeholder: true, numLabel: String(lgeTotal + 1).padStart(2, '0'), stageShort: 'FINAL', numColor: '#ffd54a', phLabel: 'RANK 1 VS RANK 2', bg: 'rgba(255,213,74,.05)', border: 'rgba(255,213,74,.3)' });
       }
     } else {
       const matchLive = !!(cur && cur.events.length > 0);
