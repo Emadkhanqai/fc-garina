@@ -1358,6 +1358,29 @@ class Component extends DCLogic {
     }
     return order.map((p, i) => ({ id: 'L' + (i + 1), stage: 'LEAGUE', num: i + 1, a: p[0], b: p[1], events: [], done: false, pen: null, pickA: '', pickB: '' }));
   }
+  // Changing the league length before a ball is kicked should redraw the board
+  // there and then. Once any match has started the draw is history, so the new
+  // number waits for a reset rather than pulling fixtures out from under the
+  // night. The opening pair — the one the toss picked — is kept.
+  // The clock stamps itself the moment a match becomes current, so a running
+  // clock is no proof anything has happened — a goal or a finished match is.
+  leagueStarted() {
+    const fx = this.state.fixtures || [];
+    return fx.some(f => f.done || (f.events && f.events.length));
+  }
+  reflowLeague() {
+    const st = this.state;
+    if (!st.tossDone || st.champion != null || !st.fixtures.length) return;
+    if (this.leagueStarted()) return;
+    const first = st.fixtures[0];
+    const fixtures = this.genFixtures(first.a, first.b);
+    if (fixtures.length === st.fixtures.length) return;
+    fixtures[0].pickA = first.pickA || '';
+    fixtures[0].pickB = first.pickB || '';
+    if (first.startedAt) fixtures[0].startedAt = first.startedAt;
+    this.setState({ fixtures }, () => this.save());
+    this.toastMsg(fixtures.length + ' LEAGUE MATCHES', '#c8ff2e');
+  }
   startToss = () => {
     if (this.state.tossDone || this.state.rolling || this.state.tossPending) return;
     SFX.ac(); SFX.showdown();
@@ -2759,6 +2782,21 @@ class Component extends DCLogic {
     });
     const printScorers = scorers.filter(s => s.goals > 0).map(s => ({ line: s.rank + '. ' + s.name + ' — ' + s.goals }));
     const stageIdx = champ ? 4 : st.fixtures.some(f => f.stage === 'FINAL') ? 3 : st.fixtures.some(f => f.stage === 'SEMI-FINAL') ? 2 : 1;
+    const tvScorers = (f, ti) => {
+      if (!f) return [];
+      const rows = [];
+      f.events.filter(e => e.team === ti).forEach(e => {
+        const label = e.player + (e.og ? ' (OG)' : '');
+        let row = rows.find(r => r.label === label);
+        if (!row) { rows.push(row = { label, times: [], color: e.og ? '#ff9d9d' : '#dfe6ee' }); }
+        row.times.push(this.goalTime(f, e));
+      });
+      return rows.map(r => ({
+        label: r.label,
+        time: r.times.length > 3 ? '\u00D7' + r.times.length : r.times.join(', '),
+        color: r.color
+      }));
+    };
     const tvSide = (f, ti, key) => {
       const t = TEAMS[ti];
       return {
@@ -2768,11 +2806,10 @@ class Component extends DCLogic {
         hasPick: !!(f && (key === 'a' ? f.pickA : f.pickB)),
         pick: (f && (key === 'a' ? f.pickA : f.pickB)) || '',
         hasScorers: !!(f && f.events.some(e => e.team === ti)),
-        scorers: f ? f.events.filter(e => e.team === ti).map(e => ({
-          label: e.player + (e.og ? ' (OG)' : ''),
-          time: this.goalTime(f, e),
-          color: e.og ? '#ff9d9d' : '#dfe6ee'
-        })) : []
+        // A goal-by-goal list walks off the top of the screen once a match runs
+        // away, so the big screen keeps one line per scorer: their times while
+        // there are few enough to read, a tally once there are not.
+        scorers: tvScorers(f, ti)
       };
     };
     // Awards read off finished matches only, and any category with nothing to
@@ -2903,7 +2940,7 @@ class Component extends DCLogic {
       toggleAwake: this.toggleAwake,
       shareSummary: this.shareSummary,
       updateReady: !!st.updateReady, updatePillShow: !!st.updateReady && !st.tvOpen && !st.bootOpen,
-      chromeShow: !st.tvOpen && !st.bootOpen, applyUpdate: this.applyUpdate,
+      chromeShow: !st.tvOpen && !st.bootOpen && !st.rolling, applyUpdate: this.applyUpdate,
       toggleSound: this.toggleSound, toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
       menuOpen: st.menuOpen, doBackup: this.doBackup, doRestore: this.doRestore,
       onRestoreFile: this.onRestoreFile, doPrint: this.doPrint, doReset: this.doReset,
@@ -3135,7 +3172,9 @@ class Component extends DCLogic {
       printTeamBtns: act.map(i => ({ logo: TEAMS[i].logo, name: TEAMS[i].name, color: TEAMS[i].color, go: () => this.printTeamGo(i) })),
       statTeams: act.length,
       statPlayers: act.reduce((n, i) => n + this.playersOf(i).length, 0),
-      statMatches: leagueCount * this.rounds() + (act.length >= 4 ? 3 : 1),
+      // Once the draw exists it is the truth: a setting changed mid-tournament
+      // waits for a reset, so the headline must not count matches nobody will play.
+      statMatches: (st.tossDone ? st.fixtures.filter(f => f.stage === 'LEAGUE').length : leagueCount * this.rounds()) + (act.length >= 4 ? 3 : 1),
       eventDate: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }).toUpperCase(),
       prizeLabel: (Number(st.prize) || 0).toLocaleString('en-US'),
       settingsOpen: !!st.settingsOpen,
@@ -3144,8 +3183,8 @@ class Component extends DCLogic {
       setPrizeVal: String(st.prize ?? 5000),
       setMinVal: String(st.minMatches || 0),
       onPrizeChange: (e) => this.setState({ prize: Math.max(0, parseInt(e.target.value, 10) || 0) }, () => this.save()),
-      onMinChange: (e) => this.setState({ minMatches: Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)) }, () => this.save()),
-      minHint: st.tossDone ? 'Applies after a reset — fixtures are already drawn.' : '0 = every team plays every other once (' + (act.length - 1) + ' matches each). Higher repeats the league: currently ' + this.rounds() + '\u00D7 round robin, ' + ((act.length - 1) * this.rounds()) + ' league matches per team.',
+      onMinChange: (e) => this.setState({ minMatches: Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)) }, () => { this.reflowLeague(); this.save(); }),
+      minHint: this.leagueStarted() ? 'Applies after a reset — the tournament is already under way.' : '0 = every team plays every other once (' + (act.length - 1) + ' matches each). Higher repeats the league: currently ' + this.rounds() + '\u00D7 round robin, ' + ((act.length - 1) * this.rounds()) + ' league matches per team.',
       printTextReport: st.printMode === 'team' ? '1' : '0',
       printFixturesMode: st.printMode !== 'team',
       printTeamMode: st.printMode === 'team' && st.printTeam != null,
